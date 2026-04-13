@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teamstar — Future Collaboration Platform</title>
+  <meta name="description" content="Teamstar is a future-ready collaboration platform bringing trusted identity, networking, messaging, events, startup building, and intelligent assistance into one premium operating environment." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-0: #020814;
+      --bg-1: #041224;
+      --bg-2: #082445;
+      --panel: rgba(8, 20, 40, 0.58);
+      --panel-strong: rgba(8, 18, 36, 0.78);
+      --panel-soft: rgba(8, 18, 36, 0.42);
+      --line: rgba(102, 196, 255, 0.14);
+      --line-strong: rgba(120, 207, 255, 0.28);
+      --text: rgba(231, 243, 255, 0.96);
+      --muted: rgba(184, 211, 234, 0.74);
+      --muted-2: rgba(196, 222, 244, 0.56);
+      --cyan: #39b4ff;
+      --cyan-2: #88ddff;
+      --blue: #1c88ff;
+      --shadow: 0 0 0 1px rgba(112, 195, 255, 0.08), 0 0 60px rgba(25, 118, 255, 0.10), inset 0 1px 0 rgba(205, 234, 255, 0.08);
+      --shadow-soft: 0 20px 60px rgba(0,0,0,.20);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --ease: cubic-bezier(.22,.8,.2,1);
+      --nav-h: 82px;
+      --max: 1420px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 14%, rgba(24,114,255,.17), transparent 24%),
+        radial-gradient(circle at 50% 44%, rgba(11,116,255,.10), transparent 38%),
+        radial-gradient(circle at 20% 20%, rgba(73,154,255,.06), transparent 18%),
+        radial-gradient(circle at 80% 24%, rgba(54,111,255,.06), transparent 18%),
+        linear-gradient(180deg, var(--bg-0) 0%, #020b18 26%, #020814 55%, #01050d 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      background: repeating-linear-gradient(180deg, rgba(110,167,255,.03) 0px, rgba(110,167,255,.03) 1px, transparent 2px, transparent 7px);
+      opacity: .14;
+      mix-blend-mode: screen;
+    }
+
+    body::after {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(47,139,255,.18), transparent 28%),
+        radial-gradient(circle at 50% 50%, rgba(31,86,198,.12), transparent 36%),
+        radial-gradient(circle at 50% 80%, rgba(17,111,255,.08), transparent 30%);
+      filter: blur(18px);
+      opacity: .42;
+    }
+
+    #particles {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: .65;
+    }
+
+    .grid-lines,
+    .vignette,
+    .center-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .grid-lines {
+      z-index: 1;
+      opacity: .18;
+      background-image:
+        linear-gradient(rgba(82,214,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(82,214,255,0.03) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(circle at center, black 45%, transparent 92%);
+    }
+
+    .vignette {
+      z-index: 2;
+      background: radial-gradient(circle at center, transparent 42%, rgba(1,5,12,.12) 58%, rgba(1,5,12,.60) 100%);
+    }
+
+    .center-glow {
+      z-index: 2;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(50, 168, 255, 0.045), transparent 26%),
+        radial-gradient(ellipse at 50% 34%, rgba(49, 146, 255, 0.04), transparent 22%),
+        radial-gradient(ellipse at 50% 72%, rgba(39, 97, 255, 0.035), transparent 22%);
+      filter: blur(14px);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    button { font: inherit; color: inherit; }
+
+    .shell { position: relative; z-index: 4; }
+    .container { width: min(calc(100% - 32px), var(--max)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(16px) saturate(155%);
+      -webkit-backdrop-filter: blur(16px) saturate(155%);
+      background: linear-gradient(180deg, rgba(4, 11, 19, 0.90), rgba(4, 11, 19, 0.64));
+      border-bottom: 1px solid rgba(102, 196, 255, 0.10);
+    }
+
+    .topbar-inner {
+      min-height: var(--nav-h);
+      display: grid;
+      grid-template-columns: auto minmax(500px, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+    }
+
+    .brand,
+    .nav,
+    .pill-btn,
+    .ghost-btn,
+    .hero-badge,
+    .mini-chip,
+    .floating-pill,
+    .mobile-panel {
+      backdrop-filter: blur(16px) saturate(155%);
+      -webkit-backdrop-filter: blur(16px) saturate(155%);
+      background: linear-gradient(180deg, rgba(9, 27, 55, 0.74), rgba(7, 18, 39, 0.56));
+      border: 1px solid rgba(98, 189, 255, 0.18);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border-radius: 20px;
+      min-width: 212px;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(145,221,255,.24);
+      background: radial-gradient(circle at 30% 30%, rgba(131,220,255,.25), rgba(0,146,255,.10) 58%, rgba(0,0,0,0) 59%), linear-gradient(180deg, rgba(13,67,125,.88), rgba(4,26,57,.9));
+    }
+    .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
+    .brand-copy { display: grid; gap: 2px; }
+    .brand-copy strong { font-size: 14px; letter-spacing: .08em; }
+    .brand-copy span { color: var(--muted); font-size: 11px; line-height: 1.15; max-width: 130px; }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 7px;
+      justify-self: stretch;
+      justify-content: center;
+    }
+    .nav a {
+      padding: 11px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      color: rgba(216, 230, 245, 0.82);
+      transition: .28s var(--ease);
+    }
+    .nav a.active, .nav a:hover {
+      color: #eef9ff;
+      background: linear-gradient(180deg, rgba(21, 72, 137, 0.55), rgba(8, 28, 62, 0.6));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 0 22px rgba(42, 152, 255, .12);
+      transform: translateY(-1px);
+    }
+
+    .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+    .pill-btn, .ghost-btn, .menu-btn {
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: .25s var(--ease);
+    }
+    .pill-btn.primary {
+      background: linear-gradient(180deg, rgba(32, 132, 255, 0.82), rgba(18, 93, 201, 0.82));
+      border-color: rgba(133, 208, 255, 0.28);
+      box-shadow: 0 0 0 1px rgba(136, 208, 255, 0.12), 0 10px 30px rgba(18, 113, 255, 0.22), inset 0 1px 0 rgba(255,255,255,0.18);
+      font-weight: 700;
+    }
+    .pill-btn:hover, .ghost-btn:hover, .menu-btn:hover { transform: translateY(-1px); }
+    .menu-btn { display: none; width: 46px; height: 46px; padding: 0; }
+
+    .mobile-panel {
+      display: none;
+      position: fixed;
+      inset: calc(var(--nav-h) + 8px) 16px auto;
+      z-index: 29;
+      border-radius: 24px;
+      padding: 14px;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mobile-panel.open { display: flex; }
+    .mobile-panel a, .mobile-panel .pill-btn, .mobile-panel .ghost-btn { width: 100%; justify-content: center; }
+
+    .dna-spine {
+      position: fixed;
+      inset: 12% 0 8%;
+      z-index: 3;
+      pointer-events: none;
+      display: grid;
+      place-items: center;
+      opacity: .48;
+      filter: drop-shadow(0 0 24px rgba(80,194,255,.10));
+    }
+
+    .dna-wrap {
+      position: relative;
+      width: min(26vw, 260px);
+      min-width: 170px;
+      height: min(72vh, 860px);
+      transform-style: preserve-3d;
+      transition: transform .12s linear;
+    }
+
+    .dna-svg {
+      width: 100%; height: 100%;
+      overflow: visible;
+    }
+
+    .dna-core-glow,
+    .dna-ring {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+    }
+    .dna-core-glow {
+      width: 180px; height: 60%;
+      background: radial-gradient(circle at center, rgba(82,214,255,.14), transparent 65%);
+      filter: blur(20px);
+    }
+    .dna-ring {
+      border: 1px solid rgba(124,232,255,.12);
+      opacity: .6;
+    }
+    .dna-ring.r1 { width: 300px; height: 120px; transform: translate(-50%,-50%) rotateX(72deg); animation: spin 14s linear infinite; }
+    .dna-ring.r2 { width: 220px; height: 360px; transform: translate(-50%,-50%) rotateY(78deg); animation: spin-rev 16s linear infinite; }
+
+    .floating-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .floating-pill {
+      position: absolute;
+      padding: 11px 14px;
+      border-radius: 999px;
+      color: rgba(221, 240, 255, 0.90);
+      font-size: 12px;
+      opacity: .0;
+      transition: transform .2s linear, opacity .35s ease;
+      will-change: transform, opacity;
+    }
+
+    main { position: relative; }
+    .section { position: relative; padding: 110px 0; }
+    .hero { min-height: calc(100vh - var(--nav-h)); display: grid; align-items: center; padding-top: 48px; }
+    .hero-wrap {
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 34px;
+      align-items: center;
+    }
+    .hero-content { max-width: 700px; position: relative; z-index: 6; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
+      color: #aee5ff; padding: 9px 14px; margin-bottom: 22px; border-radius: 999px;
+    }
+    .hero-badge::before {
+      content: ""; width: 8px; height: 8px; border-radius: 50%;
+      background: radial-gradient(circle, #6fd9ff, #1498ff 70%, transparent 72%);
+      box-shadow: 0 0 14px rgba(96, 222, 255, 0.8);
+    }
+    h1, h2, h3, h4 { font-family: Sora, Inter, sans-serif; }
+    .hero-content h1 {
+      margin: 0; font-size: clamp(3rem, 6vw, 5.8rem); line-height: .94; letter-spacing: -.05em; max-width: 12ch;
+    }
+    .hero-content .lede {
+      margin: 22px 0 0; color: var(--muted); font-size: clamp(1rem, 1.35vw, 1.18rem); line-height: 1.75; max-width: 46ch;
+    }
+    .hero-actions, .hero-metrics, .chip-row, .focus-tags, .quick-pills { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-actions { margin-top: 28px; }
+    .hero-metrics { margin-top: 28px; }
+
+    .metric, .glass-card, .story-menu button, .story-stage, .compare-card, .constellation, .constellation-info,
+    .gallery-screen, .gallery-copy, .trust-layout, .audience-grid, .ai-layout, .device-layout, .future-strip,
+    .final-cta, .footer-grid, .corridor-visual, .corridor-card {
+      background: linear-gradient(180deg, rgba(8, 20, 40, 0.56), rgba(5, 14, 29, 0.42));
+      border: 1px solid rgba(102, 196, 255, 0.12);
+      box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,.03);
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
+    }
+
+    .metric {
+      min-width: 180px; padding: 16px 18px; border-radius: 20px;
+    }
+    .metric strong { display:block; font-size: 1.24rem; margin-bottom: 6px; }
+    .metric span { color: var(--muted-2); font-size: .88rem; line-height: 1.4; }
+
+    .hero-stage {
+      position: relative; min-height: 720px; display: grid; place-items: center;
+    }
+    .hero-orbit {
+      position: absolute; inset: 50% auto auto 50%; width: min(74vw, 760px); aspect-ratio:1; transform: translate(-50%, -50%);
+      pointer-events:none; opacity:.72; filter: drop-shadow(0 0 26px rgba(0,194,255,.10));
+    }
+    .orbit-ring, .orbit-core, .orbit-pulse, .orbit-node { position:absolute; inset:0; border-radius:50%; }
+    .orbit-ring { border:1px solid rgba(82,214,255,.10); box-shadow: inset 0 0 60px rgba(0,194,255,.03); animation: spin 40s linear infinite; }
+    .orbit-ring.r2 { inset: 12%; animation-direction: reverse; animation-duration: 26s; }
+    .orbit-ring.r3 { inset: 24%; animation-duration: 18s; }
+    .orbit-core {
+      inset: 38%;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.85), rgba(255,255,255,.10) 20%, rgba(0,194,255,.16) 45%, rgba(0,194,255,0) 78%);
+      box-shadow: 0 0 56px rgba(0,194,255,.16); animation: pulse 4.4s ease-in-out infinite;
+    }
+    .orbit-pulse { inset: 30%; border: 1px solid rgba(82,214,255,.14); animation: pulse-ring 4.8s ease-out infinite; }
+    .orbit-node { width: 10px; height: 10px; inset:auto; background: linear-gradient(180deg,var(--cyan-2),var(--cyan)); box-shadow:0 0 12px rgba(0,194,255,.4); }
+    .orbit-node.n1 { top: 14%; left: 50%; } .orbit-node.n2 { top: 33%; right: 10%; } .orbit-node.n3 { bottom: 12%; right: 22%; } .orbit-node.n4 { bottom: 22%; left: 8%; } .orbit-node.n5 { top: 42%; left: 7%; }
+
+    .screen-stack { position: relative; width: min(92%, 780px); aspect-ratio: 1.08; z-index: 4; }
+    .floating-card {
+      position: absolute; border-radius: 28px; overflow: hidden; transform-style: preserve-3d;
+      background: linear-gradient(180deg, rgba(10,22,34,.88), rgba(7,17,28,.82)); border:1px solid rgba(120,180,255,.14); box-shadow: var(--shadow);
+    }
+    .floating-card img { width:100%; height:100%; object-fit:cover; object-position: top center; }
+    .card-main { width:62%; height:72%; top:14%; left:20%; transform:rotate(-4deg); animation: drift 8s ease-in-out infinite; }
+    .card-secondary { width:34%; height:28%; top:10%; left:2%; transform:rotate(-8deg); animation: drift 7s ease-in-out infinite reverse; }
+    .card-tertiary { width:32%; height:26%; top:58%; right:2%; transform:rotate(8deg); animation: drift 6.8s ease-in-out infinite; }
+    .card-quaternary { width:38%; height:30%; bottom:2%; left:7%; transform:rotate(4deg); animation: drift 8.2s ease-in-out infinite reverse; }
+    .floating-label {
+      position:absolute; z-index:5; padding:12px 16px; border-radius:999px; font-size:.84rem; color: var(--muted);
+      background: rgba(8,18,32,.70); border:1px solid rgba(82,214,255,.14); box-shadow: var(--shadow-soft); backdrop-filter: blur(14px);
+    }
+    .label-1 { top:8%; right:14%; } .label-2 { bottom:28%; left:-2%; } .label-3 { bottom:8%; right:12%; }
+
+    .intro-block { display:grid; gap:18px; align-items:start; margin-bottom:42px; position:relative; z-index:6; }
+    .eyebrow {
+      display:inline-flex; align-items:center; gap:10px; padding:8px 14px; border-radius:999px; border:1px solid var(--line);
+      background: rgba(8,18,32,.56); color: var(--cyan-2); font-size:.76rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    }
+    .eyebrow::before { content:""; width:8px; height:8px; border-radius:50%; background: linear-gradient(180deg,var(--cyan-2),var(--cyan)); box-shadow:0 0 14px rgba(0,194,255,.5); }
+    .intro-block h2, .section-title { margin: 12px 0 12px; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.05; letter-spacing: -.035em; max-width: 14ch; }
+    .intro-block p, .lede-2 { color: var(--muted); line-height: 1.75; font-size: clamp(1rem,1.2vw,1.12rem); max-width: 72ch; margin:0; }
+
+    .glass-grid { display:grid; grid-template-columns: repeat(6, 1fr); gap:18px; position:relative; z-index:6; }
+    .glass-card {
+      padding: 24px; border-radius: 24px; position:relative; overflow:hidden; transition: .3s var(--ease);
+    }
+    .glass-card:hover { transform: translateY(-4px); border-color: rgba(82,214,255,.20); }
+    .glass-card::before { content:""; position:absolute; inset:0; background: radial-gradient(circle at top right, rgba(82,214,255,.08), transparent 35%); pointer-events:none; }
+    .glass-card h4 { margin: 16px 0 10px; font-size: 1.12rem; }
+    .glass-card p { margin: 0; color: var(--muted); line-height: 1.68; font-size: .98rem; }
+    .mini-icon { width:42px; height:42px; border-radius:14px; display:grid; place-items:center; color: var(--cyan-2); border:1px solid rgba(82,214,255,.16); background: linear-gradient(180deg, rgba(15,36,58,.9), rgba(8,18,32,.85)); }
+    .mini-ui { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+    .mini-tag, .mini-chip, .focus-tag, .device-tag { display:inline-flex; align-items:center; gap:8px; padding:9px 12px; border-radius:999px; color: var(--muted); font-size:.82rem; border:1px solid rgba(120,180,255,.12); background: rgba(255,255,255,.02); }
+    .span-2 { grid-column: span 2; } .span-3 { grid-column: span 3; }
+
+    .story-layout, .compare-wrap, .constellation-wrap, .gallery-panel, .trust-layout, .ai-layout, .device-layout, .future-strip, .final-cta, .footer-grid, .scroll-corridor {
+      display:grid; gap:24px;
+    }
+    .story-layout { grid-template-columns: .95fr 1.05fr; }
+    .story-menu { display:grid; gap:14px; align-content:start; position:relative; z-index:6; }
+    .story-tab {
+      text-align:left; padding:18px 20px; border-radius:22px; color: var(--muted); cursor:pointer; transition:.3s var(--ease);
+    }
+    .story-tab small { display:block; color:var(--cyan-2); opacity:.84; font-size:.74rem; text-transform:uppercase; letter-spacing:.14em; margin-bottom:8px; }
+    .story-tab strong { display:block; font-size:1.08rem; margin-bottom:8px; color: var(--text); }
+    .story-tab span { display:block; line-height:1.65; font-size:.94rem; }
+    .story-tab.active, .story-tab:hover { transform: translateY(-3px); border-color: rgba(82,214,255,.24); }
+
+    .story-stage { position:relative; min-height: 720px; padding: 24px; border-radius: 32px; overflow:hidden; z-index:6; }
+    .stage-frame {
+      position:absolute; inset:24px; border-radius:26px; overflow:hidden; opacity:0; transform:translateY(18px) scale(.985); transition:.45s var(--ease);
+      display:grid; grid-template-rows: auto 1fr auto; background: linear-gradient(180deg, rgba(8,18,32,.82), rgba(6,14,24,.76));
+      border: 1px solid rgba(120,180,255,.08);
+    }
+    .stage-frame.active { opacity:1; transform:translateY(0) scale(1); }
+    .stage-head, .stage-foot { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 18px; background: linear-gradient(180deg, rgba(15,25,38,.8), rgba(10,18,30,.56)); }
+    .stage-screen { position:relative; overflow:hidden; }
+    .stage-screen img { width:100%; height:100%; object-fit:cover; object-position: top center; }
+    .stage-copy {
+      display:grid; gap:12px; align-content:start; position:absolute; left:24px; bottom:24px; max-width:min(60%, 420px); padding:20px; border-radius:22px;
+      background: rgba(6, 14, 24, 0.78); border:1px solid rgba(120,180,255,.12); box-shadow: var(--shadow-soft);
+    }
+    .stage-copy h4 { margin:0; font-size: 1.18rem; }
+    .stage-copy p, .stage-meta, .compare-card p, .audience-card p, .trust-points li, .ai-copy p, .device-copy p, .future-copy p, .footer-copy p { color: var(--muted); line-height: 1.72; }
+
+    .compare-wrap { grid-template-columns: 1fr 1fr; z-index:6; position:relative; }
+    .compare-card { padding: 30px; border-radius: 28px; }
+    .compare-card.teamstar { border-color: rgba(82,214,255,.22); box-shadow: var(--shadow); }
+    .compare-card h4 { margin:16px 0 18px; font-size:1.4rem; }
+    .compare-list { display:grid; gap:12px; margin:22px 0 0; }
+    .compare-item { padding:14px 16px; border-radius:18px; background: rgba(255,255,255,.02); border:1px solid rgba(120,180,255,.10); color: var(--muted); }
+
+    .scroll-corridor { grid-template-columns: minmax(360px, .88fr) minmax(320px, .82fr); align-items:start; }
+    .corridor-visual {
+      position: sticky; top: calc(var(--nav-h) + 26px); min-height: 760px; border-radius:32px; overflow:hidden; isolation:isolate; z-index:6;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(82,214,255,.10), transparent 18%),
+        radial-gradient(circle at 50% 82%, rgba(23,156,255,.06), transparent 24%),
+        linear-gradient(180deg, rgba(7,17,28,.80), rgba(4,10,18,.88));
+    }
+    .corridor-grid {
+      position:absolute; inset:0; background-image: linear-gradient(rgba(82,214,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(82,214,255,0.025) 1px, transparent 1px); background-size:60px 60px; mask-image: radial-gradient(circle at center, black 55%, transparent 92%); opacity:.28;
+    }
+    .corridor-center { position:absolute; inset:6% 0 10%; display:grid; place-items:center; z-index:2; }
+    .corridor-center img { width:min(78%, 760px); height:auto; object-fit:contain; opacity:.88; filter: drop-shadow(0 18px 40px rgba(0,0,0,.24)); }
+    .corridor-line { position:absolute; left:50%; top:10%; bottom:14%; width:1px; background: linear-gradient(180deg, rgba(82,214,255,.05), rgba(82,214,255,.22), rgba(82,214,255,.05)); transform: translateX(-50%); }
+    .corridor-steps { display:grid; gap:20px; perspective:1300px; z-index:6; position:relative; }
+    .corridor-card {
+      padding:24px; border-radius:24px; min-height:230px; display:grid; align-content:start; gap:12px;
+      opacity:.38; transform: translateY(42px) scale(.96) rotateY(10deg); transition:.85s var(--ease);
+    }
+    .corridor-card.in-view, .corridor-card.active { opacity:1; transform: translateY(0) scale(1) rotateY(0deg); border-color: rgba(82,214,255,.20); }
+    .corridor-card .step-num { color: var(--cyan-2); font-size:.78rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+    .corridor-card h4 { margin:0; font-size: clamp(1.2rem, 2vw, 1.55rem); }
+    .corridor-card p { margin:0; color: var(--muted); line-height: 1.72; }
+    .corridor-chiprow { display:flex; flex-wrap:wrap; gap:10px; }
+    .corridor-chip { padding:9px 12px; border-radius:999px; border:1px solid rgba(120,180,255,.10); background: rgba(255,255,255,.02); color: var(--muted); font-size:.82rem; }
+
+    .constellation-wrap { grid-template-columns: 1.04fr .96fr; z-index:6; position:relative; }
+    .constellation {
+      min-height:620px; border-radius:32px; position:relative; overflow:hidden;
+      background: radial-gradient(circle at 30% 30%, rgba(0,194,255,.10), transparent 22%), radial-gradient(circle at 70% 68%, rgba(109,92,255,.08), transparent 20%), linear-gradient(180deg, rgba(8,18,32,.65), rgba(4,10,18,.78));
+    }
+    .constellation svg { position:absolute; inset:0; width:100%; height:100%; }
+    .node {
+      position:absolute; width:128px; padding:14px 14px 12px; border-radius:20px; background: rgba(6,14,24,.78); border:1px solid rgba(120,180,255,.12); box-shadow: var(--shadow-soft); cursor:pointer; transition:.3s var(--ease);
+    }
+    .node:hover, .node.active { transform: translateY(-4px) scale(1.02); border-color: rgba(82,214,255,.24); }
+    .node strong { display:block; font-size:.94rem; line-height:1.3; margin-bottom:6px; }
+    .node span { display:block; color: var(--muted-2); font-size:.76rem; line-height:1.45; }
+    .node::before { content:""; width:10px; height:10px; display:block; border-radius:50%; margin-bottom:10px; background: linear-gradient(180deg,var(--cyan-2),var(--cyan)); box-shadow: 0 0 16px rgba(0,194,255,.5); }
+    .constellation-info { padding:34px; min-height:620px; border-radius:32px; display:grid; align-content:start; gap:18px; }
+    .constellation-info h4, .trust-copy h4, .ai-copy h4, .device-copy h4, .future-copy h4, .final-copy h4 { margin:0; font-size: clamp(1.8rem, 3vw, 2.75rem); line-height:1.06; letter-spacing:-.03em; }
+    .focus-title { font-size:1.24rem; color: var(--cyan-2); }
+
+    .gallery { display:grid; gap:24px; z-index:6; position:relative; }
+    .gallery-nav { display:flex; flex-wrap:wrap; gap:12px; }
+    .gallery-btn {
+      padding:12px 18px; border-radius:999px; border:1px solid var(--line); background: rgba(8,18,32,.56); color: var(--muted); cursor:pointer; transition:.25s var(--ease);
+    }
+    .gallery-btn.active, .gallery-btn:hover { color: var(--text); background: linear-gradient(180deg, rgba(12,30,48,.95), rgba(8,18,32,.72)); border-color: rgba(82,214,255,.24); }
+    .gallery-panel { display:none; grid-template-columns: 1.02fr .98fr; align-items: stretch; }
+    .gallery-panel.active { display:grid; }
+    .gallery-screen, .gallery-copy, .trust-layout, .audience-grid, .ai-layout, .device-layout, .future-strip, .final-cta, .footer-grid { border-radius: 28px; }
+    .gallery-screen { overflow:hidden; min-height:620px; }
+    .gallery-screen img { width:100%; height:100%; object-fit:cover; object-position: top center; }
+    .gallery-copy { padding:32px; display:grid; align-content:start; gap:18px; }
+    .gallery-copy h4, .audience-card h4 { margin:0; font-size:1.5rem; }
+    .gallery-copy ul, .trust-points, .audience-list, .final-list { margin:0; padding-left:18px; display:grid; gap:10px; color:var(--muted); line-height:1.72; }
+
+    .trust-layout { grid-template-columns: 1fr 1fr; overflow:hidden; z-index:6; position:relative; }
+    .trust-copy, .trust-visual, .ai-copy, .ai-visual, .device-copy, .device-visual, .future-copy, .future-visual, .final-copy, .final-form { padding:34px; }
+    .trust-visual {
+      border-left:1px solid rgba(120,180,255,.08); position:relative; min-height:520px;
+      background: radial-gradient(circle at 72% 22%, rgba(82,214,255,.12), transparent 20%), linear-gradient(180deg, rgba(10,22,34,.5), rgba(4,10,18,.2));
+    }
+    .trust-panel { position:absolute; border-radius:22px; border:1px solid rgba(120,180,255,.12); background: rgba(5,13,22,.74); box-shadow:var(--shadow-soft); padding:18px; width: clamp(210px, 42%, 300px); }
+    .trust-panel strong { display:block; margin-bottom:10px; }
+    .trust-panel span, .trust-panel li { color: var(--muted); font-size:.92rem; line-height:1.58; }
+    .trust-panel ul { margin:0; padding-left:18px; display:grid; gap:8px; }
+    .tp-1 { top: 9%; left: 10%; } .tp-2 { top:34%; right:8%; } .tp-3 { bottom:10%; left:16%; }
+
+    .audience-grid { padding:12px; display:grid; grid-template-columns: repeat(3,1fr); gap:12px; z-index:6; position:relative; }
+    .audience-card { padding:22px; border-radius:22px; border:1px solid rgba(120,180,255,.10); background: rgba(255,255,255,.02); }
+    .audience-card .micro { color: var(--cyan-2); font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.14em; margin-bottom:10px; }
+
+    .ai-layout { grid-template-columns: .96fr 1.04fr; overflow:hidden; z-index:6; position:relative; }
+    .ai-visual {
+      border-left:1px solid rgba(120,180,255,.08); display:grid; gap:16px; align-content:center;
+      background: radial-gradient(circle at 20% 20%, rgba(0,194,255,.10), transparent 24%);
+    }
+    .ai-panel { border-radius:22px; border:1px solid rgba(120,180,255,.12); background: rgba(5,13,22,.74); box-shadow: var(--shadow-soft); overflow:hidden; }
+    .ai-panel-head, .ai-panel-foot { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 18px; border-bottom:1px solid rgba(120,180,255,.08); }
+    .ai-panel-foot { border-top:1px solid rgba(120,180,255,.08); border-bottom:0; }
+    .ai-thread { padding:18px; display:grid; gap:14px; }
+    .chat-bubble { max-width:78%; padding:14px 16px; border-radius:18px; background: rgba(255,255,255,.03); border:1px solid rgba(120,180,255,.08); color:var(--muted); line-height:1.65; }
+    .chat-bubble.user { margin-left:auto; background: linear-gradient(180deg, rgba(8,95,170,.82), rgba(7,62,117,.82)); color:white; border-color: rgba(82,214,255,.18); }
+
+    .device-layout { grid-template-columns: .9fr 1.1fr; overflow:hidden; z-index:6; position:relative; }
+    .device-visual {
+      border-left:1px solid rgba(120,180,255,.08); min-height:560px; position:relative; display:grid; place-items:center;
+      background: radial-gradient(circle at 20% 20%, rgba(0,194,255,.10), transparent 20%), radial-gradient(circle at 80% 80%, rgba(109,92,255,.10), transparent 18%);
+    }
+    .device-stack { position:relative; width:min(100%,700px); height:100%; min-height:500px; }
+    .device-frame { position:absolute; border-radius:34px; border:1px solid rgba(120,180,255,.14); background: rgba(6,14,24,.84); box-shadow: var(--shadow); overflow:hidden; }
+    .device-frame img { width:100%; height:100%; object-fit:cover; object-position: top center; }
+    .desktop-frame { width:66%; height:72%; left:17%; top:13%; }
+    .tablet-frame { width:34%; height:54%; left:3%; bottom:10%; border-radius:28px; }
+    .phone-frame { width:21%; height:52%; right:5%; bottom:12%; border-radius:28px; }
+
+    .future-strip { grid-template-columns: 1fr 1fr; overflow:hidden; z-index:6; position:relative; }
+    .future-visual {
+      border-left:1px solid rgba(120,180,255,.08); display:grid; place-items:center; min-height:360px; position:relative;
+      background: radial-gradient(circle at center, rgba(0,194,255,.08), transparent 28%);
+    }
+    .signal-box { width:min(100%,420px); aspect-ratio:1; position:relative; border-radius:50%; border:1px solid rgba(120,180,255,.10); box-shadow: inset 0 0 60px rgba(0,194,255,.04); }
+    .signal-box::before, .signal-box::after { content:""; position:absolute; border-radius:50%; border:1px solid rgba(82,214,255,.12); inset:14%; animation: spin 20s linear infinite; }
+    .signal-box::after { inset:30%; animation-direction: reverse; animation-duration:12s; }
+    .signal-core { position:absolute; inset:42%; border-radius:50%; background: radial-gradient(circle at 35% 35%, white 0%, rgba(255,255,255,.2) 28%, rgba(0,194,255,.25) 60%, transparent 80%); box-shadow: 0 0 40px rgba(0,194,255,.28); }
+
+    .final-cta { grid-template-columns: 1.05fr .95fr; overflow:hidden; z-index:6; position:relative; }
+    .final-form { border-left:1px solid rgba(120,180,255,.08); display:grid; align-content:center; gap:14px; }
+    .form-shell { display:grid; gap:12px; }
+    .input { width:100%; border-radius:18px; border:1px solid rgba(120,180,255,.12); background: rgba(255,255,255,.03); color: var(--text); padding:16px 18px; outline:none; }
+    .input:focus { border-color: rgba(82,214,255,.34); box-shadow: 0 0 0 4px rgba(0,194,255,.08); }
+
+    .footer { padding: 48px 0 64px; }
+    .footer-grid { padding:28px; grid-template-columns: 1.05fr .95fr; align-items:center; z-index:6; position:relative; }
+    .footer-links { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:12px; }
+    .footer-link { padding:10px 14px; border-radius:999px; border:1px solid rgba(120,180,255,.10); color: var(--muted); background: rgba(255,255,255,.02); }
+
+    .reveal { opacity:0; transform: translateY(30px) scale(.985); filter: blur(3px); transition: opacity .85s var(--ease), transform .85s var(--ease), filter .85s var(--ease); }
+    .reveal.in-view { opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
+
+    @keyframes pulse { 0%,100%{ transform:scale(1); opacity:.95;} 50%{ transform:scale(1.08); opacity:.78;} }
+    @keyframes pulse-ring { 0%{ transform:scale(.72); opacity:.8;} 100%{ transform:scale(1.28); opacity:0;} }
+    @keyframes spin { from{ transform:translate(-50%,-50%) rotate(0deg);} to{ transform:translate(-50%,-50%) rotate(360deg);} }
+    @keyframes spin-rev { from{ transform:translate(-50%,-50%) rotate(0deg);} to{ transform:translate(-50%,-50%) rotate(-360deg);} }
+    @keyframes drift { 0%,100%{ transform: translateY(0) rotate(var(--rot, 0deg)); } 50%{ transform: translateY(-10px) rotate(var(--rot, 0deg)); } }
+    .card-main { --rot:-4deg; } .card-secondary { --rot:-8deg; } .card-tertiary { --rot:8deg; } .card-quaternary { --rot:4deg; }
+
+    @media (max-width: 1200px) {
+      .hero-wrap, .story-layout, .compare-wrap, .constellation-wrap, .gallery-panel, .trust-layout, .ai-layout, .device-layout, .future-strip, .final-cta, .footer-grid, .scroll-corridor { grid-template-columns: 1fr; }
+      .glass-grid { grid-template-columns: repeat(2, 1fr); }
+      .span-2, .span-3 { grid-column: span 1; }
+      .trust-visual, .ai-visual, .device-visual, .future-visual, .final-form { border-left:0; border-top:1px solid rgba(120,180,255,.08); }
+      .corridor-visual { position:relative; top:auto; min-height:580px; }
+      .story-stage { min-height:620px; }
+      .gallery-screen { min-height:520px; }
+    }
+
+    @media (max-width: 920px) {
+      .nav, .topbar-actions .ghost-btn, .topbar-actions .pill-btn.primary { display:none; }
+      .menu-btn { display:inline-flex; }
+      .topbar-inner { grid-template-columns: minmax(0, 1fr) auto; }
+      .hero { min-height:auto; padding-top:24px; }
+      .hero-content h1 { max-width: 100%; }
+      .hero-stage { min-height: 520px; }
+      .screen-stack { aspect-ratio: .94; width: 100%; }
+      .card-main { width: 70%; height: 70%; top: 17%; left: 17%; }
+      .card-secondary { width: 38%; height: 26%; }
+      .card-tertiary { width: 37%; height: 25%; }
+      .card-quaternary { width: 44%; height: 28%; }
+      .stage-copy { max-width: calc(100% - 48px); }
+      .audience-grid { grid-template-columns: 1fr; }
+      .glass-grid { grid-template-columns: 1fr; }
+      .device-visual { min-height: 500px; }
+      .desktop-frame { width: 72%; left: 14%; top: 12%; }
+      .tablet-frame { width: 38%; left: 2%; }
+      .phone-frame { width: 25%; right: 2%; }
+      .dna-spine { opacity: .32; }
+    }
+
+    @media (max-width: 640px) {
+      :root { --nav-h: 72px; }
+      .container { width: min(calc(100% - 20px), var(--max)); }
+      .section { padding: 80px 0; }
+      .brand-copy span { display:none; }
+      .hero-content h1 { font-size: clamp(2.5rem, 11vw, 4.2rem); }
+      .hero-actions, .hero-metrics, .gallery-nav, .footer-links { gap: 10px; }
+      .pill-btn, .ghost-btn, .gallery-btn, .story-tab, .footer-link, .focus-tag, .device-tag { width: 100%; justify-content: center; }
+      .metric { flex: 1 1 100%; }
+      .hero-stage { min-height: 430px; }
+      .floating-label { display:none; }
+      .stage-frame { inset: 12px; }
+      .story-stage { padding: 12px; min-height: 520px; }
+      .stage-copy { left: 12px; right: 12px; bottom: 12px; max-width: none; }
+      .gallery-screen { min-height: 360px; }
+      .trust-copy, .trust-visual, .ai-copy, .ai-visual, .device-copy, .device-visual, .future-copy, .future-visual, .final-copy, .final-form, .gallery-copy, .constellation-info { padding: 22px; }
+      .trust-panel { width: calc(100% - 32px); left: 16px !important; right:16px !important; }
+      .tp-1 { top: 8%; } .tp-2 { top: 36%; } .tp-3 { bottom: 10%; }
+      .device-stack { min-height: 390px; }
+      .desktop-frame { width: 78%; height: 58%; left: 11%; top: 8%; }
+      .tablet-frame { width: 46%; height: 40%; left: 2%; bottom: 5%; }
+      .phone-frame { width: 31%; height: 44%; right: 2%; bottom: 5%; }
+      .footer-grid { padding: 22px; }
+      .dna-wrap { width: 150px; height: 72vh; }
+    }
+  
+    #scene,
+    #particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    #scene { z-index: 1; opacity: 0.78; }
+    #particles { z-index: 2; opacity: 0.56; }
+
+    .vignette,
+    .center-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .vignette {
+      background:
+        radial-gradient(circle at center, transparent 42%, rgba(1, 5, 12, 0.10) 58%, rgba(1, 5, 12, 0.50) 100%);
+    }
+
+    .center-glow {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(50, 168, 255, 0.040), transparent 26%),
+        radial-gradient(ellipse at 50% 34%, rgba(49, 146, 255, 0.034), transparent 22%),
+        radial-gradient(ellipse at 50% 72%, rgba(39, 97, 255, 0.030), transparent 22%);
+      filter: blur(14px);
+    }
+
+    .site-shell {
+      position: relative;
+      z-index: 4;
+      isolation: isolate;
+    }
+
+    .header { z-index: 60; }
+
+    @media (prefers-reduced-motion: reduce) {
+      #scene,
+      #particles,
+      .vignette,
+      .center-glow { display: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="center-glow" aria-hidden="true"></div>
+
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="center-glow" aria-hidden="true"></div>
+
+  <div class="shell">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="#top" aria-label="Teamstar home">
+          <span class="brand-mark"><img src="teamstarlogo.png" alt=""></span>
+          <span class="brand-copy">
+            <strong>TEAMSTAR</strong>
+            <span>Future-ready collaboration infrastructure</span>
+          </span>
+        </a>
+
+        <nav class="nav" aria-label="Primary navigation">
+          <a class="active" href="#platform">Platform</a>
+          <a href="#difference">Why Teamstar</a>
+          <a href="#experience">Experience</a>
+          <a href="#trust">Trust Layer</a>
+          <a href="#ai">AI</a>
+          <a href="#waitlist">Investors</a>
+        </nav>
+
+        <div class="topbar-actions">
+          <a class="ghost-btn" href="#experience">Watch Experience</a>
+          <a class="pill-btn primary" href="#waitlist">Request Early Access</a>
+          <button class="menu-btn ghost-btn" id="menuBtn" aria-expanded="false" aria-label="Open mobile menu">☰</button>
+        </div>
+      </div>
+
+      <div class="mobile-panel" id="mobilePanel">
+        <a class="ghost-btn" href="#platform">Platform</a>
+        <a class="ghost-btn" href="#difference">Why Teamstar</a>
+        <a class="ghost-btn" href="#experience">Experience</a>
+        <a class="ghost-btn" href="#trust">Trust Layer</a>
+        <a class="ghost-btn" href="#ai">AI</a>
+        <a class="pill-btn primary" href="#waitlist">Request Early Access</a>
+      </div>
+    </header>
+
+    <div class="floating-layer" aria-hidden="true">
+      <div class="floating-pill" data-depth="0.12" data-range="0.00,0.26" style="top: 18%; left: 65%;">Verified identity + network visibility</div>
+      <div class="floating-pill" data-depth="0.10" data-range="0.26,0.58" style="top: 62%; left: 69%;">AI workspace, scheduling, and collaboration</div>
+      <div class="floating-pill" data-depth="0.08" data-range="0.58,0.96" style="top: 74%; left: 26%;">Structured signal across every surface</div>
+    </div>
+
+    <main id="top">
+      <section class="section hero">
+        <div class="container hero-wrap">
+          <div class="hero-content reveal in-view">
+            <div class="hero-badge">A living collaboration operating system</div>
+            <h1>Where verified people, startups, ideas, and execution converge.</h1>
+            <p class="lede">
+              Teamstar is a future-ready platform for meaningful networking, intelligent collaboration, structured discovery, startup activation, messaging, scheduling, and AI-assisted momentum. It turns fragmented interactions into a system that can actually move work forward.
+            </p>
+            <div class="hero-actions">
+              <a class="pill-btn primary" href="#waitlist">Request Early Access</a>
+              <a class="ghost-btn" href="#experience">Watch Platform Experience</a>
+              <a class="ghost-btn" href="#architecture">View Product Architecture</a>
+            </div>
+            <div class="hero-metrics" aria-label="Key Teamstar outcomes">
+              <div class="metric"><strong>Multi-context</strong><span>Social, professional, operational, collaborative, strategic</span></div>
+              <div class="metric"><strong>High trust</strong><span>Identity-aware structure, visibility control, cleaner signal</span></div>
+              <div class="metric"><strong>AI embedded</strong><span>Practical assistance inside real platform workflows</span></div>
+            </div>
+          </div>
+
+          <div class="hero-stage reveal in-view">
+            <div class="hero-orbit" aria-hidden="true">
+              <div class="orbit-ring"></div><div class="orbit-ring r2"></div><div class="orbit-ring r3"></div><div class="orbit-pulse"></div><div class="orbit-core"></div>
+              <div class="orbit-node n1"></div><div class="orbit-node n2"></div><div class="orbit-node n3"></div><div class="orbit-node n4"></div><div class="orbit-node n5"></div>
+            </div>
+            <div class="screen-stack">
+              <div class="floating-card card-main"><img src="feed-screen.png" alt="Teamstar feed experience screenshot"></div>
+              <div class="floating-card card-secondary"><img src="chat.png" alt="Teamstar messaging screen screenshot"></div>
+              <div class="floating-card card-tertiary"><img src="calendar-screen.png" alt="Teamstar calendar screen screenshot"></div>
+              <div class="floating-card card-quaternary"><img src="profile-page.png" alt="Teamstar profile screen screenshot"></div>
+              <div class="floating-label label-1">Verified identity + network visibility</div>
+              <div class="floating-label label-2">AI workspace, scheduling, and collaboration</div>
+              <div class="floating-label label-3">Structured signal across every surface</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="platform">
+        <div class="container">
+          <div class="intro-block reveal">
+            <span class="eyebrow">What Teamstar actually is</span>
+            <h2>Not another noisy feed. A coordinated environment for serious interaction.</h2>
+            <p>
+              Teamstar combines networking, collaboration, messaging, scheduling, startup building, profile depth, AI assistance, and trust controls into one premium operating layer. It is designed so people can discover better, coordinate faster, and act with more clarity.
+            </p>
+          </div>
+
+          <div class="glass-grid reveal">
+            <article class="glass-card span-2">
+              <div class="mini-icon">◎</div>
+              <h4>Intelligent Networking</h4>
+              <p>Move beyond shallow follows and random reach. Teamstar uses structure, context, and profile depth to create more meaningful discovery and better-fit connections.</p>
+              <div class="mini-ui"><span class="mini-tag">Skills & expertise</span><span class="mini-tag">Network modes</span><span class="mini-tag">Better match quality</span></div>
+            </article>
+            <article class="glass-card span-2">
+              <div class="mini-icon">⌁</div>
+              <h4>Messaging & Collaboration</h4>
+              <p>Direct chat, group communication, docs, media, link context, and workspace coordination sit inside a cleaner interface built for execution, not distraction.</p>
+              <div class="mini-ui"><span class="mini-tag">Direct + groups</span><span class="mini-tag">Docs & media</span><span class="mini-tag">Action-ready flows</span></div>
+            </article>
+            <article class="glass-card span-2">
+              <div class="mini-icon">✦</div>
+              <h4>Startup & Business Activation</h4>
+              <p>Give founders and organizations a place to form, present, organize roles, expose capabilities, and turn interest into coordinated forward movement.</p>
+              <div class="mini-ui"><span class="mini-tag">Startup formation</span><span class="mini-tag">Business presence</span><span class="mini-tag">Role clarity</span></div>
+            </article>
+            <article class="glass-card span-3">
+              <div class="mini-icon">◴</div>
+              <h4>Events & Scheduling</h4>
+              <p>Calendar logic, event creation, invite flows, reminders, and coordination tools become part of the system instead of being bolted on as an afterthought.</p>
+              <div class="mini-ui"><span class="mini-tag">Calendar surfaces</span><span class="mini-tag">Create event flows</span><span class="mini-tag">Invite & reminder controls</span></div>
+            </article>
+            <article class="glass-card span-3">
+              <div class="mini-icon">⚡</div>
+              <h4>AI Workspace Assistance</h4>
+              <p>AI inside Teamstar is there to help people move faster inside real workflows: drafting, refining, onboarding, clarifying, and assisting within platform context.</p>
+              <div class="mini-ui"><span class="mini-tag">Context aware</span><span class="mini-tag">Prompt chips</span><span class="mini-tag">Useful, not gimmicky</span></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="experience">
+        <div class="container story-layout">
+          <div class="story-menu reveal">
+            <span class="eyebrow">Platform experience</span>
+            <h2 class="section-title">A system that reveals depth as you move through it.</h2>
+            <p class="lede-2">Each surface is designed to do a specific job well while remaining part of a broader collaboration fabric.</p>
+            <button class="story-tab active" data-story="0"><small>Surface 01</small><strong>Feed as signal, not clutter</strong><span>Content sits inside a cleaner command-surface UI with meaningful engagement states and workspace continuity.</span></button>
+            <button class="story-tab" data-story="1"><small>Surface 02</small><strong>Messaging built for action</strong><span>Conversation, files, links, media, and side-panel context live together without collapsing into a mess.</span></button>
+            <button class="story-tab" data-story="2"><small>Surface 03</small><strong>Profiles with real depth</strong><span>Capabilities, networking intent, biography, and directional context become visible and useful.</span></button>
+            <button class="story-tab" data-story="3"><small>Surface 04</small><strong>Scheduling that stays integrated</strong><span>Events, reminders, and calendar context connect back into relationships, work, and platform flow.</span></button>
+          </div>
+
+          <div class="story-stage reveal" aria-live="polite">
+            <article class="stage-frame active" data-story-panel="0">
+              <div class="stage-head"><span class="stage-title">Teamstar Feed</span><span class="stage-meta">Structured signal · Context-aware discovery</span></div>
+              <div class="stage-screen"><img src="feed-screen.png" alt="Teamstar feed screen"></div>
+              <div class="stage-copy"><h4>Designed for cleaner signal</h4><p>The feed is not treated like a dopamine sewer. Teamstar gives visibility, context, and structure to what people see so discovery actually gets better with use.</p></div>
+              <div class="stage-foot"><span class="stage-meta">Discovery · Trust · Collaboration</span><span class="mini-chip">Signal over clutter</span></div>
+            </article>
+            <article class="stage-frame" data-story-panel="1">
+              <div class="stage-head"><span class="stage-title">Teamstar Messaging</span><span class="stage-meta">Conversation with context</span></div>
+              <div class="stage-screen"><img src="chat.png" alt="Teamstar chat screen"></div>
+              <div class="stage-copy"><h4>Messaging built for action</h4><p>Conversation stays connected to people, files, links, and next actions. That is the difference between chat as noise and chat as coordinated work.</p></div>
+              <div class="stage-foot"><span class="stage-meta">Direct · Group · Workspace</span><span class="mini-chip">Action-ready flows</span></div>
+            </article>
+            <article class="stage-frame" data-story-panel="2">
+              <div class="stage-head"><span class="stage-title">Teamstar Profiles</span><span class="stage-meta">Depth, identity, and intent</span></div>
+              <div class="stage-screen"><img src="profile-page.png" alt="Teamstar profile page"></div>
+              <div class="stage-copy"><h4>Profiles with real depth</h4><p>Profiles are built to show capability, direction, networking intent, and context. That creates better matching and more productive conversations.</p></div>
+              <div class="stage-foot"><span class="stage-meta">Identity · Skills · Direction</span><span class="mini-chip">Useful visibility</span></div>
+            </article>
+            <article class="stage-frame" data-story-panel="3">
+              <div class="stage-head"><span class="stage-title">Teamstar Calendar</span><span class="stage-meta">Integrated scheduling layer</span></div>
+              <div class="stage-screen"><img src="calendar-screen.png" alt="Teamstar calendar screen"></div>
+              <div class="stage-copy"><h4>Scheduling that stays integrated</h4><p>Events, reminders, availability, and scheduling context sit inside the platform instead of being kicked out to disconnected tools.</p></div>
+              <div class="stage-foot"><span class="stage-meta">Calendar · Events · Coordination</span><span class="mini-chip">Always connected</span></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="difference">
+        <div class="container">
+          <div class="intro-block reveal">
+            <span class="eyebrow">Why Teamstar</span>
+            <h2>Most platforms optimise for activity. Teamstar optimises for useful forward movement.</h2>
+            <p>That difference matters. It changes what gets surfaced, how people discover each other, how trust is handled, and how ideas become coordinated action.</p>
+          </div>
+          <div class="compare-wrap reveal">
+            <article class="compare-card">
+              <span class="mini-chip">Typical platforms</span>
+              <h4>Fragmented, noisy, shallow</h4>
+              <p>People jump between disconnected surfaces, context leaks everywhere, and most interactions are too thin to be truly useful.</p>
+              <div class="compare-list">
+                <div class="compare-item">Shallow identity and weak trust signals</div>
+                <div class="compare-item">Messaging detached from work and scheduling</div>
+                <div class="compare-item">Discovery driven by noise, not fit</div>
+                <div class="compare-item">Startups and businesses forced into generic surfaces</div>
+              </div>
+            </article>
+            <article class="compare-card teamstar">
+              <span class="mini-chip">Teamstar model</span>
+              <h4>Structured, trusted, execution-ready</h4>
+              <p>The platform treats identity, collaboration, scheduling, startup activation, and AI as parts of one coordinated environment.</p>
+              <div class="compare-list">
+                <div class="compare-item">Identity-aware structure and visibility controls</div>
+                <div class="compare-item">Messaging, scheduling, and collaboration in one flow</div>
+                <div class="compare-item">Better-fit discovery through richer profile context</div>
+                <div class="compare-item">Built for individuals, startups, and organizations</div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="architecture">
+        <div class="container scroll-corridor">
+          <div class="corridor-visual reveal">
+            <div class="corridor-grid"></div>
+            <div class="corridor-line"></div>
+            <div class="corridor-center"><img src="create-event.png" alt="Teamstar create event screen"></div>
+          </div>
+          <div class="corridor-steps">
+            <article class="corridor-card reveal active"><div class="step-num">Step 01</div><h4>Signal enters a trust-aware system</h4><p>Identity, visibility, and role context shape how information appears and how people interact from the start.</p><div class="corridor-chiprow"><span class="corridor-chip">Verification</span><span class="corridor-chip">Visibility control</span><span class="corridor-chip">Cleaner discovery</span></div></article>
+            <article class="corridor-card reveal"><div class="step-num">Step 02</div><h4>Interaction becomes coordinated workflow</h4><p>Messaging, scheduling, files, collaboration, and AI support stay inside the same environment instead of scattering across tools.</p><div class="corridor-chiprow"><span class="corridor-chip">Messaging</span><span class="corridor-chip">Calendar</span><span class="corridor-chip">Workspace</span></div></article>
+            <article class="corridor-card reveal"><div class="step-num">Step 03</div><h4>Momentum compounds across the platform</h4><p>Startups, businesses, profiles, teams, and events all benefit from the same trust layer and structured context.</p><div class="corridor-chiprow"><span class="corridor-chip">Startup builder</span><span class="corridor-chip">Business pages</span><span class="corridor-chip">Events</span></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="solutions">
+        <div class="container gallery">
+          <div class="intro-block reveal">
+            <span class="eyebrow">Solutions</span>
+            <h2>One platform. Multiple operational surfaces.</h2>
+            <p>Different users need different entry points. Teamstar gives them without turning the product into a broken mess.</p>
+          </div>
+          <div class="gallery-nav reveal">
+            <button class="gallery-btn active" data-gallery="0">Networking</button>
+            <button class="gallery-btn" data-gallery="1">Collaboration</button>
+            <button class="gallery-btn" data-gallery="2">Scheduling</button>
+            <button class="gallery-btn" data-gallery="3">Profiles</button>
+          </div>
+          <div class="gallery-panel active reveal" data-gallery-panel="0">
+            <div class="gallery-screen"><img src="feed-screen.png" alt="Teamstar networking feed"></div>
+            <div class="gallery-copy"><span class="mini-chip">Networking</span><h4>Discovery with context, not random reach.</h4><p class="lede-2">Profiles, intent, skills, and trust cues make discovery feel more meaningful and less accidental.</p><ul><li>Richer matching logic</li><li>Identity-aware visibility</li><li>Better signal from profile depth</li></ul></div>
+          </div>
+          <div class="gallery-panel" data-gallery-panel="1">
+            <div class="gallery-screen"><img src="chat.png" alt="Teamstar collaboration messaging"></div>
+            <div class="gallery-copy"><span class="mini-chip">Collaboration</span><h4>Conversation with files, context, and next actions.</h4><p class="lede-2">Collaboration is treated like something that should move work forward, not just create more notifications.</p><ul><li>Direct and group messaging</li><li>Workspace side-context</li><li>Action-ready communication flows</li></ul></div>
+          </div>
+          <div class="gallery-panel" data-gallery-panel="2">
+            <div class="gallery-screen"><img src="calendar-screen.png" alt="Teamstar scheduling"></div>
+            <div class="gallery-copy"><span class="mini-chip">Scheduling</span><h4>Events and availability stay connected.</h4><p class="lede-2">Calendar surfaces, event creation, reminders, and coordination become native instead of bolted on.</p><ul><li>Integrated event creation</li><li>Calendar surfaces</li><li>Reminder and coordination logic</li></ul></div>
+          </div>
+          <div class="gallery-panel" data-gallery-panel="3">
+            <div class="gallery-screen"><img src="profile-page.png" alt="Teamstar profile system"></div>
+            <div class="gallery-copy"><span class="mini-chip">Profiles</span><h4>Profiles with genuine operational value.</h4><p class="lede-2">A stronger profile layer improves networking, fit, discovery, and collaboration quality across the product.</p><ul><li>Skills and expertise visibility</li><li>Networking intent and direction</li><li>Practical identity context</li></ul></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="system">
+        <div class="container constellation-wrap">
+          <div class="constellation reveal">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M16,20 L40,30 L52,18 L70,38 L82,24" fill="none" stroke="rgba(100,200,255,.18)" stroke-width="0.3"/><path d="M18,68 L34,54 L50,64 L70,50 L84,74" fill="none" stroke="rgba(100,200,255,.18)" stroke-width="0.3"/><path d="M40,30 L34,54 M52,18 L50,64 M70,38 L70,50" fill="none" stroke="rgba(100,200,255,.12)" stroke-width="0.28"/></svg>
+            <button class="node active" data-node="0" style="top:14%; left:12%;"><strong>Identity</strong><span>Verified visibility and trust cues</span></button>
+            <button class="node" data-node="1" style="top:18%; right:10%;"><strong>Networking</strong><span>Discovery with context</span></button>
+            <button class="node" data-node="2" style="top:44%; left:32%;"><strong>Messaging</strong><span>Conversation with action paths</span></button>
+            <button class="node" data-node="3" style="bottom:22%; left:10%;"><strong>Scheduling</strong><span>Integrated events and reminders</span></button>
+            <button class="node" data-node="4" style="bottom:14%; right:14%;"><strong>Startups</strong><span>Formation and momentum</span></button>
+          </div>
+          <div class="constellation-info reveal">
+            <span class="eyebrow">System map</span>
+            <h4>Every major surface is stronger because it sits inside the same operating fabric.</h4>
+            <div class="focus-title" id="nodeTitle">Identity makes trust visible.</div>
+            <p id="nodeText" class="lede-2">The trust layer helps shape networking, collaboration, visibility, and moderation logic across the entire platform.</p>
+            <div class="focus-tags"><span class="focus-tag">Verification</span><span class="focus-tag">Visibility</span><span class="focus-tag">Signal quality</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="trust">
+        <div class="container trust-layout reveal">
+          <div class="trust-copy">
+            <span class="eyebrow">Trust layer</span>
+            <h4>Trust is not a badge. It is infrastructure.</h4>
+            <p class="lede-2">Teamstar treats identity, visibility, moderation logic, and role-aware surfaces as system-level design. That creates cleaner signal and lowers noise.</p>
+            <ul class="trust-points">
+              <li>Identity-aware structure instead of blind posting surfaces</li>
+              <li>Visibility controls that help people navigate context better</li>
+              <li>Business, startup, and individual presence with stronger trust framing</li>
+              <li>A cleaner environment for more meaningful interaction</li>
+            </ul>
+          </div>
+          <div class="trust-visual">
+            <div class="trust-panel tp-1"><strong>Verified Identity</strong><span>More grounded interaction begins when visibility and authenticity are handled properly.</span></div>
+            <div class="trust-panel tp-2"><strong>Structured Presence</strong><ul><li>Individuals</li><li>Startups</li><li>Businesses</li></ul></div>
+            <div class="trust-panel tp-3"><strong>Cleaner Signal</strong><span>Lower noise, better fit, stronger context, and healthier discovery quality.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="audience">
+        <div class="container audience-grid reveal">
+          <article class="audience-card"><div class="micro">For individuals</div><h4>People building real capability.</h4><p>Useful networking, stronger context, and tools that make visibility more meaningful.</p><ul class="audience-list"><li>Profile depth</li><li>Better-fit discovery</li><li>Integrated scheduling and messaging</li></ul></article>
+          <article class="audience-card"><div class="micro">For startups</div><h4>Formation and traction in one place.</h4><p>Startup surfaces help founders build structure, define roles, activate pages, and turn attention into coordinated motion.</p><ul class="audience-list"><li>Startup formation</li><li>Role clarity</li><li>Operational momentum</li></ul></article>
+          <article class="audience-card"><div class="micro">For businesses</div><h4>A more credible collaboration surface.</h4><p>Organizations can present capability, route contacts, surface trust, and work more effectively with customers and partners.</p><ul class="audience-list"><li>Business presence</li><li>Customer contact flows</li><li>Trust-aware visibility</li></ul></article>
+        </div>
+      </section>
+
+      <section class="section" id="ai">
+        <div class="container ai-layout reveal">
+          <div class="ai-copy">
+            <span class="eyebrow">AI assistance</span>
+            <h4>AI should reduce friction inside real workflows.</h4>
+            <p class="lede-2">Teamstar’s AI layer is there to help people draft, refine, summarise, compare, clarify, and move faster within platform context.</p>
+            <div class="quick-pills"><span class="mini-chip">Startup builder</span><span class="mini-chip">Profile drafting</span><span class="mini-chip">Comparison</span><span class="mini-chip">Summaries</span></div>
+          </div>
+          <div class="ai-visual">
+            <div class="ai-panel">
+              <div class="ai-panel-head"><span>Teamstar AI</span><span class="mini-chip">Context active</span></div>
+              <div class="ai-thread">
+                <div class="chat-bubble user">Draft a better startup overview from my mission and problem statement.</div>
+                <div class="chat-bubble">Done. I’ve tightened the positioning, clarified the value proposition, and translated it into language that reads well for both users and investors.</div>
+                <div class="chat-bubble user">Summarise the key differences between this profile and the best-fit roles.</div>
+                <div class="chat-bubble">Done. I’ve mapped expertise, networking intent, and role fit into a cleaner comparison so next actions are obvious.</div>
+              </div>
+              <div class="ai-panel-foot"><span>Create, refine, compare, clarify</span><span class="mini-chip">Embedded assistance</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="devices">
+        <div class="container device-layout reveal">
+          <div class="device-copy">
+            <span class="eyebrow">Device discipline</span>
+            <h4>Designed to feel coherent across surfaces.</h4>
+            <p class="lede-2">The experience is not meant to collapse into chaos when it moves between desktop, tablet, and mobile. Teamstar keeps the same system language across surfaces.</p>
+            <div class="focus-tags"><span class="device-tag">Desktop</span><span class="device-tag">Tablet</span><span class="device-tag">Mobile</span></div>
+          </div>
+          <div class="device-visual">
+            <div class="device-stack">
+              <div class="device-frame desktop-frame"><img src="feed-screen.png" alt="Desktop Teamstar screen"></div>
+              <div class="device-frame tablet-frame"><img src="calendar-screen.png" alt="Tablet Teamstar screen"></div>
+              <div class="device-frame phone-frame"><img src="chat.png" alt="Phone Teamstar screen"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="future">
+        <div class="container future-strip reveal">
+          <div class="future-copy">
+            <span class="eyebrow">Future direction</span>
+            <h4>Teamstar is being built as infrastructure, not just a product skin.</h4>
+            <p>The platform is designed to support networking, trust, collaboration, startup activation, business presence, scheduling, and AI inside one evolving operating system.</p>
+            <ul class="final-list"><li>Trust-aware core architecture</li><li>Room for richer discovery and intelligence layers</li><li>A product direction that can grow without fragmenting</li></ul>
+          </div>
+          <div class="future-visual"><div class="signal-box"><div class="signal-core"></div></div></div>
+        </div>
+      </section>
+
+      <section class="section" id="waitlist">
+        <div class="container final-cta reveal">
+          <div class="final-copy">
+            <span class="eyebrow">Request early access</span>
+            <h4>For people who want a better collaboration environment, not another noisy platform.</h4>
+            <p class="lede-2">Join the early list to track launch progress, investor positioning, and the next evolution of the Teamstar operating environment.</p>
+            <ul class="final-list"><li>Early product visibility</li><li>Launch updates</li><li>Investor and strategic access options</li></ul>
+          </div>
+          <div class="final-form">
+            <div class="form-shell">
+              <input class="input" type="text" placeholder="Your name">
+              <input class="input" type="email" placeholder="Your email">
+              <input class="input" type="text" placeholder="Role / company / interest">
+              <a class="pill-btn primary" href="#">Request Early Access</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-grid reveal">
+        <div class="footer-copy">
+          <strong>TEAMSTAR</strong>
+          <p>Future-ready collaboration infrastructure for identity, networking, messaging, scheduling, startup activation, and AI-assisted momentum.</p>
+        </div>
+        <div class="footer-links"><a class="footer-link" href="#platform">Platform</a><a class="footer-link" href="#experience">Experience</a><a class="footer-link" href="#trust">Trust Layer</a><a class="footer-link" href="#waitlist">Early Access</a></div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+    const canvas = document.getElementById('scene');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x020814, 0.04);
+
+    const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0.25, 12);
+
+    const root = new THREE.Group();
+    scene.add(root);
+
+    const haloGroup = new THREE.Group();
+    root.add(haloGroup);
+
+    const helixGroup = new THREE.Group();
+    root.add(helixGroup);
+
+    const materials = {
+      nodeA: new THREE.MeshPhysicalMaterial({
+        color: 0x56c8ff,
+        emissive: 0x1ea6ff,
+        emissiveIntensity: 0.82,
+        roughness: 0.12,
+        metalness: 0.08,
+        transparent: true,
+        opacity: 0.58,
+        transmission: 0.03,
+        thickness: 0.5,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      }),
+      nodeB: new THREE.MeshPhysicalMaterial({
+        color: 0xb9f1ff,
+        emissive: 0x5dd4ff,
+        emissiveIntensity: 0.52,
+        roughness: 0.1,
+        metalness: 0.02,
+        transparent: true,
+        opacity: 0.42,
+        transmission: 0.03,
+        thickness: 0.5,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      }),
+      rung: new THREE.MeshBasicMaterial({
+        color: 0x63d8ff,
+        transparent: true,
+        opacity: 0.14,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      }),
+      strand: new THREE.LineBasicMaterial({
+        color: 0x2bbdff,
+        transparent: true,
+        opacity: 0.14,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      }),
+      strandHot: new THREE.LineBasicMaterial({
+        color: 0xcdf5ff,
+        transparent: true,
+        opacity: 0.16,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      })
+    };
+
+    const sphereGeoA = new THREE.SphereGeometry(0.13, 16, 16);
+    const sphereGeoB = new THREE.SphereGeometry(0.092, 12, 12);
+    const rungGeo = new THREE.CylinderGeometry(0.024, 0.024, 1, 10, 1, true);
+
+    const curveA = [];
+    const curveB = [];
+    const nodeCount = 54;
+    const helixHeight = 29;
+    const radius = 1.34;
+    const turns = 4.9;
+
+    for (let i = 0; i < nodeCount; i++) {
+      const t = i / (nodeCount - 1);
+      const y = (t - 0.5) * helixHeight;
+      const angle = t * Math.PI * 2 * turns;
+      const x1 = Math.cos(angle) * radius;
+      const z1 = Math.sin(angle) * radius;
+      const x2 = Math.cos(angle + Math.PI) * radius;
+      const z2 = Math.sin(angle + Math.PI) * radius;
+
+      const p1 = new THREE.Vector3(x1, y, z1);
+      const p2 = new THREE.Vector3(x2, y, z2);
+      curveA.push(p1);
+      curveB.push(p2);
+
+      const nodeA = new THREE.Mesh(sphereGeoA, materials.nodeA);
+      nodeA.position.copy(p1);
+      helixGroup.add(nodeA);
+
+      const nodeB = new THREE.Mesh(sphereGeoB, materials.nodeB);
+      nodeB.position.copy(p2);
+      helixGroup.add(nodeB);
+
+      if (i % 2 === 0) {
+        const rung = new THREE.Mesh(rungGeo, materials.rung);
+        rung.position.copy(p1).lerp(p2, 0.5);
+        rung.scale.y = p1.distanceTo(p2);
+        rung.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), p2.clone().sub(p1).normalize());
+        helixGroup.add(rung);
+      }
+
+      const glow = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          color: i % 3 === 0 ? 0x9fe9ff : 0x41beff,
+          transparent: true,
+          opacity: i % 2 === 0 ? 0.055 : 0.03,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        })
+      );
+      glow.position.copy(i % 2 === 0 ? p1 : p2);
+      const s = i % 2 === 0 ? 0.62 : 0.42;
+      glow.scale.setScalar(s);
+      haloGroup.add(glow);
+    }
+
+    const lineA = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curveA), materials.strand);
+    const lineAHot = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curveA), materials.strandHot);
+    const lineB = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curveB), materials.strand);
+    const lineBHot = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curveB), materials.strandHot);
+    lineAHot.scale.setScalar(1.012);
+    lineBHot.scale.setScalar(1.012);
+    helixGroup.add(lineA, lineAHot, lineB, lineBHot);
+
+    const ringGeo = new THREE.TorusGeometry(3.9, 0.009, 8, 120);
+    for (let i = 0; i < 6; i++) {
+      const ring = new THREE.Mesh(
+        ringGeo,
+        new THREE.MeshBasicMaterial({
+          color: i % 2 === 0 ? 0x1f7cff : 0x5fdfff,
+          transparent: true,
+          opacity: 0.032 - i * 0.004,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        })
+      );
+      ring.rotation.x = Math.PI / 2 + i * 0.06;
+      ring.rotation.y = i * 0.42;
+      ring.scale.setScalar(1 + i * 0.12);
+      ring.position.y = -1.8 + i * 0.95;
+      root.add(ring);
+    }
+
+    const starField = new THREE.BufferGeometry();
+    const starCount = 240;
+    const starPositions = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount; i++) {
+      starPositions[i * 3 + 0] = (Math.random() - 0.5) * 28;
+      starPositions[i * 3 + 1] = (Math.random() - 0.5) * 44;
+      starPositions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+    }
+    starField.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    const stars = new THREE.Points(starField, new THREE.PointsMaterial({
+      color: 0x8bd7ff,
+      size: 0.045,
+      transparent: true,
+      opacity: 0.42,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    }));
+    root.add(stars);
+
+    const amb = new THREE.AmbientLight(0x7ccaff, 0.34);
+    const dir1 = new THREE.DirectionalLight(0x79d8ff, 0.78);
+    dir1.position.set(3.4, 3.8, 8.2);
+    const dir2 = new THREE.DirectionalLight(0x1258ff, 0.46);
+    dir2.position.set(-5, -2, 4);
+    const point = new THREE.PointLight(0x4ac0ff, 6.2, 18, 1.7);
+    point.position.set(0, 1.2, 3.8);
+    scene.add(amb, dir1, dir2, point);
+
+    root.position.set(2.65, 0.5, 0);
+    root.rotation.x = -0.14;
+    root.rotation.z = 0.1;
+    helixGroup.rotation.y = 0.24;
+
+    const floatingPills = [...document.querySelectorAll('.floating-pill')];
+    const revealEls = [...document.querySelectorAll('.reveal')];
+
+    let scroll01 = 0;
+    let targetScroll01 = 0;
+    let lastTime = 0;
+
+    function onResize() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+
+      if (w < 720) {
+        camera.position.set(0, 0.2, 13.5);
+        root.position.set(0.05, 1.2, 0);
+        root.scale.setScalar(0.9);
+      } else if (w < 1100) {
+        camera.position.set(0, 0.18, 12.4);
+        root.position.set(1.2, 0.8, 0);
+        root.scale.setScalar(0.96);
+      } else {
+        camera.position.set(0, 0.25, 12);
+        root.position.set(2.65, 0.5, 0);
+        root.scale.setScalar(1);
+      }
+    }
+
+    function updateScrollTarget() {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      targetScroll01 = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+    }
+
+    window.addEventListener('resize', onResize);
+    window.addEventListener('scroll', updateScrollTarget, { passive: true });
+    onResize();
+    updateScrollTarget();
+
+    const particleCanvas = document.getElementById('particles');
+    const pctx = particleCanvas.getContext('2d');
+    const particleCount = 64;
+    const particles = [];
+
+    function resetParticleCanvas() {
+      particleCanvas.width = Math.floor(window.innerWidth * Math.min(window.devicePixelRatio, 1.5));
+      particleCanvas.height = Math.floor(window.innerHeight * Math.min(window.devicePixelRatio, 1.5));
+      particleCanvas.style.width = window.innerWidth + 'px';
+      particleCanvas.style.height = window.innerHeight + 'px';
+      pctx.setTransform(1, 0, 0, 1, 0, 0);
+      pctx.scale(particleCanvas.width / window.innerWidth, particleCanvas.height / window.innerHeight);
+    }
+
+    function seedParticles() {
+      particles.length = 0;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          r: Math.random() * 1.2 + 0.22,
+          a: Math.random() * Math.PI * 2,
+          s: Math.random() * 0.08 + 0.018,
+          drift: Math.random() * 0.16 + 0.03,
+          glow: Math.random() * 0.5 + 0.25
+        });
+      }
+    }
+
+    function drawParticles(time, s01) {
+      pctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      const centerX = window.innerWidth * 0.56;
+      const centerY = window.innerHeight * 0.5;
+
+      for (const p of particles) {
+        const x = p.x + Math.cos(time * 0.00035 + p.a) * 5 + (centerX - p.x) * 0.00006 * s01 * 100;
+        const y = (p.y + Math.sin(time * 0.00028 + p.a) * 3 + p.drift * time * 0.02) % (window.innerHeight + 30);
+        const alpha = (0.08 + Math.sin(time * 0.001 + p.a) * 0.035 + p.glow * 0.09);
+        const grad = pctx.createRadialGradient(x, y, 0, x, y, p.r * 8);
+        grad.addColorStop(0, `rgba(132, 221, 255, ${alpha})`);
+        grad.addColorStop(0.5, `rgba(70, 176, 255, ${alpha * 0.45})`);
+        grad.addColorStop(1, 'rgba(70, 176, 255, 0)');
+        pctx.fillStyle = grad;
+        pctx.beginPath();
+        pctx.arc(x, y, p.r * 8, 0, Math.PI * 2);
+        pctx.fill();
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      resetParticleCanvas();
+      seedParticles();
+    });
+    resetParticleCanvas();
+    seedParticles();
+
+    function updateReveal() {
+      const trigger = window.innerHeight * 0.78;
+      for (const el of revealEls) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < trigger) el.classList.add('visible');
+      }
+    }
+
+    updateReveal();
+    window.addEventListener('scroll', updateReveal, { passive: true });
+
+    function animate(time = 0) {
+      const dt = Math.min(0.035, (time - lastTime) / 1000 || 0.016);
+      lastTime = time;
+
+      scroll01 += (targetScroll01 - scroll01) * Math.min(1, dt * 5.4);
+
+      const autoDrift = time * 0.00009;
+      const scrollTurns = scroll01 * Math.PI * 2.25;
+      helixGroup.rotation.y = 0.22 + autoDrift + scrollTurns;
+      helixGroup.rotation.x = Math.sin(scroll01 * Math.PI * 1.2) * 0.08 - 0.05;
+      helixGroup.position.y = (scroll01 - 0.5) * -1.45;
+      helixGroup.position.z = Math.sin(scroll01 * Math.PI * 2) * 0.08;
+
+      haloGroup.rotation.y = -time * 0.000045 - scroll01 * Math.PI * 0.72;
+      haloGroup.rotation.z = Math.sin(time * 0.00045) * 0.035;
+
+      root.rotation.y = Math.sin(time * 0.00012) * 0.045 + (scroll01 - 0.5) * 0.15;
+      root.rotation.x = -0.14 + Math.sin(time * 0.00022) * 0.018;
+      root.position.x += ((window.innerWidth < 720 ? 0.05 : window.innerWidth < 1100 ? 1.2 : 2.65) + Math.sin(scroll01 * Math.PI) * 0.3 - root.position.x) * Math.min(1, dt * 3.5);
+      root.position.y += ((window.innerWidth < 720 ? 1.2 : window.innerWidth < 1100 ? 0.8 : 0.5) + Math.cos(scroll01 * Math.PI * 2) * 0.16 - root.position.y) * Math.min(1, dt * 3.5);
+
+      camera.position.x = Math.sin(scroll01 * Math.PI * 1.1) * 0.2;
+      camera.position.y = 0.2 + Math.cos(scroll01 * Math.PI * 1.2) * 0.08;
+      camera.lookAt(0.18, 0.16 + Math.sin(scroll01 * Math.PI * 2) * 0.08, 0);
+
+      point.intensity = 5.2 + Math.sin(time * 0.0011) * 0.6 + scroll01 * 0.9;
+      stars.rotation.y += dt * 0.014;
+      stars.rotation.x = Math.sin(time * 0.00008) * 0.04;
+
+      floatingPills.forEach((pill, i) => {
+        const depth = parseFloat(pill.dataset.depth || '0.2');
+        const [rangeStart, rangeEnd] = (pill.dataset.range || '0,1').split(',').map(Number);
+        const active = scroll01 >= rangeStart && scroll01 <= rangeEnd;
+        const local = Math.max(0, Math.min(1, (scroll01 - rangeStart) / Math.max(0.001, rangeEnd - rangeStart)));
+        const x = Math.sin(scroll01 * Math.PI * (1.1 + i * 0.05) + i) * 16 * depth;
+        const y = Math.cos(scroll01 * Math.PI * (0.9 + i * 0.04) + i * 0.5) * 10 * depth - local * 10 * depth;
+        pill.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${1 + Math.sin(time * 0.00035 + i) * 0.006})`;
+        pill.style.opacity = active ? `${0.2 + Math.sin(local * Math.PI) * 0.42}` : '0';
+      });
+
+      drawParticles(time, scroll01);
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  </script>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const mobilePanel = document.getElementById('mobilePanel');
+    if (menuBtn) {
+      menuBtn.addEventListener('click', () => {
+        const open = mobilePanel.classList.toggle('open');
+        menuBtn.setAttribute('aria-expanded', String(open));
+      });
+      mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        mobilePanel.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      }));
+    }
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('in-view');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    const storyTabs = [...document.querySelectorAll('.story-tab')];
+    const storyPanels = [...document.querySelectorAll('[data-story-panel]')];
+    storyTabs.forEach(tab => tab.addEventListener('click', () => {
+      const idx = tab.dataset.story;
+      storyTabs.forEach(t => t.classList.toggle('active', t === tab));
+      storyPanels.forEach(panel => panel.classList.toggle('active', panel.dataset.storyPanel === idx));
+    }));
+
+    const galleryBtns = [...document.querySelectorAll('.gallery-btn')];
+    const galleryPanels = [...document.querySelectorAll('[data-gallery-panel]')];
+    galleryBtns.forEach(btn => btn.addEventListener('click', () => {
+      const idx = btn.dataset.gallery;
+      galleryBtns.forEach(b => b.classList.toggle('active', b === btn));
+      galleryPanels.forEach(panel => panel.classList.toggle('active', panel.dataset.galleryPanel === idx));
+    }));
+
+    const nodeData = [
+      { title: 'Identity makes trust visible.', text: 'The trust layer helps shape networking, collaboration, visibility, and moderation logic across the entire platform.' },
+      { title: 'Networking becomes more meaningful.', text: 'Better-fit discovery emerges when profile depth, visibility, and context are treated as first-class parts of the system.' },
+      { title: 'Messaging stays attached to work.', text: 'Conversation becomes more useful when it connects directly to people, files, tasks, events, and context.' },
+      { title: 'Scheduling remains integrated.', text: 'Events and reminders stop being external overhead when they are built into the same environment as collaboration.' },
+      { title: 'Startup activation compounds the system.', text: 'Founders, businesses, and teams benefit from the same trust layer, visibility logic, and structured surfaces.' }
+    ];
+    const nodeTitle = document.getElementById('nodeTitle');
+    const nodeText = document.getElementById('nodeText');
+    document.querySelectorAll('.node').forEach(node => {
+      node.addEventListener('click', () => {
+        document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+        node.classList.add('active');
+        const data = nodeData[Number(node.dataset.node)] || nodeData[0];
+        nodeTitle.textContent = data.title;
+        nodeText.textContent = data.text;
+      });
+    });
+
+    const floatingPills = [...document.querySelectorAll('.floating-pill')];
+    const dnaWrap = document.getElementById('dnaWrap');
+    const root = document.documentElement;
+    const corridorCards = [...document.querySelectorAll('.corridor-card')];
+
+    function onScroll() {
+      const max = document.body.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? window.scrollY / max : 0;
+      const rot = -18 + progress * 36;
+      const tilt = Math.sin(progress * Math.PI * 2) * 4;
+      if (dnaWrap) dnaWrap.style.transform = `rotateY(${rot}deg) rotateX(${tilt}deg) translateY(${progress * -14}px)`;
+      root.style.setProperty('--dna-progress', progress.toFixed(3));
+
+      floatingPills.forEach(pill => {
+        const [start, end] = pill.dataset.range.split(',').map(Number);
+        const active = progress >= start && progress <= end;
+        const local = Math.max(0, Math.min(1, (progress - start) / (end - start || 1)));
+        const depth = parseFloat(pill.dataset.depth || '0.1');
+        pill.style.opacity = active ? '0.62' : '0';
+        pill.style.transform = `translate3d(0, ${(local - .5) * 90 * depth}px, 0)`;
+      });
+
+      corridorCards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const visible = rect.top < window.innerHeight * 0.80;
+        card.classList.toggle('in-view', visible);
+      });
+    }
+    document.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.6);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.min(120, Math.floor(window.innerWidth / 14));
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 1.7 + 0.2,
+        a: Math.random() * 0.5 + 0.08,
+        s: Math.random() * 0.28 + 0.04
+      }));
+    }
+    function drawParticles() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      particles.forEach(p => {
+        p.y -= p.s;
+        if (p.y < -6) { p.y = window.innerHeight + 6; p.x = Math.random() * window.innerWidth; }
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(139, 222, 255, ${p.a})`;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    resizeCanvas();
+    drawParticles();
+    window.addEventListener('resize', resizeCanvas);
+  </script>
+</body>
+</html>
