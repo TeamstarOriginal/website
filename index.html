@@ -66,6 +66,7 @@
     }
 
     body::after {
+      opacity: 0.28;
       background:
         radial-gradient(circle at 50% 18%, rgba(47,139,255,.18), transparent 28%),
         radial-gradient(circle at 50% 50%, rgba(31,86,198,.12), transparent 36%),
@@ -125,8 +126,7 @@
       position: sticky;
       top: 0;
       z-index: 30;
-      backdrop-filter: blur(16px) saturate(155%);
-      -webkit-backdrop-filter: blur(16px) saturate(155%);
+      -webkit-
       background: linear-gradient(180deg, rgba(4, 11, 19, 0.90), rgba(4, 11, 19, 0.64));
       border-bottom: 1px solid rgba(102, 196, 255, 0.10);
     }
@@ -148,9 +148,8 @@
     .mini-chip,
     .floating-pill,
     .mobile-panel {
-      backdrop-filter: blur(16px) saturate(155%);
-      -webkit-backdrop-filter: blur(16px) saturate(155%);
-      background: linear-gradient(180deg, rgba(9, 27, 55, 0.74), rgba(7, 18, 39, 0.56));
+      -webkit-
+      background: linear-gradient(180deg, rgba(9, 27, 55, 0.90), rgba(7, 18, 39, 0.84));
       border: 1px solid rgba(98, 189, 255, 0.18);
       box-shadow: var(--shadow);
     }
@@ -334,8 +333,7 @@
       background: linear-gradient(180deg, rgba(8, 20, 40, 0.56), rgba(5, 14, 29, 0.42));
       border: 1px solid rgba(102, 196, 255, 0.12);
       box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,.03);
-      backdrop-filter: blur(12px) saturate(140%);
-      -webkit-backdrop-filter: blur(12px) saturate(140%);
+      -webkit-
     }
 
     .metric {
@@ -367,7 +365,7 @@
     .screen-stack { position: relative; width: min(92%, 780px); aspect-ratio: 1.08; z-index: 4; }
     .floating-card {
       position: absolute; border-radius: 28px; overflow: hidden; transform-style: preserve-3d;
-      background: linear-gradient(180deg, rgba(10,22,34,.88), rgba(7,17,28,.82)); border:1px solid rgba(120,180,255,.14); box-shadow: var(--shadow);
+      background: linear-gradient(180deg, rgba(10,22,34,.94), rgba(7,17,28,.90)); border:1px solid rgba(120,180,255,.14); box-shadow: var(--shadow);
     }
     .floating-card img { width:100%; height:100%; object-fit:cover; object-position: top center; }
     .card-main { width:62%; height:72%; top:14%; left:20%; transform:rotate(-4deg); animation: drift 8s ease-in-out infinite; }
@@ -376,14 +374,14 @@
     .card-quaternary { width:38%; height:30%; bottom:2%; left:7%; transform:rotate(4deg); animation: drift 8.2s ease-in-out infinite reverse; }
     .floating-label {
       position:absolute; z-index:5; padding:12px 16px; border-radius:999px; font-size:.84rem; color: var(--muted);
-      background: rgba(8,18,32,.70); border:1px solid rgba(82,214,255,.14); box-shadow: var(--shadow-soft); backdrop-filter: blur(14px);
+      background: rgba(8,18,32,.70); border:1px solid rgba(82,214,255,.14); box-shadow: var(--shadow-soft);
     }
     .label-1 { top:8%; right:14%; } .label-2 { bottom:28%; left:-2%; } .label-3 { bottom:8%; right:12%; }
 
     .intro-block { display:grid; gap:18px; align-items:start; margin-bottom:42px; position:relative; z-index:6; }
     .eyebrow {
       display:inline-flex; align-items:center; gap:10px; padding:8px 14px; border-radius:999px; border:1px solid var(--line);
-      background: rgba(8,18,32,.56); color: var(--cyan-2); font-size:.76rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+      background: rgba(8,18,32,.86); color: var(--cyan-2); font-size:.76rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
     }
     .eyebrow::before { content:""; width:8px; height:8px; border-radius:50%; background: linear-gradient(180deg,var(--cyan-2),var(--cyan)); box-shadow:0 0 14px rgba(0,194,255,.5); }
     .intro-block h2, .section-title { margin: 12px 0 12px; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.05; letter-spacing: -.035em; max-width: 14ch; }
@@ -485,7 +483,7 @@
     .gallery { display:grid; gap:24px; z-index:6; position:relative; }
     .gallery-nav { display:flex; flex-wrap:wrap; gap:12px; }
     .gallery-btn {
-      padding:12px 18px; border-radius:999px; border:1px solid var(--line); background: rgba(8,18,32,.56); color: var(--muted); cursor:pointer; transition:.25s var(--ease);
+      padding:12px 18px; border-radius:999px; border:1px solid var(--line); background: rgba(8,18,32,.86); color: var(--muted); cursor:pointer; transition:.25s var(--ease);
     }
     .gallery-btn.active, .gallery-btn:hover { color: var(--text); background: linear-gradient(180deg, rgba(12,30,48,.95), rgba(8,18,32,.72)); border-color: rgba(82,214,255,.24); }
     .gallery-panel { display:none; grid-template-columns: 1.02fr .98fr; align-items: stretch; }
@@ -1073,7 +1071,7 @@
 
     const canvas = document.getElementById('scene');
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
@@ -1269,7 +1267,7 @@
       const w = window.innerWidth;
       const h = window.innerHeight;
       renderer.setSize(w, h);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
 
