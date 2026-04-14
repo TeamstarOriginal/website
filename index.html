@@ -126,7 +126,6 @@
       position: sticky;
       top: 0;
       z-index: 30;
-      -webkit-
       background: linear-gradient(180deg, rgba(4, 11, 19, 0.90), rgba(4, 11, 19, 0.64));
       border-bottom: 1px solid rgba(102, 196, 255, 0.10);
     }
@@ -148,7 +147,6 @@
     .mini-chip,
     .floating-pill,
     .mobile-panel {
-      -webkit-
       background: linear-gradient(180deg, rgba(9, 27, 55, 0.90), rgba(7, 18, 39, 0.84));
       border: 1px solid rgba(98, 189, 255, 0.18);
       box-shadow: var(--shadow);
@@ -333,7 +331,6 @@
       background: linear-gradient(180deg, rgba(8, 20, 40, 0.56), rgba(5, 14, 29, 0.42));
       border: 1px solid rgba(102, 196, 255, 0.12);
       box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,.03);
-      -webkit-
     }
 
     .metric {
@@ -670,19 +667,252 @@
       .center-glow { display: none; }
     }
 
+  
+
+    /* --- strict-content cinematic makeover overrides --- */
+    :root {
+      --bg-0: #030813;
+      --bg-1: #06101d;
+      --bg-2: #0a1831;
+      --panel: rgba(8, 20, 38, 0.68);
+      --panel-strong: rgba(6, 14, 28, 0.82);
+      --panel-soft: rgba(9, 23, 44, 0.42);
+      --line: rgba(121, 205, 255, 0.14);
+      --line-strong: rgba(121, 205, 255, 0.28);
+      --text: rgba(237, 246, 255, 0.96);
+      --muted: rgba(184, 206, 228, 0.76);
+      --muted-2: rgba(177, 204, 232, 0.58);
+      --cyan: #4ac4ff;
+      --cyan-2: #8fe7ff;
+      --blue: #2d79ff;
+      --shadow: 0 0 0 1px rgba(131, 209, 255, 0.08), 0 12px 40px rgba(22, 89, 185, 0.18), inset 0 1px 0 rgba(255,255,255,0.06);
+      --shadow-soft: 0 26px 80px rgba(0,0,0,0.28);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 50% 8%, rgba(41, 130, 255, 0.18), transparent 24%),
+        radial-gradient(circle at 80% 22%, rgba(62, 190, 255, 0.08), transparent 18%),
+        radial-gradient(circle at 14% 18%, rgba(74, 117, 255, 0.08), transparent 18%),
+        linear-gradient(180deg, #040914 0%, #040b16 28%, #030813 56%, #02060f 100%);
+    }
+
+    body::before {
+      background:
+        linear-gradient(rgba(131, 209, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(131, 209, 255, 0.025) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(circle at center, black 46%, transparent 88%);
+      opacity: 0.32;
+      mix-blend-mode: normal;
+    }
+
+    body::after {
+      background: radial-gradient(circle at center, transparent 40%, rgba(2, 5, 10, 0.32) 72%, rgba(2, 5, 10, 0.7) 100%);
+      filter: none;
+      opacity: 1;
+    }
+
+    #scene {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.92;
+    }
+
+    .glow-haze,
+    .scanlines,
+    .center-beam {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .glow-haze {
+      z-index: 2;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(72, 192, 255, 0.08), transparent 18%),
+        radial-gradient(circle at 50% 50%, rgba(42, 120, 255, 0.12), transparent 26%),
+        radial-gradient(circle at 50% 84%, rgba(27, 112, 255, 0.08), transparent 22%);
+      filter: blur(18px);
+    }
+
+    .scanlines {
+      z-index: 2;
+      background: repeating-linear-gradient(180deg, rgba(145, 210, 255, 0.02) 0px, rgba(145, 210, 255, 0.02) 1px, transparent 2px, transparent 6px);
+      mix-blend-mode: screen;
+      opacity: 0.36;
+    }
+
+    .center-beam {
+      z-index: 2;
+      background: linear-gradient(90deg, transparent 46%, rgba(121,205,255,0.06) 50%, transparent 54%);
+      opacity: 0.7;
+      filter: blur(12px);
+    }
+
+    #particles,
+    .grid-lines,
+    .vignette,
+    .center-glow { display: none !important; }
+
+    .shell { position: relative; z-index: 4; isolation: isolate; }
+
+    .topbar {
+      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(4, 10, 18, 0.88), rgba(4, 10, 18, 0.58));
+      border-bottom: 1px solid rgba(121, 205, 255, 0.12);
+    }
+
+    .brand,
+    .nav,
+    .pill-btn,
+    .ghost-btn,
+    .hero-badge,
+    .mini-chip,
+    .floating-pill,
+    .mobile-panel,
+    .metric,
+    .glass-card,
+    .story-menu button,
+    .story-stage,
+    .compare-card,
+    .constellation,
+    .constellation-info,
+    .gallery-screen,
+    .gallery-copy,
+    .trust-layout,
+    .audience-grid,
+    .ai-layout,
+    .device-layout,
+    .future-strip,
+    .final-cta,
+    .footer-grid,
+    .corridor-visual,
+    .corridor-card,
+    .trust-panel,
+    .ai-panel,
+    .device-frame,
+    .input,
+    .node {
+      background: linear-gradient(180deg, rgba(10, 24, 45, 0.88), rgba(6, 15, 30, 0.74));
+      border-color: rgba(121, 205, 255, 0.14);
+      box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,.04), 0 0 0 1px rgba(121,205,255,.06);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero-stage,
+    .constellation,
+    .corridor-visual,
+    .device-visual,
+    .future-visual,
+    .trust-visual,
+    .ai-visual {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(74, 188, 255, 0.08), transparent 18%),
+        radial-gradient(circle at 50% 82%, rgba(46, 103, 255, 0.08), transparent 24%),
+        linear-gradient(180deg, rgba(8,18,32,.72), rgba(4,10,18,.82));
+    }
+
+    .hero-content,
+    .intro-block,
+    .story-menu,
+    .gallery,
+    .constellation-wrap,
+    .scroll-corridor,
+    .compare-wrap,
+    .trust-layout,
+    .ai-layout,
+    .device-layout,
+    .future-strip,
+    .final-cta,
+    .footer-grid { position: relative; z-index: 6; }
+
+    .hero-content h1,
+    .intro-block h2,
+    .section-title,
+    .constellation-info h4,
+    .trust-copy h4,
+    .ai-copy h4,
+    .device-copy h4,
+    .future-copy h4,
+    .final-copy h4 {
+      text-shadow: 0 0 28px rgba(84, 190, 255, 0.08);
+    }
+
+    .floating-pill {
+      opacity: 0.42;
+      animation: floating-pill-drift 9s ease-in-out infinite;
+    }
+
+    .floating-pill:nth-child(2) { animation-duration: 10.5s; }
+    .floating-pill:nth-child(3) { animation-duration: 11.5s; }
+
+    .hero-orbit { filter: drop-shadow(0 0 34px rgba(72,192,255,.12)); }
+    .orbit-ring { border-color: rgba(121,205,255,.12); }
+    .orbit-core { box-shadow: 0 0 72px rgba(0,194,255,.18); }
+    .stage-copy,
+    .floating-label,
+    .compare-item,
+    .corridor-chip,
+    .mini-tag,
+    .device-tag,
+    .focus-tag,
+    .gallery-btn,
+    .footer-link {
+      backdrop-filter: blur(12px);
+    }
+
+    @keyframes floating-pill-drift {
+      0%,100% { transform: translate3d(0,0,0); }
+      50% { transform: translate3d(0,-10px,0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #scene,
+      .glow-haze,
+      .scanlines,
+      .center-beam,
+      .floating-pill { display: none !important; }
+    }
+
+
+    /* Fine-tuning pass: reduce scroll artefacts and keep hero elements stable */
+    .hero-stage {
+      border-radius: 38px;
+      overflow: hidden;
+      contain: paint;
+    }
+
+    .card-main,
+    .card-secondary,
+    .card-tertiary,
+    .card-quaternary {
+      animation: none !important;
+      will-change: auto;
+    }
+
+    .card-main { transform: rotate(-4deg) !important; }
+    .card-secondary { transform: rotate(-8deg) !important; }
+    .card-tertiary { transform: rotate(8deg) !important; }
+    .card-quaternary { transform: rotate(4deg) !important; }
+
+    .floating-layer,
+    .floating-pill {
+      display: none !important;
+      animation: none !important;
+    }
+
+
   </style>
 </head>
 <body>
 
   <canvas id="scene" aria-hidden="true"></canvas>
-  <canvas id="particles" aria-hidden="true"></canvas>
-  <div class="vignette" aria-hidden="true"></div>
-  <div class="center-glow" aria-hidden="true"></div>
-
-  <canvas id="particles" aria-hidden="true"></canvas>
-  <div class="grid-lines" aria-hidden="true"></div>
-  <div class="vignette" aria-hidden="true"></div>
-  <div class="center-glow" aria-hidden="true"></div>
+  <div class="glow-haze" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="center-beam" aria-hidden="true"></div>
 
   <div class="shell">
     <header class="topbar">
@@ -691,7 +921,7 @@
           <span class="brand-mark"><img src="teamstarlogo.png" alt=""></span>
           <span class="brand-copy">
             <strong>TEAMSTAR</strong>
-            <span>Future-ready collaboration infrastructure</span>
+            <span>Think, Create &amp; Collaborate</span>
           </span>
         </a>
 
@@ -705,7 +935,7 @@
         </nav>
 
         <div class="topbar-actions">
-          <a class="ghost-btn" href="#experience">Watch Experience</a>
+          <a class="ghost-btn" href="#top">Log In</a>
           <a class="pill-btn primary" href="#waitlist">Request Early Access</a>
           <button class="menu-btn ghost-btn" id="menuBtn" aria-expanded="false" aria-label="Open mobile menu">☰</button>
         </div>
@@ -720,12 +950,6 @@
         <a class="pill-btn primary" href="#waitlist">Request Early Access</a>
       </div>
     </header>
-
-    <div class="floating-layer" aria-hidden="true">
-      <div class="floating-pill" data-depth="0.12" data-range="0.00,0.26" style="top: 18%; left: 65%;">Verified identity + network visibility</div>
-      <div class="floating-pill" data-depth="0.10" data-range="0.26,0.58" style="top: 62%; left: 69%;">AI workspace, scheduling, and collaboration</div>
-      <div class="floating-pill" data-depth="0.08" data-range="0.58,0.96" style="top: 74%; left: 26%;">Structured signal across every surface</div>
-    </div>
 
     <main id="top">
       <section class="section hero">
@@ -1067,348 +1291,243 @@
   </div>
 
   <script type="module">
+
     import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
-    const canvas = document.getElementById('scene');
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x020814, 0.04);
+    if (!prefersReduced) {
+      const canvas = document.getElementById('scene');
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.35));
+      renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 0.25, 12);
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x040914, 0.038);
 
-    const root = new THREE.Group();
-    scene.add(root);
+      const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 0.2, 12.8);
 
-    const haloGroup = new THREE.Group();
-    root.add(haloGroup);
+      const root = new THREE.Group();
+      scene.add(root);
 
-    const helixGroup = new THREE.Group();
-    root.add(helixGroup);
+      const haloGroup = new THREE.Group();
+      const ribbonGroup = new THREE.Group();
+      const starGroup = new THREE.Group();
+      root.add(haloGroup, ribbonGroup, starGroup);
 
-    const materials = {
-      nodeA: new THREE.MeshPhysicalMaterial({
-        color: 0x56c8ff,
-        emissive: 0x1ea6ff,
-        emissiveIntensity: 0.82,
-        roughness: 0.12,
-        metalness: 0.08,
-        transparent: true,
-        opacity: 0.58,
+      const ambient = new THREE.AmbientLight(0x7ccaff, 0.34);
+      const keyLight = new THREE.DirectionalLight(0x7be0ff, 0.9);
+      keyLight.position.set(3.8, 5.2, 8.6);
+      const fillLight = new THREE.DirectionalLight(0x2e67ff, 0.42);
+      fillLight.position.set(-5.4, -2.6, 3.8);
+      const point = new THREE.PointLight(0x50c5ff, 5.6, 18, 1.8);
+      point.position.set(0, 1.2, 3.6);
+      scene.add(ambient, keyLight, fillLight, point);
+
+      const nodeCount = window.innerWidth < 760 ? 54 : 82;
+      const height = 28;
+      const radius = 1.34;
+      const turns = 5.4;
+      const pointsA = [];
+      const pointsB = [];
+
+      const nodeMatA = new THREE.MeshPhysicalMaterial({
+        color: 0x54cbff,
+        emissive: 0x23a8ff,
+        emissiveIntensity: 0.92,
+        roughness: 0.14,
+        metalness: 0.04,
         transmission: 0.03,
-        thickness: 0.5,
+        transparent: true,
+        opacity: 0.54,
         depthWrite: false,
         blending: THREE.AdditiveBlending
-      }),
-      nodeB: new THREE.MeshPhysicalMaterial({
-        color: 0xb9f1ff,
+      });
+
+      const nodeMatB = new THREE.MeshPhysicalMaterial({
+        color: 0xb8f0ff,
         emissive: 0x5dd4ff,
-        emissiveIntensity: 0.52,
+        emissiveIntensity: 0.46,
         roughness: 0.1,
         metalness: 0.02,
         transparent: true,
-        opacity: 0.42,
-        transmission: 0.03,
-        thickness: 0.5,
+        opacity: 0.34,
         depthWrite: false,
         blending: THREE.AdditiveBlending
-      }),
-      rung: new THREE.MeshBasicMaterial({
-        color: 0x63d8ff,
-        transparent: true,
-        opacity: 0.14,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending
-      }),
-      strand: new THREE.LineBasicMaterial({
-        color: 0x2bbdff,
-        transparent: true,
-        opacity: 0.14,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-      }),
-      strandHot: new THREE.LineBasicMaterial({
-        color: 0xcdf5ff,
-        transparent: true,
-        opacity: 0.16,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-      })
-    };
-
-    const sphereGeoA = new THREE.SphereGeometry(0.13, 16, 16);
-    const sphereGeoB = new THREE.SphereGeometry(0.092, 12, 12);
-    const rungGeo = new THREE.CylinderGeometry(0.024, 0.024, 1, 10, 1, true);
-
-    const curveA = [];
-    const curveB = [];
-    const nodeCount = 54;
-    const helixHeight = 29;
-    const radius = 1.34;
-    const turns = 4.9;
-
-    for (let i = 0; i < nodeCount; i++) {
-      const t = i / (nodeCount - 1);
-      const y = (t - 0.5) * helixHeight;
-      const angle = t * Math.PI * 2 * turns;
-      const x1 = Math.cos(angle) * radius;
-      const z1 = Math.sin(angle) * radius;
-      const x2 = Math.cos(angle + Math.PI) * radius;
-      const z2 = Math.sin(angle + Math.PI) * radius;
-
-      const p1 = new THREE.Vector3(x1, y, z1);
-      const p2 = new THREE.Vector3(x2, y, z2);
-      curveA.push(p1);
-      curveB.push(p2);
-
-      const nodeA = new THREE.Mesh(sphereGeoA, materials.nodeA);
-      nodeA.position.copy(p1);
-      helixGroup.add(nodeA);
-
-      const nodeB = new THREE.Mesh(sphereGeoB, materials.nodeB);
-      nodeB.position.copy(p2);
-      helixGroup.add(nodeB);
-
-      if (i % 2 === 0) {
-        const rung = new THREE.Mesh(rungGeo, materials.rung);
-        rung.position.copy(p1).lerp(p2, 0.5);
-        rung.scale.y = p1.distanceTo(p2);
-        rung.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), p2.clone().sub(p1).normalize());
-        helixGroup.add(rung);
-      }
-
-      const glow = new THREE.Sprite(
-        new THREE.SpriteMaterial({
-          color: i % 3 === 0 ? 0x9fe9ff : 0x41beff,
-          transparent: true,
-          opacity: i % 2 === 0 ? 0.055 : 0.03,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false
-        })
-      );
-      glow.position.copy(i % 2 === 0 ? p1 : p2);
-      const s = i % 2 === 0 ? 0.62 : 0.42;
-      glow.scale.setScalar(s);
-      haloGroup.add(glow);
-    }
-
-    const lineA = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curveA), materials.strand);
-    const lineAHot = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curveA), materials.strandHot);
-    const lineB = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curveB), materials.strand);
-    const lineBHot = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curveB), materials.strandHot);
-    lineAHot.scale.setScalar(1.012);
-    lineBHot.scale.setScalar(1.012);
-    helixGroup.add(lineA, lineAHot, lineB, lineBHot);
-
-    const ringGeo = new THREE.TorusGeometry(3.9, 0.009, 8, 120);
-    for (let i = 0; i < 6; i++) {
-      const ring = new THREE.Mesh(
-        ringGeo,
-        new THREE.MeshBasicMaterial({
-          color: i % 2 === 0 ? 0x1f7cff : 0x5fdfff,
-          transparent: true,
-          opacity: 0.032 - i * 0.004,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false
-        })
-      );
-      ring.rotation.x = Math.PI / 2 + i * 0.06;
-      ring.rotation.y = i * 0.42;
-      ring.scale.setScalar(1 + i * 0.12);
-      ring.position.y = -1.8 + i * 0.95;
-      root.add(ring);
-    }
-
-    const starField = new THREE.BufferGeometry();
-    const starCount = 240;
-    const starPositions = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount; i++) {
-      starPositions[i * 3 + 0] = (Math.random() - 0.5) * 28;
-      starPositions[i * 3 + 1] = (Math.random() - 0.5) * 44;
-      starPositions[i * 3 + 2] = (Math.random() - 0.5) * 20;
-    }
-    starField.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-    const stars = new THREE.Points(starField, new THREE.PointsMaterial({
-      color: 0x8bd7ff,
-      size: 0.045,
-      transparent: true,
-      opacity: 0.42,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false
-    }));
-    root.add(stars);
-
-    const amb = new THREE.AmbientLight(0x7ccaff, 0.34);
-    const dir1 = new THREE.DirectionalLight(0x79d8ff, 0.78);
-    dir1.position.set(3.4, 3.8, 8.2);
-    const dir2 = new THREE.DirectionalLight(0x1258ff, 0.46);
-    dir2.position.set(-5, -2, 4);
-    const point = new THREE.PointLight(0x4ac0ff, 6.2, 18, 1.7);
-    point.position.set(0, 1.2, 3.8);
-    scene.add(amb, dir1, dir2, point);
-
-    root.position.set(2.65, 0.5, 0);
-    root.rotation.x = -0.14;
-    root.rotation.z = 0.1;
-    helixGroup.rotation.y = 0.24;
-
-    const floatingPills = [...document.querySelectorAll('.floating-pill')];
-    const revealEls = [...document.querySelectorAll('.reveal')];
-
-    let scroll01 = 0;
-    let targetScroll01 = 0;
-    let lastTime = 0;
-
-    function onResize() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      renderer.setSize(w, h);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-
-      if (w < 720) {
-        camera.position.set(0, 0.2, 13.5);
-        root.position.set(0.05, 1.2, 0);
-        root.scale.setScalar(0.9);
-      } else if (w < 1100) {
-        camera.position.set(0, 0.18, 12.4);
-        root.position.set(1.2, 0.8, 0);
-        root.scale.setScalar(0.96);
-      } else {
-        camera.position.set(0, 0.25, 12);
-        root.position.set(2.65, 0.5, 0);
-        root.scale.setScalar(1);
-      }
-    }
-
-    function updateScrollTarget() {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      targetScroll01 = maxScroll > 0 ? window.scrollY / maxScroll : 0;
-    }
-
-    window.addEventListener('resize', onResize);
-    window.addEventListener('scroll', updateScrollTarget, { passive: true });
-    onResize();
-    updateScrollTarget();
-
-    const particleCanvas = document.getElementById('particles');
-    const pctx = particleCanvas.getContext('2d');
-    const particleCount = 64;
-    const particles = [];
-
-    function resetParticleCanvas() {
-      particleCanvas.width = Math.floor(window.innerWidth * Math.min(window.devicePixelRatio, 1.5));
-      particleCanvas.height = Math.floor(window.innerHeight * Math.min(window.devicePixelRatio, 1.5));
-      particleCanvas.style.width = window.innerWidth + 'px';
-      particleCanvas.style.height = window.innerHeight + 'px';
-      pctx.setTransform(1, 0, 0, 1, 0, 0);
-      pctx.scale(particleCanvas.width / window.innerWidth, particleCanvas.height / window.innerHeight);
-    }
-
-    function seedParticles() {
-      particles.length = 0;
-      for (let i = 0; i < particleCount; i++) {
-        particles.push({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          r: Math.random() * 1.2 + 0.22,
-          a: Math.random() * Math.PI * 2,
-          s: Math.random() * 0.08 + 0.018,
-          drift: Math.random() * 0.16 + 0.03,
-          glow: Math.random() * 0.5 + 0.25
-        });
-      }
-    }
-
-    function drawParticles(time, s01) {
-      pctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      const centerX = window.innerWidth * 0.56;
-      const centerY = window.innerHeight * 0.5;
-
-      for (const p of particles) {
-        const x = p.x + Math.cos(time * 0.00035 + p.a) * 5 + (centerX - p.x) * 0.00006 * s01 * 100;
-        const y = (p.y + Math.sin(time * 0.00028 + p.a) * 3 + p.drift * time * 0.02) % (window.innerHeight + 30);
-        const alpha = (0.08 + Math.sin(time * 0.001 + p.a) * 0.035 + p.glow * 0.09);
-        const grad = pctx.createRadialGradient(x, y, 0, x, y, p.r * 8);
-        grad.addColorStop(0, `rgba(132, 221, 255, ${alpha})`);
-        grad.addColorStop(0.5, `rgba(70, 176, 255, ${alpha * 0.45})`);
-        grad.addColorStop(1, 'rgba(70, 176, 255, 0)');
-        pctx.fillStyle = grad;
-        pctx.beginPath();
-        pctx.arc(x, y, p.r * 8, 0, Math.PI * 2);
-        pctx.fill();
-      }
-    }
-
-    window.addEventListener('resize', () => {
-      resetParticleCanvas();
-      seedParticles();
-    });
-    resetParticleCanvas();
-    seedParticles();
-
-    function updateReveal() {
-      const trigger = window.innerHeight * 0.78;
-      for (const el of revealEls) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < trigger) el.classList.add('visible');
-      }
-    }
-
-    updateReveal();
-    window.addEventListener('scroll', updateReveal, { passive: true });
-
-    function animate(time = 0) {
-      const dt = Math.min(0.035, (time - lastTime) / 1000 || 0.016);
-      lastTime = time;
-
-      scroll01 += (targetScroll01 - scroll01) * Math.min(1, dt * 5.4);
-
-      const autoDrift = time * 0.00009;
-      const scrollTurns = scroll01 * Math.PI * 2.25;
-      helixGroup.rotation.y = 0.22 + autoDrift + scrollTurns;
-      helixGroup.rotation.x = Math.sin(scroll01 * Math.PI * 1.2) * 0.08 - 0.05;
-      helixGroup.position.y = (scroll01 - 0.5) * -1.45;
-      helixGroup.position.z = Math.sin(scroll01 * Math.PI * 2) * 0.08;
-
-      haloGroup.rotation.y = -time * 0.000045 - scroll01 * Math.PI * 0.72;
-      haloGroup.rotation.z = Math.sin(time * 0.00045) * 0.035;
-
-      root.rotation.y = Math.sin(time * 0.00012) * 0.045 + (scroll01 - 0.5) * 0.15;
-      root.rotation.x = -0.14 + Math.sin(time * 0.00022) * 0.018;
-      root.position.x += ((window.innerWidth < 720 ? 0.05 : window.innerWidth < 1100 ? 1.2 : 2.65) + Math.sin(scroll01 * Math.PI) * 0.3 - root.position.x) * Math.min(1, dt * 3.5);
-      root.position.y += ((window.innerWidth < 720 ? 1.2 : window.innerWidth < 1100 ? 0.8 : 0.5) + Math.cos(scroll01 * Math.PI * 2) * 0.16 - root.position.y) * Math.min(1, dt * 3.5);
-
-      camera.position.x = Math.sin(scroll01 * Math.PI * 1.1) * 0.2;
-      camera.position.y = 0.2 + Math.cos(scroll01 * Math.PI * 1.2) * 0.08;
-      camera.lookAt(0.18, 0.16 + Math.sin(scroll01 * Math.PI * 2) * 0.08, 0);
-
-      point.intensity = 5.2 + Math.sin(time * 0.0011) * 0.6 + scroll01 * 0.9;
-      stars.rotation.y += dt * 0.014;
-      stars.rotation.x = Math.sin(time * 0.00008) * 0.04;
-
-      floatingPills.forEach((pill, i) => {
-        const depth = parseFloat(pill.dataset.depth || '0.2');
-        const [rangeStart, rangeEnd] = (pill.dataset.range || '0,1').split(',').map(Number);
-        const active = scroll01 >= rangeStart && scroll01 <= rangeEnd;
-        const local = Math.max(0, Math.min(1, (scroll01 - rangeStart) / Math.max(0.001, rangeEnd - rangeStart)));
-        const x = Math.sin(scroll01 * Math.PI * (1.1 + i * 0.05) + i) * 16 * depth;
-        const y = Math.cos(scroll01 * Math.PI * (0.9 + i * 0.04) + i * 0.5) * 10 * depth - local * 10 * depth;
-        pill.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${1 + Math.sin(time * 0.00035 + i) * 0.006})`;
-        pill.style.opacity = active ? `${0.2 + Math.sin(local * Math.PI) * 0.42}` : '0';
       });
 
-      drawParticles(time, scroll01);
-      renderer.render(scene, camera);
+      const nodeGeoA = new THREE.SphereGeometry(0.125, 16, 16);
+      const nodeGeoB = new THREE.SphereGeometry(0.09, 12, 12);
+      const rungGeo = new THREE.CylinderGeometry(0.02, 0.02, 1, 10, 1, true);
+      const rungMat = new THREE.MeshBasicMaterial({
+        color: 0x63d8ff,
+        transparent: true,
+        opacity: 0.12,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      });
+
+      for (let i = 0; i < nodeCount; i++) {
+        const t = i / (nodeCount - 1);
+        const y = (t - 0.5) * height;
+        const angle = t * Math.PI * 2 * turns;
+        const x1 = Math.cos(angle) * radius;
+        const z1 = Math.sin(angle) * radius;
+        const x2 = Math.cos(angle + Math.PI) * radius;
+        const z2 = Math.sin(angle + Math.PI) * radius;
+
+        const p1 = new THREE.Vector3(x1, y, z1);
+        const p2 = new THREE.Vector3(x2, y, z2);
+        pointsA.push(p1);
+        pointsB.push(p2);
+
+        const a = new THREE.Mesh(nodeGeoA, nodeMatA);
+        a.position.copy(p1);
+        ribbonGroup.add(a);
+
+        const b = new THREE.Mesh(nodeGeoB, nodeMatB);
+        b.position.copy(p2);
+        ribbonGroup.add(b);
+
+        if (i % 2 === 0) {
+          const rung = new THREE.Mesh(rungGeo, rungMat);
+          rung.position.copy(p1).lerp(p2, 0.5);
+          rung.scale.y = p1.distanceTo(p2);
+          rung.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), p2.clone().sub(p1).normalize());
+          ribbonGroup.add(rung);
+        }
+
+        if (i % 3 === 0) {
+          const glow = new THREE.Sprite(new THREE.SpriteMaterial({
+            color: i % 2 === 0 ? 0x95e9ff : 0x47beff,
+            transparent: true,
+            opacity: i % 2 === 0 ? 0.05 : 0.03,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          }));
+          glow.position.copy(i % 2 === 0 ? p1 : p2);
+          const scale = i % 2 === 0 ? 0.7 : 0.46;
+          glow.scale.setScalar(scale);
+          haloGroup.add(glow);
+        }
+      }
+
+      const lineMat = new THREE.LineBasicMaterial({ color: 0x2bbdff, transparent: true, opacity: 0.14, depthWrite: false, blending: THREE.AdditiveBlending });
+      const lineHot = new THREE.LineBasicMaterial({ color: 0xcdf5ff, transparent: true, opacity: 0.16, depthWrite: false, blending: THREE.AdditiveBlending });
+      const lineA = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pointsA), lineMat);
+      const lineAHot = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pointsA), lineHot);
+      const lineB = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pointsB), lineMat);
+      const lineBHot = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pointsB), lineHot);
+      lineAHot.scale.setScalar(1.012);
+      lineBHot.scale.setScalar(1.012);
+      ribbonGroup.add(lineA, lineAHot, lineB, lineBHot);
+
+      const torusGeo = new THREE.TorusGeometry(3.9, 0.008, 8, 120);
+      for (let i = 0; i < 5; i++) {
+        const ring = new THREE.Mesh(torusGeo, new THREE.MeshBasicMaterial({
+          color: i % 2 === 0 ? 0x2d7dff : 0x66deff,
+          transparent: true,
+          opacity: 0.03 - i * 0.004,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending
+        }));
+        ring.rotation.x = Math.PI / 2 + i * 0.08;
+        ring.rotation.y = i * 0.42;
+        ring.position.y = -1.8 + i * 0.96;
+        ring.scale.setScalar(1 + i * 0.12);
+        root.add(ring);
+      }
+
+      const starCount = window.innerWidth < 760 ? 160 : 260;
+      const starPositions = new Float32Array(starCount * 3);
+      for (let i = 0; i < starCount; i++) {
+        starPositions[i * 3 + 0] = (Math.random() - 0.5) * 28;
+        starPositions[i * 3 + 1] = (Math.random() - 0.5) * 44;
+        starPositions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+      }
+      const starsGeo = new THREE.BufferGeometry();
+      starsGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+      const stars = new THREE.Points(starsGeo, new THREE.PointsMaterial({
+        color: 0x8bd7ff,
+        size: 0.045,
+        transparent: true,
+        opacity: 0.38,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      }));
+      starGroup.add(stars);
+
+      root.position.set(window.innerWidth < 980 ? 0.8 : 2.5, 0.42, 0);
+      root.rotation.x = -0.14;
+      root.rotation.z = 0.12;
+      ribbonGroup.rotation.y = 0.2;
+
+      let targetScroll = 0;
+      let smoothScroll = 0;
+      let lastTime = 0;
+
+      const basePos = () => {
+        if (window.innerWidth < 760) return { x: 0, y: 1.05, scale: 0.88, z: 13.9 };
+        if (window.innerWidth < 1100) return { x: 1.15, y: 0.72, scale: 0.94, z: 12.9 };
+        return { x: 2.5, y: 0.42, scale: 1, z: 12.4 };
+      };
+
+      function updateScrollTarget() {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        targetScroll = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+      }
+
+      function onResize() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        renderer.setSize(w, h);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.35));
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        const base = basePos();
+        camera.position.set(0, 0.22, base.z);
+        root.position.set(base.x, base.y, 0);
+        root.scale.setScalar(base.scale);
+      }
+
+      function animate(time = 0) {
+        const dt = Math.min(0.035, (time - lastTime) / 1000 || 0.016);
+        lastTime = time;
+        smoothScroll += (targetScroll - smoothScroll) * Math.min(1, dt * 4.8);
+
+        const drift = time * 0.00009;
+        const scrollTurns = smoothScroll * Math.PI * 2.15;
+        ribbonGroup.rotation.y = 0.18 + drift + scrollTurns;
+        ribbonGroup.rotation.x = Math.sin(smoothScroll * Math.PI * 1.2) * 0.08 - 0.05;
+        ribbonGroup.position.y = (smoothScroll - 0.5) * -1.42;
+        haloGroup.rotation.y = -time * 0.00005 - smoothScroll * Math.PI * 0.72;
+        haloGroup.rotation.z = Math.sin(time * 0.00046) * 0.03;
+        stars.rotation.y += dt * 0.012;
+        stars.rotation.x = Math.sin(time * 0.00008) * 0.04;
+
+        const base = basePos();
+        root.rotation.y = Math.sin(time * 0.00012) * 0.05 + (smoothScroll - 0.5) * 0.14;
+        root.rotation.x = -0.14 + Math.sin(time * 0.00018) * 0.018;
+        root.position.x += (base.x + Math.sin(smoothScroll * Math.PI) * 0.28 - root.position.x) * Math.min(1, dt * 3.4);
+        root.position.y += (base.y + Math.cos(smoothScroll * Math.PI * 2) * 0.15 - root.position.y) * Math.min(1, dt * 3.4);
+        camera.position.x = Math.sin(smoothScroll * Math.PI * 1.05) * 0.24;
+        camera.position.y = 0.18 + Math.cos(smoothScroll * Math.PI * 1.2) * 0.08;
+        camera.lookAt(0.16, 0.12 + Math.sin(smoothScroll * Math.PI * 2) * 0.08, 0);
+        point.intensity = 5.2 + Math.sin(time * 0.0011) * 0.5 + smoothScroll * 0.8;
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', onResize, { passive: true });
+      window.addEventListener('scroll', updateScrollTarget, { passive: true });
+      onResize();
+      updateScrollTarget();
       requestAnimationFrame(animate);
     }
-
-    requestAnimationFrame(animate);
+  
   </script>
 
   <script>
@@ -1498,41 +1617,42 @@
     document.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     onScroll();
-
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    function resizeCanvas() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.6);
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.min(120, Math.floor(window.innerWidth / 14));
-      particles = Array.from({ length: count }, () => ({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        r: Math.random() * 1.7 + 0.2,
-        a: Math.random() * 0.5 + 0.08,
-        s: Math.random() * 0.28 + 0.04
-      }));
+    const particleCanvas = document.getElementById('particles');
+    if (particleCanvas) {
+      const ctx = particleCanvas.getContext('2d');
+      let particles = [];
+      function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.6);
+        particleCanvas.width = window.innerWidth * dpr;
+        particleCanvas.height = window.innerHeight * dpr;
+        particleCanvas.style.width = window.innerWidth + 'px';
+        particleCanvas.style.height = window.innerHeight + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = Math.min(120, Math.floor(window.innerWidth / 14));
+        particles = Array.from({ length: count }, () => ({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          r: Math.random() * 1.7 + 0.2,
+          a: Math.random() * 0.5 + 0.08,
+          s: Math.random() * 0.28 + 0.04
+        }));
+      }
+      function drawParticles() {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        particles.forEach(p => {
+          p.y -= p.s;
+          if (p.y < -6) { p.y = window.innerHeight + 6; p.x = Math.random() * window.innerWidth; }
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(139, 222, 255, ${p.a})`;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        requestAnimationFrame(drawParticles);
+      }
+      resizeCanvas();
+      drawParticles();
+      window.addEventListener('resize', resizeCanvas);
     }
-    function drawParticles() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      particles.forEach(p => {
-        p.y -= p.s;
-        if (p.y < -6) { p.y = window.innerHeight + 6; p.x = Math.random() * window.innerWidth; }
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(139, 222, 255, ${p.a})`;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      requestAnimationFrame(drawParticles);
-    }
-    resizeCanvas();
-    drawParticles();
-    window.addEventListener('resize', resizeCanvas);
   </script>
 </body>
 </html>
