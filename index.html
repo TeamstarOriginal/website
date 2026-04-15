@@ -486,18 +486,31 @@
       font-family: var(--fm); font-size: 10.8px; letter-spacing: .1em;
       color: var(--text-3); margin-bottom: 18px;
     }
+    .fc-headline {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+      min-height: 44px;
+    }
     .fc-ico {
-      width: 42px; height: 42px; border-radius: var(--r1);
+      width: 44px; height: 44px; border-radius: 10px;
       border: 1px solid var(--border); display: grid; place-items: center;
-      color: var(--cyan-2); font-size: 18px; margin-bottom: 16px;
+      color: var(--cyan-2); font-size: 18px; margin: 0;
       background: linear-gradient(135deg, rgba(57,180,255,.10), rgba(28,136,255,.04));
       transition: .3s var(--ease);
+      flex: 0 0 44px;
+      line-height: 1;
     }
     .fc:hover .fc-ico { border-color: rgba(57,180,255,.32); box-shadow: 0 0 18px rgba(57,180,255,.12); }
 
     .fc-h {
       font-family: var(--fd); font-weight: 600; font-size: 1.3rem;
-      letter-spacing: .03em; margin-bottom: 10px;
+      letter-spacing: .03em; margin: 0;
+      line-height: 1.06;
+      display: flex;
+      align-items: center;
+      min-height: 44px;
     }
     .fc-p { color: var(--text-2); font-size: .96rem; line-height: 1.72; margin-bottom: 18px; }
     .fc-tags { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -659,10 +672,34 @@
     }
     .t-card { background: var(--bg-1); padding: 34px 28px; transition: .3s var(--ease); }
     .t-card:hover { background: rgba(5,15,34,.96); }
-    .t-ico { font-size: 22px; margin-bottom: 18px; }
+    .t-headrow {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      align-items: center;
+      column-gap: 14px;
+      margin-bottom: 14px;
+    }
+    .t-headrow h4 {
+      margin: 0 !important;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      min-height: 24px;
+    }
+    .t-ico {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      line-height: 1;
+      margin: 0;
+      transform: translateY(-1px);
+      flex: 0 0 auto;
+    }
     .t-card h4 {
       font-family: var(--fd); font-weight: 700; font-size: 1.35rem;
-      letter-spacing: .03em; text-transform: uppercase; margin-bottom: 10px;
+      letter-spacing: .03em; text-transform: uppercase; margin: 0 0 10px;
     }
     .t-card p { color: var(--text-2); font-size: .96rem; line-height: 1.72; margin-bottom: 18px; }
     .t-list { display: grid; gap: 8px; }
@@ -848,6 +885,34 @@
       color: var(--text-3); line-height: 1.65; margin-top: 4px;
     }
 
+    .android-scroll-compat .bg-field,
+    .android-scroll-compat .bg-grid,
+    .android-scroll-compat .bg-scan,
+    .android-scroll-compat .bg-vignette {
+      will-change: auto;
+    }
+    .android-scroll-compat .bg-field {
+      transform: none;
+      inset: -10%;
+      background-size: 135% 135%, 132% 132%, 128% 128%, 100% 100%;
+      background-position: 16% 16%, 84% 12%, 50% 80%, 50% 50% !important;
+    }
+    .android-scroll-compat .bg-grid {
+      opacity: .16;
+      background-position: 0 0, 0 0 !important;
+    }
+    .android-scroll-compat .bg-scan {
+      opacity: .18;
+      background-position: 0 0, 0 0 !important;
+    }
+    .android-scroll-compat .bg-vignette {
+      transform: none;
+      background-position: 50% 22%, 50% 82%, 50% 50% !important;
+    }
+    .android-scroll-compat #bg-canvas {
+      opacity: .18;
+    }
+
     /* ── Animations ── */
     @keyframes pulse-pt {
       0%,100% { opacity:1; transform:scale(1); }
@@ -889,8 +954,27 @@
       .sys-grid { gap: 36px; }
     }
     @media (max-width: 860px) {
+      .fc-headline,
+      .t-headline {
+        gap: 12px;
+      }
+      .fc-ico,
+      .t-ico {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+      }
+      .fc-h,
+      .t-card h4 {
+        min-height: 40px;
+        font-size: 1.16rem;
+      }
       .nav, .nav-end .btn-ghost { display: none; }
       .menu-btn { display: flex; }
+      .nav-end .btn-primary {
+        padding-left: 13px;
+        padding-right: 13px;
+      }
 
       .hero-grid { grid-template-columns: 1fr; min-height: auto; gap: 40px; }
       .hero-vis { min-height: 340px; }
@@ -940,7 +1024,7 @@
       .wait-copy h2 { font-size: clamp(2.5rem, 13vw, 5rem); }
       .wait-form { padding: 24px; }
       .dev-stack { height: 320px; }
-    }
+      }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
       #bg-canvas, #hero-cv, #const-cv { display: none; }
@@ -1067,7 +1151,7 @@
                 <div class="pulse-r" style="width:38px;height:38px;"></div>
                 <div class="pulse-r pr2" style="width:38px;height:38px;"></div>
                 <div class="pulse-r pr3" style="width:38px;height:38px;"></div>
-                <div class="nn-dot"><span class="nd nd-g"></span>Teamstar AI</div>
+                <div class="nn-dot"><span class="nd nd-g"></span>Teamstar</div>
               </div>
             </div>
           </div>
@@ -1097,56 +1181,70 @@
         <div class="feat-grid reveal d1">
           <article class="fc fc-network">
             <div class="fc-n">01</div>
+            <div class="fc-headline">
             <div class="fc-ico">◎</div>
-            <h3 class="fc-h">Intelligent Networking</h3>
+              <h3 class="fc-h">Intelligent Networking</h3>
+            </div>
             <p class="fc-p">Move beyond shallow follows and random reach. Structure, context, and profile depth create more meaningful discovery and better-fit connections.</p>
             <div class="fc-tags"><span class="tag">Skills &amp; Expertise</span><span class="tag">Network Modes</span><span class="tag">Match Quality</span></div>
           </article>
 
           <article class="fc fc-message">
             <div class="fc-n">02</div>
+            <div class="fc-headline">
             <div class="fc-ico">⌁</div>
-            <h3 class="fc-h">Messaging &amp; Collaboration</h3>
+              <h3 class="fc-h">Messaging &amp; Collaboration</h3>
+            </div>
             <p class="fc-p">Conversation becomes more useful when it connects directly to people, files, tasks, events, and context — not just another notification layer.</p>
             <div class="fc-tags"><span class="tag">Direct &amp; Group</span><span class="tag">File Sharing</span><span class="tag">Workspace Context</span></div>
           </article>
 
           <article class="fc fc-scheduling">
             <div class="fc-n">03</div>
+            <div class="fc-headline">
             <div class="fc-ico">◷</div>
-            <h3 class="fc-h">Scheduling &amp; Events</h3>
+              <h3 class="fc-h">Scheduling &amp; Events</h3>
+            </div>
             <p class="fc-p">Events and reminders stop being external overhead when built into the same environment as collaboration. Coordination becomes native.</p>
             <div class="fc-tags"><span class="tag">Event Creation</span><span class="tag">Calendar Surfaces</span><span class="tag">Reminders</span></div>
           </article>
 
           <article class="fc fc-activation fc-featured">
             <div class="fc-n">04</div>
+            <div class="fc-headline">
             <div class="fc-ico">⬡</div>
-            <h3 class="fc-h">Startup Activation</h3>
+              <h3 class="fc-h">Startup Activation</h3>
+            </div>
             <p class="fc-p">Founders, businesses, and teams benefit from the same trust layer, visibility logic, and structured surfaces. Build structure, define roles, activate pages, and turn attention into coordinated motion — formation and traction in one place.</p>
             <div class="fc-tags"><span class="tag">Startup Formation</span><span class="tag">Role Clarity</span><span class="tag">Operational Momentum</span><span class="tag">Business Presence</span></div>
           </article>
 
           <article class="fc fc-profile">
             <div class="fc-n">05</div>
+            <div class="fc-headline">
             <div class="fc-ico">⊕</div>
-            <h3 class="fc-h">Profile Depth</h3>
+              <h3 class="fc-h">Profile Depth</h3>
+            </div>
             <p class="fc-p">A stronger profile layer improves networking, fit, discovery, and collaboration quality across every surface of the product.</p>
             <div class="fc-tags"><span class="tag">Skills Visibility</span><span class="tag">Network Intent</span><span class="tag">Identity Context</span></div>
           </article>
 
           <article class="fc fc-ai">
             <div class="fc-n">06</div>
+            <div class="fc-headline">
             <div class="fc-ico">⬢</div>
-            <h3 class="fc-h">AI Assistance</h3>
+              <h3 class="fc-h">AI Assistance</h3>
+            </div>
             <p class="fc-p">Practical AI embedded inside real platform workflows. Draft, refine, summarise, compare, and clarify within the context of your actual work.</p>
             <div class="fc-tags"><span class="tag">Startup Builder</span><span class="tag">Profile Drafting</span><span class="tag">Summaries</span></div>
           </article>
 
           <article class="fc fc-trust">
             <div class="fc-n">07</div>
+            <div class="fc-headline">
             <div class="fc-ico">◈</div>
-            <h3 class="fc-h">Trust Infrastructure</h3>
+              <h3 class="fc-h">Trust Infrastructure</h3>
+            </div>
             <p class="fc-p">Identity, visibility, moderation logic, and role-aware surfaces treated as system-level design. Cleaner signal, lower noise, healthier environment.</p>
             <div class="fc-tags"><span class="tag">Verified Identity</span><span class="tag">Visibility Controls</span><span class="tag">Signal Quality</span></div>
           </article>
@@ -1270,7 +1368,7 @@
                 <div class="pulse-r" style="width:58px;height:58px;"></div>
                 <div class="pulse-r pr2" style="width:58px;height:58px;"></div>
                 <div class="pulse-r pr3" style="width:58px;height:58px;"></div>
-                <div class="c-btn"><span class="nd nd-g"></span>Teamstar AI</div>
+                <div class="c-btn"><span class="nd nd-g"></span>Teamstar</div>
               </div>
               <div class="c-nd active" data-node="0" style="top:16%;left:50%;">
                 <button class="c-btn">Trusted Identity</button>
@@ -1322,20 +1420,26 @@
         </div>
         <div class="trust-grid reveal d1">
           <div class="t-card">
-            <div class="t-ico">◉</div>
-            <h4>Verified Identity</h4>
+            <div class="t-headline">
+              <div class="t-ico">◉</div>
+              <h4>Verified Identity</h4>
+            </div>
             <p>More grounded interaction begins when visibility and authenticity are handled properly at a system level — not as an afterthought.</p>
             <ul class="t-list"><li>Identity-aware structure</li><li>Not blind posting surfaces</li><li>Reduced anonymity risk</li></ul>
           </div>
           <div class="t-card">
-            <div class="t-ico">⊞</div>
-            <h4>Structured Presence</h4>
+            <div class="t-headline">
+              <div class="t-ico">⊞</div>
+              <h4>Structured Presence</h4>
+            </div>
             <p>Business, startup, and individual presence with stronger trust framing and better-fit discovery for every account type.</p>
             <ul class="t-list"><li>Individual accounts</li><li>Startup formation</li><li>Business presence</li></ul>
           </div>
           <div class="t-card">
-            <div class="t-ico">◈</div>
-            <h4>Cleaner Signal</h4>
+            <div class="t-headline">
+              <div class="t-ico">◈</div>
+              <h4>Cleaner Signal</h4>
+            </div>
             <p>Visibility controls that help people navigate context better. Lower noise, better fit, stronger context, healthier discovery quality.</p>
             <ul class="t-list"><li>Lower noise environment</li><li>Better discovery fit</li><li>Healthier interaction quality</li></ul>
           </div>
@@ -1678,29 +1782,13 @@ sections.forEach(s => navObs.observe(s));
   const vig  = document.querySelector('.bg-vignette');
   if (!field || !grid || !scan || !vig) return;
 
-  let raf = 0;
-  function apply() {
-    raf = 0;
-    const y = window.scrollY || window.pageYOffset || 0;
-    const y1 = Math.min(18, y * 0.012);
-    const y2 = Math.min(10, y * 0.008);
-    const y3 = Math.min(8, y * 0.006);
-    const y4 = Math.min(12, y * 0.009);
-
-    field.style.backgroundPosition = `16% ${16 + y1}%, 84% ${12 + y2}%, 50% ${80 - y3}%, 50% ${50 + y3 * 0.25}%`;
-    grid.style.backgroundPosition  = `0 ${y2 * 1.4}px, ${-y2 * 1.1}px 0`;
-    scan.style.backgroundPosition  = `0 ${y3 * 0.8}px, 0 ${y3 * 1.2}px`;
-    vig.style.backgroundPosition   = `50% ${22 + y2 * 0.4}%, 50% ${82 - y4 * 0.35}%, 50% 50%`;
-    field.style.opacity = String(Math.max(0.90, 0.96 - y * 0.00003));
-  }
-
-  function onScroll() {
-    if (!raf) raf = requestAnimationFrame(apply);
-  }
-
-  apply();
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
+  // The scroll-driven background drift looked clever until it started tearing on
+  // real hardware. Keep the layered look, kill the moving seam.
+  document.body.classList.add('android-scroll-compat');
+  field.style.opacity = '0.95';
+  grid.style.opacity = '0.17';
+  scan.style.opacity = '0.16';
+  vig.style.opacity = '0.80';
 })();
 
 /* ═══════════════════════════════════
@@ -1784,7 +1872,7 @@ sections.forEach(s => navObs.observe(s));
     { fx: .50, fy: .80 }, // Scheduling
     { fx: .24, fy: .65 }, // Pathways
     { fx: .22, fy: .30 }, // Content Sharing
-    { fx: .50, fy: .50 }, // Teamstar AI (center)
+    { fx: .50, fy: .50 }, // Teamstar (center)
   ];
 
   const EDGES = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4],[2,5],[0,2],[5,2],[1,3]];
@@ -1917,7 +2005,7 @@ sections.forEach(s => navObs.observe(s));
     { fx: .50, fy: .79 }, // Scheduling
     { fx: .26, fy: .62 }, // Pathways
     { fx: .21, fy: .31 }, // Content Sharing
-    { fx: .50, fy: .50 }  // Teamstar AI center
+    { fx: .50, fy: .50 }  // Teamstar center
   ];
   const EDGES = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4],[2,5],[0,2],[1,3],[5,2]];
   const SQRT3 = Math.sqrt(3);
