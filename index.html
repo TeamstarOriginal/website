@@ -686,34 +686,33 @@
     }
     .t-card { background: var(--bg-1); padding: 34px 28px; transition: .3s var(--ease); }
     .t-card:hover { background: rgba(5,15,34,.96); }
-    .t-headrow {
-      display: grid;
-      grid-template-columns: 24px 1fr;
-      align-items: center;
-      column-gap: 14px;
-      margin-bottom: 14px;
-    }
-    .t-headrow h4 {
-      margin: 0 !important;
-      line-height: 1;
+    .t-headline {
       display: flex;
       align-items: center;
-      min-height: 24px;
+      gap: 14px;
+      margin-bottom: 14px;
+      min-height: 44px;
     }
     .t-ico {
-      width: 24px;
-      height: 24px;
-      display: grid;
-      place-items: center;
-      font-size: 20px;
+      width: 44px; height: 44px; border-radius: 10px;
+      border: 1px solid var(--border); display: grid; place-items: center;
+      color: var(--cyan-2); font-size: 18px; margin: 0;
+      background: linear-gradient(135deg, rgba(57,180,255,.10), rgba(28,136,255,.04));
+      transition: .3s var(--ease);
+      flex: 0 0 44px;
       line-height: 1;
-      margin: 0;
-      transform: translateY(-1px);
-      flex: 0 0 auto;
+    }
+    .t-card:hover .t-ico {
+      border-color: rgba(57,180,255,.32);
+      box-shadow: 0 0 18px rgba(57,180,255,.12);
     }
     .t-card h4 {
-      font-family: var(--fd); font-weight: 700; font-size: 1.35rem;
-      letter-spacing: .03em; text-transform: uppercase; margin: 0 0 10px;
+      font-family: var(--fd); font-weight: 700; font-size: 1.3rem;
+      letter-spacing: .03em; text-transform: uppercase; margin: 0;
+      line-height: 1.06;
+      display: flex;
+      align-items: center;
+      min-height: 44px;
     }
     .t-card p { color: var(--text-2); font-size: .96rem; line-height: 1.72; margin-bottom: 18px; }
     .t-list { display: grid; gap: 8px; }
