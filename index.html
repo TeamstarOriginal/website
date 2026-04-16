@@ -490,7 +490,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       min-height: 44px;
     }
     .fc-ico {
@@ -548,41 +548,55 @@
     .g-desc { font-size: .88rem; color: var(--text-3); line-height: 1.5; }
 
     .gal-stage { background: var(--bg-1); position: relative; overflow: hidden; }
-    .gal-panel { display: none; height: 100%; grid-template-columns: 1fr 1fr; }
+    .gal-panel {
+      display: none;
+      height: 100%;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+    }
     .gal-panel.active { display: grid; }
     .gal-screen {
-      border-right: 1px solid var(--border);
-      background: rgba(5,13,27,.8);
+      background:
+        radial-gradient(circle at 50% 15%, rgba(57,180,255,.10), transparent 32%),
+        linear-gradient(180deg, rgba(7,15,29,.94), rgba(4,10,20,.98));
       overflow: hidden;
       display: flex;
-      align-items: stretch;
-      justify-content: stretch;
-      padding: 0;
-      min-height: 560px;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      min-height: 640px;
+      border-bottom: none;
     }
     .gal-screen img {
-      width: 100%;
-      height: 100%;
-      max-height: none;
-      object-fit: cover;
-      object-position: top center;
-      border-radius: 0;
-      box-shadow: none;
       display: block;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      object-position: center top;
+      border-radius: 18px;
+      box-shadow: 0 22px 56px rgba(0,0,0,.42), 0 0 0 1px rgba(255,255,255,.03) inset;
+      background: #06111d;
+      margin: 0 auto;
     }
     .gal-copy {
-      padding: 36px 32px; display: flex; flex-direction: column;
-      justify-content: center; background: rgba(5,13,27,.5);
+      display: none;
     }
     .gal-copy h4 {
-      font-family: var(--fd); font-weight: 700; font-size: 1.75rem;
-      letter-spacing: .02em; margin-bottom: 14px;
+      font-family: var(--fd); font-weight: 700; font-size: 1.5rem;
+      letter-spacing: .02em; margin-bottom: 12px;
     }
-    .gal-copy p { color: var(--text-2); font-size: .9rem; line-height: 1.75; margin-bottom: 22px; }
-    .gal-copy ul { display: grid; gap: 9px; }
+    .gal-copy p { color: var(--text-2); font-size: .92rem; line-height: 1.72; margin-bottom: 18px; max-width: 90ch; }
+    .gal-copy ul {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px 18px;
+    }
     .gal-copy li {
       font-family: var(--fm); font-size: 9.5px; letter-spacing: .08em;
       color: var(--text-2); display: flex; align-items: center; gap: 10px;
+      white-space: nowrap;
     }
     .gal-copy li::before { content: ''; width: 14px; height: 1px; background: var(--cyan); flex-shrink: 0; }
 
@@ -663,6 +677,7 @@
     }
     .nc-title { font-family: var(--fd); font-weight: 600; font-size: 1.28rem; margin-bottom: 10px; }
     .nc-text { color: var(--text-2); font-size: .96rem; line-height: 1.72; }
+
     /* ── Trust ── */
     .trust-grid {
       display: grid; grid-template-columns: repeat(3,1fr);
@@ -671,39 +686,34 @@
     }
     .t-card { background: var(--bg-1); padding: 34px 28px; transition: .3s var(--ease); }
     .t-card:hover { background: rgba(5,15,34,.96); }
-
-    .t-headline {
+    .t-headrow {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      align-items: center;
+      column-gap: 14px;
+      margin-bottom: 14px;
+    }
+    .t-headrow h4 {
+      margin: 0 !important;
+      line-height: 1;
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
-      min-height: 44px;
+      min-height: 24px;
     }
-
     .t-ico {
-      width: 44px;
-      height: 44px;
-      flex: 0 0 44px;
+      width: 24px;
+      height: 24px;
       display: grid;
       place-items: center;
-      font-size: 18px;
+      font-size: 20px;
       line-height: 1;
       margin: 0;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: linear-gradient(135deg, rgba(57,180,255,.10), rgba(28,136,255,.04));
-      color: var(--cyan-2);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+      transform: translateY(-1px);
+      flex: 0 0 auto;
     }
-
     .t-card h4 {
       font-family: var(--fd); font-weight: 700; font-size: 1.35rem;
-      letter-spacing: .03em; text-transform: uppercase;
-      margin: 0;
-      line-height: 1.06;
-      display: flex;
-      align-items: center;
-      min-height: 44px;
+      letter-spacing: .03em; text-transform: uppercase; margin: 0 0 10px;
     }
     .t-card p { color: var(--text-2); font-size: .96rem; line-height: 1.72; margin-bottom: 18px; }
     .t-list { display: grid; gap: 8px; }
@@ -712,7 +722,6 @@
       color: var(--text-3); display: flex; align-items: center; gap: 8px;
     }
     .t-list li::before { content: ''; width: 12px; height: 1px; background: var(--cyan); opacity: .5; }
-
 
     /* ── Audience ── */
     .aud-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
@@ -1003,8 +1012,17 @@
       .g-tab { min-width: 150px; border-bottom: none; border-right: 1px solid var(--border); }
       .g-tab::before { top: auto; bottom: 0; left: 0; right: 0; width: auto; height: 2px; transform: scaleX(0); transform-origin: left; }
       .g-tab.active::before { transform: scaleX(1); }
-      .gal-panel { grid-template-columns: 1fr; }
-      .gal-screen { display: none; }
+      .gal-panel {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+      }
+      .gal-screen {
+        display: flex;
+        min-height: 320px;
+        border-right: none;
+        border-bottom: none;
+        padding: 14px;
+      }
 
       .trust-grid { grid-template-columns: 1fr; }
       .aud-grid { grid-template-columns: 1fr; }
@@ -1276,77 +1294,99 @@
         <div class="gal-wrap reveal d1">
           <div class="gal-tabs" role="tablist">
             <button class="g-tab active" data-gallery="0" role="tab" aria-selected="true">
-              <div class="g-idx">01 / NETWORKING</div>
-              <div class="g-title">Discovery</div>
-              <div class="g-desc">Context-aware discovery and meaningful connections.</div>
+              <div class="g-idx">01 / FEED</div>
+              <div class="g-title">Intro Screen</div>
+              <div class="g-desc">The main feed with AI workspace, navigation, and structured signal.</div>
             </button>
             <button class="g-tab" data-gallery="1" role="tab" aria-selected="false">
-              <div class="g-idx">02 / COLLABORATION</div>
-              <div class="g-title">Messaging</div>
-              <div class="g-desc">Conversation with files, context, and next actions.</div>
+              <div class="g-idx">02 / CALENDAR</div>
+              <div class="g-title">Scheduling</div>
+              <div class="g-desc">Integrated calendar surfaces with history, invites, and task context.</div>
             </button>
             <button class="g-tab" data-gallery="2" role="tab" aria-selected="false">
-              <div class="g-idx">03 / SCHEDULING</div>
-              <div class="g-title">Events</div>
-              <div class="g-desc">Integrated calendar surfaces and coordination.</div>
+              <div class="g-idx">03 / CHAT</div>
+              <div class="g-title">Messaging</div>
+              <div class="g-desc">Direct conversation, media, docs, and profile context in one flow.</div>
             </button>
             <button class="g-tab" data-gallery="3" role="tab" aria-selected="false">
-              <div class="g-idx">04 / PROFILES</div>
-              <div class="g-title">Identity</div>
-              <div class="g-desc">Profiles with genuine operational value.</div>
+              <div class="g-idx">04 / EVENTS</div>
+              <div class="g-title">Create Event</div>
+              <div class="g-desc">Structured event creation with reminders, privacy, and hosting controls.</div>
+            </button>
+            <button class="g-tab" data-gallery="4" role="tab" aria-selected="false">
+              <div class="g-idx">05 / SEARCH</div>
+              <div class="g-title">Discovery</div>
+              <div class="g-desc">Search across people, feed, hashtags, events, and pages with filters.</div>
             </button>
           </div>
 
           <div class="gal-stage">
             <div class="gal-panel active" data-gallery-panel="0">
-              <div class="gal-screen"><img src="feed-screen.png" alt="Teamstar networking feed"></div>
+              <div class="gal-screen"><img src="feed.png" alt="Teamstar feed intro screen"></div>
               <div class="gal-copy">
-                <span class="lbl"><i></i> Networking</span>
-                <h4>Discovery with context, not random reach.</h4>
-                <p>Profiles, intent, skills, and trust cues make discovery feel more meaningful and less accidental.</p>
+                <span class="lbl"><i></i> Feed</span>
+                <h4>The operating layer is visible from the first screen.</h4>
+                <p>This full feed view shows the core Teamstar experience in one glance: left navigation, central post flow, and the right-side Teamstar AI workspace working as one system instead of disconnected tools.</p>
                 <ul>
-                  <li>Richer matching logic</li>
-                  <li>Identity-aware visibility</li>
-                  <li>Better signal from profile depth</li>
+                  <li>Structured feed + identity context</li>
+                  <li>AI workspace assistant in-view</li>
+                  <li>Navigation designed for serious use</li>
                 </ul>
               </div>
             </div>
+
             <div class="gal-panel" data-gallery-panel="1">
-              <div class="gal-screen"><img src="chat.png" alt="Teamstar messaging"></div>
+              <div class="gal-screen"><img src="calendar.png" alt="Teamstar calendar screen"></div>
               <div class="gal-copy">
-                <span class="lbl"><i></i> Collaboration</span>
-                <h4>Conversation with files, context, and next actions.</h4>
-                <p>Collaboration treated as something that should move work forward, not just create more notifications.</p>
+                <span class="lbl"><i></i> Calendar</span>
+                <h4>Scheduling stays inside the collaboration fabric.</h4>
+                <p>The calendar view keeps events, invites, history, and operational context attached to the same environment, so coordination does not fracture into separate tools.</p>
                 <ul>
-                  <li>Direct and group messaging</li>
-                  <li>Workspace side-context</li>
-                  <li>Action-ready communication flows</li>
+                  <li>Monthly, weekly, daily, and schedule views</li>
+                  <li>Event history, invites, and task context</li>
+                  <li>Right-side event stream for continuity</li>
                 </ul>
               </div>
             </div>
+
             <div class="gal-panel" data-gallery-panel="2">
-              <div class="gal-screen"><img src="calendar-screen.png" alt="Teamstar scheduling"></div>
+              <div class="gal-screen"><img src="chat.png" alt="Teamstar chat screen"></div>
               <div class="gal-copy">
-                <span class="lbl"><i></i> Scheduling</span>
-                <h4>Events and availability stay connected.</h4>
-                <p>Calendar surfaces, event creation, reminders, and coordination become native instead of bolted on.</p>
+                <span class="lbl"><i></i> Chat</span>
+                <h4>Messaging keeps people, files, and context together.</h4>
+                <p>This view shows how direct messaging is treated as real work infrastructure, with thread context, participant identity, and attached assets all available without leaving the conversation.</p>
                 <ul>
-                  <li>Integrated event creation</li>
-                  <li>Calendar surfaces</li>
-                  <li>Reminder and coordination logic</li>
+                  <li>Direct chat with persistent thread context</li>
+                  <li>Docs, media, audio, and links nearby</li>
+                  <li>Profile intelligence visible beside the thread</li>
                 </ul>
               </div>
             </div>
+
             <div class="gal-panel" data-gallery-panel="3">
-              <div class="gal-screen"><img src="profile-page.png" alt="Teamstar profile"></div>
+              <div class="gal-screen"><img src="create-event.png" alt="Teamstar create event modal"></div>
               <div class="gal-copy">
-                <span class="lbl"><i></i> Profiles</span>
-                <h4>Profiles with genuine operational value.</h4>
-                <p>A stronger profile layer improves networking, fit, discovery, and collaboration quality across the product.</p>
+                <span class="lbl"><i></i> Create Event</span>
+                <h4>Event creation is structured, fast, and trust-aware.</h4>
+                <p>The event composer is designed for practical use, with image upload, timing, recurrence, visibility, reminders, and description fields presented cleanly inside the same system language.</p>
                 <ul>
-                  <li>Skills and expertise visibility</li>
-                  <li>Networking intent and direction</li>
-                  <li>Practical identity context</li>
+                  <li>Clear event setup flow</li>
+                  <li>Reminders, visibility, and format controls</li>
+                  <li>Consistent modal experience inside the platform</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="gal-panel" data-gallery-panel="4">
+              <div class="gal-screen"><img src="search.png" alt="Teamstar search results screen"></div>
+              <div class="gal-copy">
+                <span class="lbl"><i></i> Search</span>
+                <h4>Discovery becomes precise when filters actually matter.</h4>
+                <p>The search view connects people, categories, qualifications, expertise, and other structured filters so discovery becomes intentional rather than random scrolling and luck.</p>
+                <ul>
+                  <li>Search across people, feed, events, and pages</li>
+                  <li>Structured filters for serious matching</li>
+                  <li>Discovery built on profile depth and relevance</li>
                 </ul>
               </div>
             </div>
@@ -1544,38 +1584,8 @@
         </div>
       </div>
     </section>
-
     <!-- ── Chapter 08 ── -->
-    <div class="chapter"><div class="container chapter-row">
-      <span class="ch-n">08</span>
-      <span class="ch-dot"></span>
-      <span class="ch-t">Device Discipline</span>
-    </div></div>
 
-    <!-- ═══ DEVICES ═══ -->
-    <section class="section" id="devices">
-      <div class="container dev-wrap">
-        <div class="dev-stack reveal">
-          <div class="dev-frame dev-desk"><img src="feed-screen.png" alt="Desktop view"></div>
-          <div class="dev-frame dev-tab"><img src="calendar-screen.png" alt="Tablet view"></div>
-          <div class="dev-frame dev-mob"><img src="chat.png" alt="Mobile view"></div>
-        </div>
-        <div class="dev-copy reveal d2">
-          <span class="lbl"><i></i> Device discipline <s></s></span>
-          <h3>Designed to Feel Coherent Across Every Surface.</h3>
-          <p>The experience is not meant to collapse into chaos when it moves between desktop, tablet, and mobile. Teamstar keeps the same system language — same trust, same context, same quality — across all surfaces.</p>
-          <div class="dev-tags">
-            <span class="d-tag">Desktop</span>
-            <span class="d-tag">Tablet</span>
-            <span class="d-tag">Mobile</span>
-            <span class="d-tag">iOS &amp; Android</span>
-            <span class="d-tag">Web</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Chapter 09 ── -->
     <div class="chapter"><div class="container chapter-row">
       <span class="ch-n">09</span>
       <span class="ch-dot"></span>
