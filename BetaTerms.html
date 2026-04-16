@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BetaTerms — Teamstar</title>
+  <meta name="description" content="BetaTerms for Teamstar." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg-0: #020814;
+  --bg-1: #040d1c;
+  --bg-2: #071526;
+  --text: rgba(225, 242, 255, 0.96);
+  --text-2: rgba(170, 202, 228, 0.82);
+  --text-3: rgba(140, 178, 210, 0.58);
+  --cyan: #39b4ff;
+  --cyan-2: #88ddff;
+  --border: rgba(90, 178, 255, 0.14);
+  --border-hi: rgba(90, 178, 255, 0.24);
+  --fd: 'Barlow Condensed', sans-serif;
+  --fb: 'Barlow', sans-serif;
+  --fm: 'IBM Plex Mono', monospace;
+  --r1: 10px;
+  --r2: 18px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--fb);
+  color: var(--text);
+  background:
+    radial-gradient(circle at 15% 18%, rgba(0,194,255,0.14), transparent 22%),
+    radial-gradient(circle at 85% 14%, rgba(109,92,255,0.10), transparent 18%),
+    linear-gradient(180deg, #02060c 0%, #07111b 40%, #03070d 100%);
+  min-height: 100vh;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(82,214,255,0.025) 50%, transparent 100%),
+    linear-gradient(transparent 0%, rgba(255,255,255,0.015) 50%, transparent 100%);
+  background-size: 100% 100%, 100% 6px;
+  mix-blend-mode: screen;
+  opacity: .34;
+}
+.wrap {
+  position: relative;
+  z-index: 1;
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+.card {
+  border: 1px solid var(--border-hi);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(5, 13, 26, .92), rgba(5, 13, 26, .84));
+  box-shadow: 0 24px 80px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.05);
+  overflow: hidden;
+}
+.head {
+  padding: 26px 28px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.eyebrow {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--cyan-2);
+  margin-bottom: 12px;
+}
+.title {
+  margin: 0 0 10px;
+  font-family: var(--fd);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  line-height: .96;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+}
+.meta {
+  margin: 0;
+  font-family: var(--fm);
+  color: var(--text-3);
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+.content {
+  padding: 28px;
+  color: var(--text-2);
+  line-height: 1.8;
+  font-size: 1rem;
+  white-space: pre-wrap;
+}
+.content a {{ color: var(--cyan-2); }}
+.content strong {{ color: var(--text); }}
+@media (max-width: 640px) {{
+  .wrap {{ width: calc(100% - 20px); padding-top: 14px; }}
+  .head, .content {{ padding-left: 18px; padding-right: 18px; }}
+}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="head">
+        <div class="eyebrow">Teamstar Legal</div>
+        <h1 class="title">Beta Terms</h1>
+        <p class="meta">Standalone legal page for Teamstar website use</p>
+      </div>
+      <div class="content">Teamstar - Beta Testing Terms &amp; Conditions
+
+Last Upated: 16th April 2026
+
+1) Participation &amp; Eligibility
+By joining the Teamstar beta (the “Beta”), you agree to these Beta Terms in addition to the Terms of Service.
+You must be 16+ and legally able to contract. No access for users under 16.
+
+2) Pre-Release Software; No Support
+Beta builds, features, and content are pre-release and may change or be removed.
+Teamstar Pty Ltd is not obligated to provide maintenance, technical support, or a commercial release.
+
+3) “As Is” / Experimental
+Beta is provided “AS IS” and “AS AVAILABLE,” and may contain bugs, errors, delays, and data loss risks.
+To the fullest extent permitted by law, all warranties are disclaimed (merchantability, fitness, accuracy, non-infringement, performance).
+
+4) Feedback License
+You grant Teamstar a perpetual, worldwide, royalty-free license to use ideas, bug reports, and suggestions you submit, without obligation to you.
+
+5) Confidentiality &amp; Limited Forum Exception
+Non-public Beta information is Confidential. You must not disclose it outside Teamstar’s designated Beta discussion spaces.
+Inside official Teamstar Beta forums/channels for your cohort, you may discuss Beta info only with fellow participants in that same cohort.
+
+6) Third-Party Components
+Beta may include or interoperate with third-party software subject to their licenses. Those terms govern your use of those components.
+
+7) Risk Allocation; Liability Cap
+You accept all risks and costs arising from installation/use of Beta (including backups, device/peripheral impacts, data loss).
+Indirect, special, incidental, or consequential damages are excluded to the maximum extent permitted by law.
+Aggregate liability cap: AUD $0.00 for Beta participation, except where non-excludable by law (e.g., personal injury).
+
+8) IP Indemnity (Limited)
+Teamstar warrants it can license the Beta to you.
+Teamstar will defend claims that the unmodified Beta as supplied infringes third-party copyright, if you: (i) notify within a reasonable time; (ii) provide reasonable assistance; (iii) allow Teamstar control of defense; and (iv) are not using Beta with unapproved combinations.
+Teamstar may modify, replace, or suspend Beta to resolve a claim.
+
+9) Termination; Return/Destruction
+You or Teamstar may terminate Beta access at any time.
+On termination, stop using Beta and delete/return confidential materials. If some components cannot be purged, you must continue to treat them as Confidential.
+
+10) Export Compliance
+You will not export/re-export Beta or related materials in violation of applicable export laws/sanctions.
+
+To delete your data, please visit:
+
+<a href="https://digital.teamstar.app/delete-account" target="_blank" rel="noopener">https://digital.teamstar.app/delete-account</a></div>
+    </div>
+  </div>
+</body>
+</html>

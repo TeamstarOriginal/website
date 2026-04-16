@@ -901,6 +901,81 @@
       color: var(--text-3); line-height: 1.65; margin-top: 4px;
     }
 
+    .form-note code {
+      font-family: var(--fm);
+      color: var(--cyan-2);
+      background: rgba(57,180,255,.08);
+      border: 1px solid rgba(57,180,255,.18);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+    .form-note a { color: var(--cyan-2); text-decoration: underline; }
+    .status-ok { color: #9ef6c3; }
+    .status-warn { color: #ffd38a; }
+
+    .legal-modal[hidden] { display: none; }
+    .legal-modal {
+      position: fixed; inset: 0; z-index: 120;
+      display: grid; place-items: center;
+      padding: 24px;
+    }
+    .legal-modal__backdrop {
+      position: absolute; inset: 0;
+      background: rgba(2, 8, 20, 0.82);
+      backdrop-filter: blur(14px);
+    }
+    .legal-modal__dialog {
+      position: relative;
+      width: min(1080px, calc(100vw - 32px));
+      height: min(86vh, 860px);
+      border-radius: var(--r3);
+      border: 1px solid rgba(90, 178, 255, 0.22);
+      background: linear-gradient(180deg, rgba(4, 11, 19, 0.98), rgba(4, 11, 19, 0.92));
+      box-shadow: 0 24px 80px rgba(0,0,0,.46), 0 0 0 1px rgba(255,255,255,.03) inset;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      z-index: 1;
+    }
+    .legal-modal__head {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5, 13, 26, .92);
+    }
+    .legal-modal__meta { display: grid; gap: 4px; min-width: 0; }
+    .legal-modal__eyebrow {
+      font-family: var(--fm); font-size: 9px; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--cyan-2);
+    }
+    .legal-modal__title {
+      font-family: var(--fd); font-size: 1.5rem; font-weight: 700;
+      letter-spacing: .04em; text-transform: uppercase;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .legal-modal__actions {
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    }
+    .legal-modal__frame {
+      width: 100%; height: 100%; border: 0; background: #06111d;
+    }
+    .legal-open-link { cursor: pointer; }
+    body.modal-open { overflow: hidden; }
+
+    @media (max-width: 720px) {
+      .legal-modal { padding: 12px; }
+      .legal-modal__dialog { width: 100%; height: min(90vh, 920px); }
+      .legal-modal__head {
+        flex-direction: column; align-items: stretch;
+      }
+      .legal-modal__actions {
+        width: 100%; justify-content: stretch;
+      }
+      .legal-modal__actions .btn {
+        flex: 1; justify-content: center;
+      }
+    }
+
 
     /* ── Proof / Investor ── */
     .proof-grid {
@@ -1821,22 +1896,23 @@
             </ul>
           </div>
 
-          <form class="wait-form reveal d2" id="waitlistForm" aria-label="Access request" data-endpoint="">
+          <form class="wait-form reveal d2" id="waitlistForm" aria-label="Access request" action="https://formspree.io/f/xjgjgqze" method="POST" data-endpoint="https://formspree.io/f/xjgjgqze">
+            <input type="hidden" name="source" value="Teamstar website access form">
             <div class="f-grp">
               <label class="f-lbl" for="f-name">Your Name</label>
-              <input class="f-inp" type="text" id="f-name" placeholder="Full name" autocomplete="name" required>
+              <input class="f-inp" type="text" id="f-name" name="name" placeholder="Full name" autocomplete="name" required>
             </div>
             <div class="f-grp">
               <label class="f-lbl" for="f-email">Email Address</label>
-              <input class="f-inp" type="email" id="f-email" placeholder="you@company.com" autocomplete="email" required>
+              <input class="f-inp" type="email" id="f-email" name="email" placeholder="you@company.com" autocomplete="email" required>
             </div>
             <div class="f-grp">
               <label class="f-lbl" for="f-company">Company / Role</label>
-              <input class="f-inp" type="text" id="f-company" placeholder="Founder, investor, operator, team lead...">
+              <input class="f-inp" type="text" id="f-company" name="company_role" placeholder="Founder, investor, operator, team lead...">
             </div>
             <div class="f-grp">
               <label class="f-lbl" for="f-interest">Access Type</label>
-              <select class="f-inp" id="f-interest" required>
+              <select class="f-inp" id="f-interest" name="access_type" required>
                 <option value="">Select one</option>
                 <option value="Early Access">Early Access</option>
                 <option value="Strategic Partner">Strategic Partner</option>
@@ -1846,7 +1922,7 @@
             </div>
             <div class="f-grp">
               <label class="f-lbl" for="f-message">Why are you reaching out?</label>
-              <textarea class="f-inp" id="f-message" placeholder="A short note about your interest, use case, partnership idea, or investment context."></textarea>
+              <textarea class="f-inp" id="f-message" name="message" placeholder="A short note about your interest, use case, partnership idea, or investment context."></textarea>
             </div>
             <button class="btn-cta" type="submit" style="justify-content:center; text-align:center;">
               Submit Request →
@@ -1858,7 +1934,7 @@
     </section>
 
 
-  </main>  </main>
+  </main>
 
   <footer class="footer">
     <div class="container foot-inner">
@@ -1878,9 +1954,31 @@
         <a class="foot-a" href="#ai">AI</a>
         <a class="foot-a" href="#investors">Investors</a>
         <a class="foot-a" href="#waitlist">Access</a>
+        <a class="foot-a legal-open-link" href="Privacy.html" data-legal-modal="Privacy.html" data-legal-title="Privacy">Privacy</a>
+        <a class="foot-a legal-open-link" href="TermsOfService.html" data-legal-modal="TermsOfService.html" data-legal-title="TermsOfService">TermsOfService</a>
+        <a class="foot-a legal-open-link" href="BetaTerms.html" data-legal-modal="BetaTerms.html" data-legal-title="BetaTerms">BetaTerms</a>
       </div>
     </div>
   </footer>
+
+
+
+  <div class="legal-modal" id="legalModal" hidden aria-hidden="true">
+    <div class="legal-modal__backdrop" data-legal-close></div>
+    <div class="legal-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="legalModalTitle">
+      <div class="legal-modal__head">
+        <div class="legal-modal__meta">
+          <span class="legal-modal__eyebrow">Teamstar Legal</span>
+          <h2 class="legal-modal__title" id="legalModalTitle">Document</h2>
+        </div>
+        <div class="legal-modal__actions">
+          <a class="btn btn-ghost" id="legalModalOpenLink" href="Privacy.html" target="_blank" rel="noopener">Open page</a>
+          <button class="btn btn-primary" type="button" data-legal-close>Close</button>
+        </div>
+      </div>
+      <iframe class="legal-modal__frame" id="legalModalFrame" src="about:blank" title="Legal document"></iframe>
+    </div>
+  </div>
 
 </div><!-- /shell -->
 
@@ -1941,62 +2039,24 @@ document.querySelectorAll('.c-nd').forEach(node => {
 
 
 /* ── Access request form ── */
-const TEAMSTAR_FORM_ENDPOINT = window.TEAMSTAR_FORM_ENDPOINT || '';
+const TEAMSTAR_FORM_ENDPOINT = window.TEAMSTAR_FORM_ENDPOINT || 'https://formspree.io/f/xjgjgqze';
 const waitlistForm = document.getElementById('waitlistForm');
 const formNote = document.getElementById('formNote');
-
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, (m) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  }[m]));
-}
 
 if (waitlistForm) {
   waitlistForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById('f-name').value.trim();
-    const email = document.getElementById('f-email').value.trim();
-    const company = document.getElementById('f-company').value.trim();
-    const interest = document.getElementById('f-interest').value.trim();
-    const message = document.getElementById('f-message').value.trim();
-    const endpoint = TEAMSTAR_FORM_ENDPOINT || waitlistForm.dataset.endpoint || '';
+    const endpoint = TEAMSTAR_FORM_ENDPOINT || waitlistForm.action || waitlistForm.dataset.endpoint || 'https://formspree.io/f/xjgjgqze';
+    const formData = new FormData(waitlistForm);
+    const name = String(formData.get('name') || '').trim();
+    const email = String(formData.get('email') || '').trim();
+    const accessType = String(formData.get('access_type') || '').trim();
 
-    if (!name || !email || !interest) {
+    if (!name || !email || !accessType) {
       if (formNote) {
         formNote.className = 'form-note status-warn';
         formNote.textContent = 'Name, email, and access type are required.';
-      }
-      return;
-    }
-
-    const payload = {
-      name,
-      email,
-      company,
-      interest,
-      message,
-      source: 'Teamstar website access form',
-      submittedAt: new Date().toISOString()
-    };
-
-    if (!endpoint) {
-      const subject = `Teamstar ${interest} Request — ${name}`;
-      const body = [
-        `Name: ${name}`,
-        `Email: ${email}`,
-        `Company / Role: ${company || 'Not supplied'}`,
-        `Access Type: ${interest}`,
-        `Message: ${message || 'Not supplied'}`
-      ].join('\n');
-
-      if (formNote) {
-        formNote.className = 'form-note status-warn';
-        formNote.innerHTML = `Set <code>TEAMSTAR_FORM_ENDPOINT</code> to your Cloudflare Worker or API endpoint to enable in-page submissions. For now, use the <a href="mailto:waitlist@teamstar.com.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}">email fallback</a>.`;
       }
       return;
     }
@@ -2009,11 +2069,20 @@ if (waitlistForm) {
 
       const res = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(payload)
+        headers: { 'Accept': 'application/json' },
+        body: formData
       });
 
-      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (_err) {
+        data = null;
+      }
+
+      if (!res.ok || (data && data.ok === false)) {
+        throw new Error((data && (data.error || data.errors?.map?.(x => x.message).join(', '))) || `Request failed: ${res.status}`);
+      }
 
       waitlistForm.reset();
       if (formNote) {
@@ -2024,11 +2093,53 @@ if (waitlistForm) {
       console.error(err);
       if (formNote) {
         formNote.className = 'form-note status-warn';
-        formNote.innerHTML = `Submission failed. Check your endpoint, or use the <a href="mailto:waitlist@teamstar.com.au">email fallback</a>.`;
+        formNote.textContent = 'Submission failed. Please try again in a moment or email waitlist@teamstar.com.au.';
       }
     }
   });
 }
+
+/* ── Legal document modal ── */
+const legalModal = document.getElementById('legalModal');
+const legalModalFrame = document.getElementById('legalModalFrame');
+const legalModalTitle = document.getElementById('legalModalTitle');
+const legalModalOpenLink = document.getElementById('legalModalOpenLink');
+const legalTriggerLinks = document.querySelectorAll('[data-legal-modal]');
+
+function openLegalModal(url, title) {
+  if (!legalModal || !legalModalFrame || !legalModalTitle || !legalModalOpenLink) return;
+  legalModal.hidden = false;
+  legalModal.setAttribute('aria-hidden', 'false');
+  legalModalTitle.textContent = title || 'Document';
+  legalModalFrame.src = url;
+  legalModalOpenLink.href = url;
+  document.body.classList.add('modal-open');
+}
+
+function closeLegalModal() {
+  if (!legalModal || !legalModalFrame) return;
+  legalModal.hidden = true;
+  legalModal.setAttribute('aria-hidden', 'true');
+  legalModalFrame.src = 'about:blank';
+  document.body.classList.remove('modal-open');
+}
+
+legalTriggerLinks.forEach((link) => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    openLegalModal(link.getAttribute('data-legal-modal'), link.getAttribute('data-legal-title') || link.textContent.trim());
+  });
+});
+
+if (legalModal) {
+  legalModal.querySelectorAll('[data-legal-close]').forEach((el) => {
+    el.addEventListener('click', closeLegalModal);
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && legalModal && !legalModal.hidden) closeLegalModal();
+});
 
 
 /* ── Nav active section ── *//* ── Nav active section ── */

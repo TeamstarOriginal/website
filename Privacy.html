@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy — Teamstar</title>
+  <meta name="description" content="Privacy for Teamstar." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg-0: #020814;
+  --bg-1: #040d1c;
+  --bg-2: #071526;
+  --text: rgba(225, 242, 255, 0.96);
+  --text-2: rgba(170, 202, 228, 0.82);
+  --text-3: rgba(140, 178, 210, 0.58);
+  --cyan: #39b4ff;
+  --cyan-2: #88ddff;
+  --border: rgba(90, 178, 255, 0.14);
+  --border-hi: rgba(90, 178, 255, 0.24);
+  --fd: 'Barlow Condensed', sans-serif;
+  --fb: 'Barlow', sans-serif;
+  --fm: 'IBM Plex Mono', monospace;
+  --r1: 10px;
+  --r2: 18px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--fb);
+  color: var(--text);
+  background:
+    radial-gradient(circle at 15% 18%, rgba(0,194,255,0.14), transparent 22%),
+    radial-gradient(circle at 85% 14%, rgba(109,92,255,0.10), transparent 18%),
+    linear-gradient(180deg, #02060c 0%, #07111b 40%, #03070d 100%);
+  min-height: 100vh;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(82,214,255,0.025) 50%, transparent 100%),
+    linear-gradient(transparent 0%, rgba(255,255,255,0.015) 50%, transparent 100%);
+  background-size: 100% 100%, 100% 6px;
+  mix-blend-mode: screen;
+  opacity: .34;
+}
+.wrap {
+  position: relative;
+  z-index: 1;
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+.card {
+  border: 1px solid var(--border-hi);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(5, 13, 26, .92), rgba(5, 13, 26, .84));
+  box-shadow: 0 24px 80px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.05);
+  overflow: hidden;
+}
+.head {
+  padding: 26px 28px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.eyebrow {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--cyan-2);
+  margin-bottom: 12px;
+}
+.title {
+  margin: 0 0 10px;
+  font-family: var(--fd);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  line-height: .96;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+}
+.meta {
+  margin: 0;
+  font-family: var(--fm);
+  color: var(--text-3);
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+.content {
+  padding: 28px;
+  color: var(--text-2);
+  line-height: 1.8;
+  font-size: 1rem;
+  white-space: pre-wrap;
+}
+.content a {{ color: var(--cyan-2); }}
+.content strong {{ color: var(--text); }}
+@media (max-width: 640px) {{
+  .wrap {{ width: calc(100% - 20px); padding-top: 14px; }}
+  .head, .content {{ padding-left: 18px; padding-right: 18px; }}
+}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="head">
+        <div class="eyebrow">Teamstar Legal</div>
+        <h1 class="title">Privacy</h1>
+        <p class="meta">Standalone legal page for Teamstar website use</p>
+      </div>
+      <div class="content">Teamstar - Privacy Policy (Global)
+
+Last Upated: 16th April 2026
+
+1) Who controls your data?
+Teamstar Pty Ltd is the data controller for most processing. Contact: privacy@teamstar.com.au EU/UK users may contact our DPO/representative at Contact: privacy@teamstar.com.au.
+
+2) Scope
+This Policy covers personal data processed via our website, app(s), and integrated services. Users must be 16+; we do not knowingly collect data from children under 16.
+
+3) What we collect
+Identifiers &amp; profile: name, email, photo, handle, age range/DoB (if provided), phone, address, identity verification signals.
+Usage &amp; device: IP, device identifiers, OS, app version, events, logs, crash reports, diagnostics, cookies and similar tech.
+Content &amp; metadata: posts, messages, files, media, groups, connections, and related timestamps/metadata.
+Contacts &amp; location (optional): if you enable, we process phonebook entries or coarse location to power features.
+Third-party sign-in: Google/Apple/LinkedIn/etc. provide basic profile and auth tokens as you permit.
+
+4) Why we process (legal bases)
+Provide the Service and features (performance of contract).
+Improve, secure, and troubleshoot (legitimate interests; consent where required).
+Communications &amp; support (legitimate interests/contract).
+Personalization &amp; analytics (consent where required; otherwise legitimate interests).
+Compliance, fraud prevention, and safety (legal obligations/legitimate interests).
+Marketing (consent where required; opt-out anytime).
+
+5) Sharing
+Service providers / processors (hosting, storage, analytics, communications, moderation, payments, customer support).
+Integrations you choose to connect.
+Corporate transactions (merger, acquisition, reorg).
+Legal/safety (lawful requests; to protect rights, users, and the public).
+We don’t sell personal data in the common sense; for California we do not “sell” data as defined by CPRA, nor “share” for cross-context behavioral advertising unless you opt-in where required.
+
+6) International transfers
+We operate globally and may transfer data to countries with different laws. Where required, we use appropriate safeguards (e.g., Standard Contractual Clauses) and assess local laws.
+
+7) Retention
+We keep personal data only as long as necessary for the purposes above, to comply with law, and to resolve disputes. We apply documented retention schedules.
+
+8) Your choices &amp; rights
+Access, rectify, delete, port, restrict, object (GDPR/UK GDPR/APPs).
+Withdraw consent (where processing is based on consent).
+California/Virginia/etc.: access, delete, correct, limit use of sensitive data, and opt-out of certain data uses.
+Marketing &amp; cookies: manage preferences in-app, via OS settings, or browser controls.
+To exercise rights: privacy@teamstar.com.au. We may need to verify your identity. You can also contact your supervisory authority/regulator.
+
+9) Security
+We use administrative, technical, and organizational measures (encryption in transit, access controls, monitoring, backups). No system is 100% secure.
+
+10) Cookies &amp; tracking
+We use cookies/SDKs for core functionality, analytics, and (if enabled) marketing. Where required, we obtain consent via a banner and provide granular controls.
+
+11) Children
+No users under 16. If you believe a minor has provided data, contact us to remove it.
+
+12) Changes
+We’ll post updates here and adjust the “Last updated” date. Material changes may also be notified in-app/email.
+
+13) Contact
+Email: privacy@teamstar.com.au
+Postal: 3 Cranbrook Steet, Botany, NSW, 2019, Australia.
+EU/UK inquiries: privacy@teamstar.com.au
+
+To delete your data, please visit:
+
+<a href="https://digital.teamstar.app/delete-account" target="_blank" rel="noopener">https://digital.teamstar.app/delete-account</a></div>
+    </div>
+  </div>
+</body>
+</html>
