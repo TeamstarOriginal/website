@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teamstar — Future Collaboration Platform</title>
-  <meta name="description" content="Teamstar is a future-ready collaboration platform bringing trusted identity, networking, messaging, events, startup building, and intelligent assistance into one premium operating environment." />
+  <title>Teamstar — Trusted Identity, Discovery &amp; Collaboration</title>
+  <meta name="description" content="Teamstar brings verified identity, structured discovery, collaboration, scheduling, startup activation, and AI-assisted workflows into one serious operating environment for professionals, startups, and businesses." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -320,7 +320,7 @@
 
     .hero-h1 {
       font-family: var(--fd); font-weight: 800;
-      font-size: clamp(4rem, 8.5vw, 9.5rem);
+      font-size: clamp(3.4rem, 7.4vw, 8.35rem);
       line-height: .88; letter-spacing: -.015em;
       text-transform: uppercase; margin-bottom: 26px;
     }
@@ -332,6 +332,8 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
+    .h1-nowrap { white-space: nowrap; }
+
 
     .hero-p {
       font-size: clamp(1rem, 1.22vw, 1.12rem);
@@ -383,6 +385,7 @@
     }
     .hero-net {
       position: relative; width: 100%; max-width: 560px; aspect-ratio: 1;
+      transform: translateY(-118px);
     }
     #hero-cv { position: absolute; inset: 0; width: 100%; height: 100%; }
 
@@ -898,6 +901,110 @@
       color: var(--text-3); line-height: 1.65; margin-top: 4px;
     }
 
+
+    /* ── Proof / Investor ── */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--r2);
+      overflow: hidden;
+      margin-top: 22px;
+    }
+    .proof-card {
+      background: var(--bg-1);
+      padding: 24px 22px;
+      min-height: 100%;
+      transition: .3s var(--ease);
+    }
+    .proof-card:hover { background: rgba(5,15,34,.96); }
+    .proof-eyebrow {
+      font-family: var(--fm);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--cyan-2);
+      margin-bottom: 10px;
+    }
+    .proof-title {
+      font-family: var(--fd);
+      font-weight: 700;
+      font-size: 1.1rem;
+      line-height: 1.08;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .proof-text {
+      color: var(--text-2);
+      font-size: .92rem;
+      line-height: 1.68;
+    }
+
+    .investor-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .investor-stack { display: grid; gap: 14px; }
+    .investor-card {
+      border: 1px solid var(--border);
+      border-radius: var(--r1);
+      padding: 20px;
+      background: rgba(5,13,27,.72);
+      transition: .3s var(--ease);
+    }
+    .investor-card:hover {
+      border-color: var(--border-hi);
+      background: rgba(5,15,34,.92);
+    }
+    .investor-card h4 {
+      font-family: var(--fd);
+      font-weight: 700;
+      font-size: 1.22rem;
+      line-height: 1.06;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .investor-card p {
+      color: var(--text-2);
+      font-size: .95rem;
+      line-height: 1.72;
+    }
+    .investor-card ul {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .investor-card li {
+      font-family: var(--fm);
+      font-size: 9px;
+      letter-spacing: .07em;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .investor-card li::before {
+      content: '';
+      width: 12px;
+      height: 1px;
+      background: var(--cyan);
+      opacity: .55;
+      flex-shrink: 0;
+    }
+    .wait-form textarea.f-inp {
+      min-height: 108px;
+      resize: vertical;
+    }
+    .form-note a {
+      color: var(--cyan-2);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     .android-scroll-compat .bg-field,
     .android-scroll-compat .bg-grid,
     .android-scroll-compat .bg-scan,
@@ -991,6 +1098,7 @@
 
       .hero-grid { grid-template-columns: 1fr; min-height: auto; gap: 40px; }
       .hero-vis { min-height: 340px; }
+      .hero-net { transform: translateY(0); }
       .hero-h1 { font-size: clamp(3rem, 11vw, 6rem); }
 
       .feat-grid {
@@ -1025,6 +1133,8 @@
 
       .trust-grid { grid-template-columns: 1fr; }
       .aud-grid { grid-template-columns: 1fr; }
+      .proof-grid { grid-template-columns: 1fr; }
+      .investor-grid { grid-template-columns: 1fr; }
       .ai-wrap { grid-template-columns: 1fr; gap: 36px; }
       .dev-wrap { grid-template-columns: 1fr; gap: 36px; }
       .future-inner { grid-template-columns: 1fr; gap: 28px; }
@@ -1083,7 +1193,7 @@
         <a class="nav-a" href="#experience">Experience</a>
         <a class="nav-a" href="#trust">Trust</a>
         <a class="nav-a" href="#ai">AI</a>
-        <a class="nav-a" href="#waitlist">Investors</a>
+        <a class="nav-a" href="#investors">Investors</a>
       </nav>
 
       <div class="nav-end">
@@ -1099,6 +1209,7 @@
       <a class="nav-a" href="#experience">Experience</a>
       <a class="nav-a" href="#trust">Trust</a>
       <a class="nav-a" href="#ai">AI</a>
+      <a class="nav-a" href="#investors">Investors</a>
       <a class="nav-a" href="https://digital.teamstar.app" target="_blank" rel="noopener">Log In</a>
       <a class="btn btn-primary" href="#waitlist">Request Early Access</a>
     </div>
@@ -1114,35 +1225,36 @@
           <div class="hero-left reveal in-view">
             <div class="hero-seq">
               <span class="seq-dot"></span>
-              A living collaboration operating system
+              Verified identity. Structured discovery. Real collaboration.
             </div>
 
             <h1 class="hero-h1">
               <span class="h1-dim">Where</span>
-              <span class="h1-solid">Verified People,</span>
-              <span class="h1-grad">Ideas &amp; Execution</span>
-              <span class="h1-solid">Converge.</span>
+              <span class="h1-solid">Trusted Identity,</span>
+              <span class="h1-grad">Discovery</span>
+              <span class="h1-grad h1-nowrap">&amp; Execution</span>
+              <span class="h1-solid">Move Together.</span>
             </h1>
 
-            <p class="hero-p">Teamstar is a future-ready platform for meaningful networking, intelligent collaboration, structured discovery, startup activation, messaging, scheduling, and AI-assisted momentum. It turns fragmented interactions into a system that can actually move work forward.</p>
+            <p class="hero-p">Teamstar is built for professionals, startups, and businesses that need more than noise. It brings verified identity, structured discovery, messaging, scheduling, startup activation, and AI-assisted workflows into one environment designed to turn better connections into real work.</p>
 
             <div class="hero-acts">
               <a class="btn-cta" href="#waitlist">Request Early Access <span style="opacity:.6">→</span></a>
-              <a class="btn btn-ghost" href="#experience">Watch Platform Experience</a>
+              <a class="btn btn-ghost" href="#experience">See Product Screens</a>
             </div>
 
             <div class="data-strip">
               <div class="ds-cell">
-                <div class="ds-lbl">Scope</div>
-                <div class="ds-val">Multi-context</div>
+                <div class="ds-lbl">Identity</div>
+                <div class="ds-val">Trust First</div>
               </div>
               <div class="ds-cell">
-                <div class="ds-lbl">Infrastructure</div>
-                <div class="ds-val">High Trust</div>
+                <div class="ds-lbl">Discovery</div>
+                <div class="ds-val">Structured Fit</div>
               </div>
               <div class="ds-cell">
-                <div class="ds-lbl">Intelligence</div>
-                <div class="ds-val">AI Native</div>
+                <div class="ds-lbl">Workflows</div>
+                <div class="ds-val">AI Assisted</div>
               </div>
             </div>
           </div>
@@ -1155,7 +1267,7 @@
                 <div class="nn-dot"><span class="nd"></span>Trusted Identity</div>
               </div>
               <div class="net-node nn-in">
-                <div class="nn-dot"><span class="nd"></span>Intelligent Networking</div>
+                <div class="nn-dot"><span class="nd"></span>Structured Discovery</div>
               </div>
               <div class="net-node nn-msg">
                 <div class="nn-dot"><span class="nd"></span>Messaging</div>
@@ -1164,7 +1276,7 @@
                 <div class="nn-dot"><span class="nd"></span>Scheduling</div>
               </div>
               <div class="net-node nn-path" >
-                <div class="nn-dot"><span class="nd"></span>Pathways</div>
+                <div class="nn-dot"><span class="nd"></span>Startup Paths</div>
               </div>
               <div class="net-node nn-share" >
                 <div class="nn-dot"><span class="nd"></span>Content Sharing</div>
@@ -1195,9 +1307,9 @@
         <div class="feat-header reveal">
           <div>
             <span class="lbl"><i></i> What Teamstar actually is <s></s></span>
-            <h2 class="sh">Not Another<br>Noisy Feed.</h2>
+            <h2 class="sh">Built To Fix<br>Fragmented Work.</h2>
           </div>
-          <p class="feat-p">Teamstar combines networking, collaboration, messaging, scheduling, startup building, profile depth, AI assistance, and trust controls into one premium operating layer — designed so people can discover better, coordinate faster, and act with more clarity.</p>
+          <p class="feat-p">This is not another shallow feed dressed up in premium visuals. Teamstar is a trust-aware operating environment that connects identity, discovery, messaging, scheduling, startup activation, and AI-assisted execution in one coherent system.</p>
         </div>
 
         <div class="feat-grid reveal d1">
@@ -1207,7 +1319,7 @@
             <div class="fc-ico">◎</div>
               <h3 class="fc-h">Intelligent Networking</h3>
             </div>
-            <p class="fc-p">Move beyond shallow follows and random reach. Structure, context, and profile depth create more meaningful discovery and better-fit connections.</p>
+            <p class="fc-p">Find people by capability, intent, and fit instead of hoping the algorithm gets lucky. Better matching starts with better structure.</p>
             <div class="fc-tags"><span class="tag">Skills &amp; Expertise</span><span class="tag">Network Modes</span><span class="tag">Match Quality</span></div>
           </article>
 
@@ -1217,7 +1329,7 @@
             <div class="fc-ico">⌁</div>
               <h3 class="fc-h">Messaging &amp; Collaboration</h3>
             </div>
-            <p class="fc-p">Conversation becomes more useful when it connects directly to people, files, tasks, events, and context — not just another notification layer.</p>
+            <p class="fc-p">Keep conversation tied to files, people, events, and action instead of scattering work across disconnected tools and dead-end threads.</p>
             <div class="fc-tags"><span class="tag">Direct &amp; Group</span><span class="tag">File Sharing</span><span class="tag">Workspace Context</span></div>
           </article>
 
@@ -1227,7 +1339,7 @@
             <div class="fc-ico">◷</div>
               <h3 class="fc-h">Scheduling &amp; Events</h3>
             </div>
-            <p class="fc-p">Events and reminders stop being external overhead when built into the same environment as collaboration. Coordination becomes native.</p>
+            <p class="fc-p">Bring timing, invites, and follow-through into the same operating layer so coordination stops leaking out into external overhead.</p>
             <div class="fc-tags"><span class="tag">Event Creation</span><span class="tag">Calendar Surfaces</span><span class="tag">Reminders</span></div>
           </article>
 
@@ -1237,7 +1349,7 @@
             <div class="fc-ico">⬡</div>
               <h3 class="fc-h">Startup Activation</h3>
             </div>
-            <p class="fc-p">Founders, businesses, and teams benefit from the same trust layer, visibility logic, and structured surfaces. Build structure, define roles, activate pages, and turn attention into coordinated motion — formation and traction in one place.</p>
+            <p class="fc-p">Move from idea to structured startup presence with roles, activation paths, visibility logic, and collaboration surfaces designed to help traction actually happen.</p>
             <div class="fc-tags"><span class="tag">Startup Formation</span><span class="tag">Role Clarity</span><span class="tag">Operational Momentum</span><span class="tag">Business Presence</span></div>
           </article>
 
@@ -1247,7 +1359,7 @@
             <div class="fc-ico">⊕</div>
               <h3 class="fc-h">Profile Depth</h3>
             </div>
-            <p class="fc-p">A stronger profile layer improves networking, fit, discovery, and collaboration quality across every surface of the product.</p>
+            <p class="fc-p">Profiles carry useful capability context, not just vanity. That improves fit, discovery quality, and collaboration outcomes everywhere else.</p>
             <div class="fc-tags"><span class="tag">Skills Visibility</span><span class="tag">Network Intent</span><span class="tag">Identity Context</span></div>
           </article>
 
@@ -1257,7 +1369,7 @@
             <div class="fc-ico">⬢</div>
               <h3 class="fc-h">AI Assistance</h3>
             </div>
-            <p class="fc-p">Practical AI embedded inside real platform workflows. Draft, refine, summarise, compare, and clarify within the context of your actual work.</p>
+            <p class="fc-p">Practical AI where work happens: draft, refine, summarise, compare, and clarify without leaving the operating context that matters.</p>
             <div class="fc-tags"><span class="tag">Startup Builder</span><span class="tag">Profile Drafting</span><span class="tag">Summaries</span></div>
           </article>
 
@@ -1267,7 +1379,7 @@
             <div class="fc-ico">◈</div>
               <h3 class="fc-h">Trust Infrastructure</h3>
             </div>
-            <p class="fc-p">Identity, visibility, moderation logic, and role-aware surfaces treated as system-level design. Cleaner signal, lower noise, healthier environment.</p>
+            <p class="fc-p">Identity, visibility, moderation, and role-aware surface access treated as system design. Cleaner signal. Lower noise. Better outcomes.</p>
             <div class="fc-tags"><span class="tag">Verified Identity</span><span class="tag">Visibility Controls</span><span class="tag">Signal Quality</span></div>
           </article>
         </div>
@@ -1495,34 +1607,35 @@
     <div class="chapter"><div class="container chapter-row">
       <span class="ch-n">06</span>
       <span class="ch-dot"></span>
-      <span class="ch-t">Who It's Built For</span>
+      <span class="ch-t">Why Teamstar</span>
     </div></div>
 
-    <!-- ═══ AUDIENCE ═══ -->
+    <!-- ═══ DIFFERENCE ═══ -->
     <section class="section" id="difference">
       <div class="container">
         <div style="margin-bottom:40px;" class="reveal">
-          <span class="lbl"><i></i> Who it's built for <s></s></span>
-          <h2 class="sh">Built for People<br>Who Do Real Work.</h2>
+          <span class="lbl"><i></i> Why Teamstar <s></s></span>
+          <h2 class="sh">Not Another Feed.<br>A Better Operating Layer.</h2>
+          <p style="color:var(--text-2);line-height:1.75;font-size:.98rem;max-width:62ch;margin-top:14px;">The wedge is not “more social.” The wedge is verified identity, structured discovery, and execution workflows inside one trust-aware system. That is a sharper position and a more defensible one.</p>
         </div>
         <div class="aud-grid reveal d1">
           <article class="a-card">
-            <div class="a-lbl">For individuals</div>
-            <h4>People building real capability.</h4>
-            <p>Useful networking, stronger context, and tools that make visibility more meaningful in a trust-aware environment.</p>
-            <ul class="a-list"><li>Profile depth</li><li>Better-fit discovery</li><li>Integrated scheduling &amp; messaging</li></ul>
+            <div class="a-lbl">Differentiator 01</div>
+            <h4>Trust is infrastructure.</h4>
+            <p>Teamstar treats identity, visibility, moderation, and surface access as system rules, not decorative badges slapped on after the damage is done.</p>
+            <ul class="a-list"><li>Verified identity model</li><li>Role-aware visibility</li><li>Lower-noise environment</li></ul>
           </article>
           <article class="a-card">
-            <div class="a-lbl">For startups</div>
-            <h4>Formation and traction in one place.</h4>
-            <p>Startup surfaces help founders build structure, define roles, activate pages, and turn attention into coordinated motion.</p>
-            <ul class="a-list"><li>Startup formation</li><li>Role clarity</li><li>Operational momentum</li></ul>
+            <div class="a-lbl">Differentiator 02</div>
+            <h4>Discovery has real context.</h4>
+            <p>Capability, fit, intent, and profile depth matter more than blind reach. Better discovery starts when context stops being optional.</p>
+            <ul class="a-list"><li>Profile depth</li><li>Structured matching</li><li>Better-fit networking</li></ul>
           </article>
           <article class="a-card">
-            <div class="a-lbl">For businesses</div>
-            <h4>A more credible collaboration surface.</h4>
-            <p>Organizations can present capability, route contacts, surface trust, and work more effectively with customers and partners.</p>
-            <ul class="a-list"><li>Business presence</li><li>Customer contact flows</li><li>Trust-aware visibility</li></ul>
+            <div class="a-lbl">Differentiator 03</div>
+            <h4>Execution sits inside the same system.</h4>
+            <p>Messaging, scheduling, startup activation, and AI support stay connected to the same operating fabric, so attention has somewhere useful to go.</p>
+            <ul class="a-list"><li>Messaging + scheduling</li><li>Startup activation paths</li><li>AI in workflow</li></ul>
           </article>
         </div>
       </div>
@@ -1535,13 +1648,13 @@
       <span class="ch-t">AI Assistance</span>
     </div></div>
 
-    <!-- ═══ AI ═══ -->
+<!-- ═══ AI ═══ --><!-- ═══ AI ═══ -->
     <section class="section" id="ai">
       <div class="container ai-wrap">
         <div class="ai-copy reveal">
           <span class="lbl"><i></i> AI assistance <s></s></span>
           <h3>AI Should Reduce Friction Inside Real Workflows.</h3>
-          <p>Teamstar's AI layer is there to help people draft, refine, summarise, compare, clarify, and move faster within platform context. Not a gimmick bolted on — built into the operating fabric from the ground up.</p>
+          <p>Teamstar's AI layer is there to help people draft, refine, summarise, compare, clarify, and move faster inside platform context. Not a gimmick bolted on for a pitch deck — practical assistance embedded where real work happens.</p>
           <div class="chips">
             <span class="chip">Startup Builder</span>
             <span class="chip">Profile Drafting</span>
@@ -1584,44 +1697,109 @@
       </div>
     </section>
     <!-- ── Chapter 08 ── -->
-
     <div class="chapter"><div class="container chapter-row">
-      <span class="ch-n">09</span>
+      <span class="ch-n">08</span>
       <span class="ch-dot"></span>
-      <span class="ch-t">Future Direction</span>
+      <span class="ch-t">Execution &amp; Roadmap</span>
     </div></div>
 
-    <!-- ═══ FUTURE ═══ -->
+    <!-- ═══ FUTURE / PROOF ═══ -->
     <section class="section" id="future">
       <div class="container">
         <div class="future-box reveal">
           <div class="future-inner">
             <div class="future-copy">
-              <span class="lbl"><i></i> Future direction <s></s></span>
-              <h3>Built as Infrastructure.<br>Not Just a Product Skin.</h3>
-              <p>The platform is designed to support networking, trust, collaboration, startup activation, business presence, scheduling, and AI inside one evolving operating system — with room to scale without fragmenting.</p>
+              <span class="lbl"><i></i> Current position <s></s></span>
+              <h3>Vision Is Cheap.<br>Execution Has To Be Visible.</h3>
+              <p>Teamstar is being shaped around a clear wedge: verified identity, structured discovery, collaboration, startup activation, and AI-assisted workflows in one trust-aware environment. The goal is not to look futuristic. The goal is to make professional interaction actually work better.</p>
               <ul class="f-list">
-                <li>Trust-aware core architecture</li>
-                <li>Room for richer discovery and intelligence layers</li>
-                <li>A product direction that can grow without fragmenting</li>
+                <li>Core experience already mapped across feed, chat, calendar, events, and discovery</li>
+                <li>Trust model positioned as system infrastructure, not decoration</li>
+                <li>AI framed as workflow support instead of bolted-on theatre</li>
               </ul>
             </div>
             <div class="roadmap">
               <div class="rm-card">
-                <div class="rm-phase">NOW — MVP 1.0</div>
-                <div class="rm-title">Core Platform Active</div>
-                <div class="rm-desc">Networking, messaging, scheduling, profiles, and trust infrastructure.</div>
+                <div class="rm-phase">NOW — PRODUCT FOUNDATION</div>
+                <div class="rm-title">Core Surfaces Defined</div>
+                <div class="rm-desc">Feed, chat, calendar, events, discovery, startup, and trust surfaces aligned inside one consistent product system.</div>
               </div>
               <div class="rm-card">
-                <div class="rm-phase">NEXT — Phase 2</div>
-                <div class="rm-title">AI &amp; Discovery Layer</div>
-                <div class="rm-desc">Deeper AI integration, richer intelligence, expanded startup activation.</div>
+                <div class="rm-phase">NEXT — PRIVATE ACCESS</div>
+                <div class="rm-title">Early Users &amp; Hardening</div>
+                <div class="rm-desc">Bring in early access users, tighten onboarding, validate workflows, and harden the trust and collaboration stack.</div>
               </div>
               <div class="rm-card">
-                <div class="rm-phase">HORIZON — Scale</div>
-                <div class="rm-title">Platform-Scale Infrastructure</div>
-                <div class="rm-desc">The operating system for professional interaction, not just another app.</div>
+                <div class="rm-phase">THEN — PLATFORM SCALE</div>
+                <div class="rm-title">Deeper AI &amp; Richer Discovery</div>
+                <div class="rm-desc">Expand intelligence, improve matching, and scale a platform that keeps trust and execution connected.</div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-grid reveal d1">
+          <article class="proof-card">
+            <div class="proof-eyebrow">Visible today</div>
+            <div class="proof-title">Trust-aware product direction</div>
+            <p class="proof-text">The product story is centred on identity, visibility, and signal quality instead of pretending trust can be added later.</p>
+          </article>
+          <article class="proof-card">
+            <div class="proof-eyebrow">Visible today</div>
+            <div class="proof-title">Integrated operating surfaces</div>
+            <p class="proof-text">Feed, messaging, scheduling, events, search, and startup flows already present as one system rather than isolated screenshots with no spine.</p>
+          </article>
+          <article class="proof-card">
+            <div class="proof-eyebrow">Visible today</div>
+            <div class="proof-title">Clearer market wedge</div>
+            <p class="proof-text">The sharpest angle is verified identity plus structured discovery plus execution. That is stronger than vague “future of collaboration” fluff.</p>
+          </article>
+          <article class="proof-card">
+            <div class="proof-eyebrow">Visible today</div>
+            <div class="proof-title">Investor-ready narrative</div>
+            <p class="proof-text">The story now points to a wedge, a roadmap, and a reason the product could matter, instead of relying purely on atmosphere.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Chapter 09 ── -->
+    <div class="chapter"><div class="container chapter-row">
+      <span class="ch-n">09</span>
+      <span class="ch-dot"></span>
+      <span class="ch-t">Investor Lens</span>
+    </div></div>
+
+    <!-- ═══ INVESTORS ═══ -->
+    <section class="section" id="investors">
+      <div class="container">
+        <div class="investor-grid">
+          <div class="reveal">
+            <span class="lbl"><i></i> Investor lens <s></s></span>
+            <h2 class="sh">A Sharper Wedge.<br>A Clearer Path.</h2>
+            <p style="color:var(--text-2);line-height:1.75;font-size:.98rem;max-width:62ch;margin-top:14px;">The opportunity is not “another feed.” It is a trust-aware professional operating environment that connects identity, discovery, collaboration, startup activation, and AI-assisted execution in one system. That is the story worth backing.</p>
+          </div>
+
+          <div class="investor-stack reveal d2">
+            <div class="investor-card">
+              <div class="a-lbl">Problem</div>
+              <h4>Professional interaction is fragmented and noisy.</h4>
+              <p>Identity, discovery, messaging, scheduling, and startup formation are spread across disconnected tools that weaken trust and follow-through.</p>
+            </div>
+            <div class="investor-card">
+              <div class="a-lbl">Wedge</div>
+              <h4>Trust + discovery + execution.</h4>
+              <p>Teamstar combines verified identity, structured discovery, collaboration, and AI-assisted workflows inside one operating fabric instead of forcing users to stitch the experience together themselves.</p>
+            </div>
+            <div class="investor-card">
+              <div class="a-lbl">Why now</div>
+              <h4>Noise is scaling faster than trust.</h4>
+              <p>AI, synthetic content, and fragmented professional tools make trust, signal quality, and workflow coherence more valuable, not less.</p>
+              <ul>
+                <li>Sharper positioning for investor conversations</li>
+                <li>Better explanation of what makes Teamstar different</li>
+                <li>Cleaner path into early-access and strategic discussions</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -1633,17 +1811,17 @@
       <div class="container">
         <div class="wait-grid">
           <div class="wait-copy reveal">
-            <span class="lbl"><i></i> Request early access <s></s></span>
-            <h2>For People Who Want a Better Environment.</h2>
-            <p>Join the early list to track launch progress, investor positioning, and the next evolution of the Teamstar operating environment. No noise. Straight signal.</p>
+            <span class="lbl"><i></i> Request access <s></s></span>
+            <h2>Early Access.<br>Strategic Access.<br>Investor Access.</h2>
+            <p>Request access if you are a serious professional, founder, strategic partner, or investor who wants to follow the next stage of Teamstar. No hype theatre. Just a cleaner way into the conversation.</p>
             <ul>
-              <li>Early product visibility</li>
-              <li>Launch updates</li>
-              <li>Investor and strategic access options</li>
+              <li>Product and rollout updates</li>
+              <li>Private access and strategic conversations</li>
+              <li>Investor brief and follow-up pathway</li>
             </ul>
           </div>
 
-          <form class="wait-form reveal d2" id="waitlistForm" aria-label="Early access request">
+          <form class="wait-form reveal d2" id="waitlistForm" aria-label="Access request" data-endpoint="">
             <div class="f-grp">
               <label class="f-lbl" for="f-name">Your Name</label>
               <input class="f-inp" type="text" id="f-name" placeholder="Full name" autocomplete="name" required>
@@ -1653,19 +1831,34 @@
               <input class="f-inp" type="email" id="f-email" placeholder="you@company.com" autocomplete="email" required>
             </div>
             <div class="f-grp">
-              <label class="f-lbl" for="f-role">Role / Company / Interest</label>
-              <input class="f-inp" type="text" id="f-role" placeholder="Founder, Investor, Professional...">
+              <label class="f-lbl" for="f-company">Company / Role</label>
+              <input class="f-inp" type="text" id="f-company" placeholder="Founder, investor, operator, team lead...">
+            </div>
+            <div class="f-grp">
+              <label class="f-lbl" for="f-interest">Access Type</label>
+              <select class="f-inp" id="f-interest" required>
+                <option value="">Select one</option>
+                <option value="Early Access">Early Access</option>
+                <option value="Strategic Partner">Strategic Partner</option>
+                <option value="Investor">Investor</option>
+                <option value="General Enquiry">General Enquiry</option>
+              </select>
+            </div>
+            <div class="f-grp">
+              <label class="f-lbl" for="f-message">Why are you reaching out?</label>
+              <textarea class="f-inp" id="f-message" placeholder="A short note about your interest, use case, partnership idea, or investment context."></textarea>
             </div>
             <button class="btn-cta" type="submit" style="justify-content:center; text-align:center;">
-              Request Early Access →
+              Submit Request →
             </button>
-            <p class="form-note" id="formNote">This opens your email app with the details pre-filled for waitlist@teamstar.com.au.</p>
+            <p class="form-note" id="formNote">We will use these details only to respond about access, rollout, or investor follow-up.</p>
           </form>
         </div>
       </div>
     </section>
 
-  </main>
+
+  </main>  </main>
 
   <footer class="footer">
     <div class="container foot-inner">
@@ -1677,13 +1870,14 @@
           <span class="foot-legal">Copyright 2026 Teamstar Pty Ltd</span>
         </div>
       </div>
-      <p class="foot-copy">Future-ready collaboration infrastructure for identity, networking, messaging, scheduling, startup activation, and AI-assisted momentum.</p>
+      <p class="foot-copy">Trusted identity, structured discovery, collaboration, startup activation, and AI-assisted workflows in one serious operating environment.</p>
       <div class="foot-links">
         <a class="foot-a" href="#platform">Platform</a>
         <a class="foot-a" href="#experience">Experience</a>
         <a class="foot-a" href="#trust">Trust</a>
         <a class="foot-a" href="#ai">AI</a>
-        <a class="foot-a" href="#waitlist">Early Access</a>
+        <a class="foot-a" href="#investors">Investors</a>
+        <a class="foot-a" href="#waitlist">Access</a>
       </div>
     </div>
   </footer>
@@ -1746,38 +1940,98 @@ document.querySelectorAll('.c-nd').forEach(node => {
 });
 
 
-/* ── Early access mailto form ── */
+/* ── Access request form ── */
+const TEAMSTAR_FORM_ENDPOINT = window.TEAMSTAR_FORM_ENDPOINT || '';
 const waitlistForm = document.getElementById('waitlistForm');
 const formNote = document.getElementById('formNote');
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (m) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[m]));
+}
+
 if (waitlistForm) {
-  waitlistForm.addEventListener('submit', (e) => {
+  waitlistForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const name = document.getElementById('f-name').value.trim();
     const email = document.getElementById('f-email').value.trim();
-    const role = document.getElementById('f-role').value.trim();
+    const company = document.getElementById('f-company').value.trim();
+    const interest = document.getElementById('f-interest').value.trim();
+    const message = document.getElementById('f-message').value.trim();
+    const endpoint = TEAMSTAR_FORM_ENDPOINT || waitlistForm.dataset.endpoint || '';
 
-    if (!name || !email) {
-      if (formNote) formNote.textContent = 'Name and email are required before opening your email app.';
+    if (!name || !email || !interest) {
+      if (formNote) {
+        formNote.className = 'form-note status-warn';
+        formNote.textContent = 'Name, email, and access type are required.';
+      }
       return;
     }
 
-    const subject = `Teamstar Early Access — ${name}`;
-    const body = [
-      'Teamstar Early Access Request',
-      '',
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Role / Company / Interest: ${role || 'Not supplied'}`,
-      '',
-      'Submitted from the Teamstar website early access form.'
-    ].join('\n');
+    const payload = {
+      name,
+      email,
+      company,
+      interest,
+      message,
+      source: 'Teamstar website access form',
+      submittedAt: new Date().toISOString()
+    };
 
-    if (formNote) formNote.textContent = 'Opening your email app now…';
-    window.location.href = `mailto:waitlist@teamstar.com.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    if (!endpoint) {
+      const subject = `Teamstar ${interest} Request — ${name}`;
+      const body = [
+        `Name: ${name}`,
+        `Email: ${email}`,
+        `Company / Role: ${company || 'Not supplied'}`,
+        `Access Type: ${interest}`,
+        `Message: ${message || 'Not supplied'}`
+      ].join('\n');
+
+      if (formNote) {
+        formNote.className = 'form-note status-warn';
+        formNote.innerHTML = `Set <code>TEAMSTAR_FORM_ENDPOINT</code> to your Cloudflare Worker or API endpoint to enable in-page submissions. For now, use the <a href="mailto:waitlist@teamstar.com.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}">email fallback</a>.`;
+      }
+      return;
+    }
+
+    try {
+      if (formNote) {
+        formNote.className = 'form-note';
+        formNote.textContent = 'Submitting your request…';
+      }
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+
+      waitlistForm.reset();
+      if (formNote) {
+        formNote.className = 'form-note status-ok';
+        formNote.textContent = 'Request received. Teamstar will be in touch.';
+      }
+    } catch (err) {
+      console.error(err);
+      if (formNote) {
+        formNote.className = 'form-note status-warn';
+        formNote.innerHTML = `Submission failed. Check your endpoint, or use the <a href="mailto:waitlist@teamstar.com.au">email fallback</a>.`;
+      }
+    }
   });
 }
 
-/* ── Nav active section ── */
+
+/* ── Nav active section ── *//* ── Nav active section ── */
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.nav-a');
 const navObs = new IntersectionObserver((entries) => {
