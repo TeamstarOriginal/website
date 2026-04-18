@@ -3,486 +3,397 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unified State Studio v5</title>
+  <title>Unified State Studio v5.1</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Jura:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg0: #060e1c;
-      --bg1: #0a1628;
-      --bg2: #0f1e34;
-      --glass: rgba(255,255,255,0.05);
-      --glass-2: rgba(255,255,255,0.03);
-      --gb: rgba(0,210,255,0.13);
-      --gb-strong: rgba(0,210,255,0.32);
-      --text: #e4f2ff;
-      --muted: #5d7d99;
-      --soft: #92afc8;
+      --bg0: #040c18;
+      --bg1: #081422;
+      --bg2: #0c1c32;
+      --glass: rgba(8,20,40,0.88);
+      --glass-2: rgba(6,14,26,0.92);
+      --gb: rgba(0,212,255,0.28);
+      --gb-strong: rgba(0,212,255,0.55);
+      --text: #dff0ff;
+      --muted: #4e6d89;
+      --soft: #86a8c4;
       --cyan: #00d4ff;
       --violet: #a855f7;
       --teal: #00ffbd;
       --amber: #ffaa30;
       --danger: #ff5555;
-      --radius: 20px;
-      --radius-md: 14px;
-      --radius-sm: 10px;
+      --radius: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
       --pill: 999px;
-      --shadow: 0 24px 64px rgba(0,0,0,0.55), 0 8px 24px rgba(0,0,0,0.35);
-      --glow-c: 0 0 22px rgba(0,212,255,0.38), 0 0 44px rgba(0,212,255,0.14);
-      --glow-v: 0 0 22px rgba(168,85,247,0.38), 0 0 44px rgba(168,85,247,0.14);
-      --glow-t: 0 0 18px rgba(0,255,189,0.32), 0 0 36px rgba(0,255,189,0.1);
-      --glow-soft: 0 0 14px rgba(0,212,255,0.1);
+      --shadow: 0 20px 60px rgba(0,0,0,0.7), 0 6px 20px rgba(0,0,0,0.4);
+      --glow-c: 0 0 24px rgba(0,212,255,0.42), 0 0 50px rgba(0,212,255,0.16);
+      --glow-soft: 0 0 12px rgba(0,212,255,0.1);
+
+      /* Image-1 style border glow */
+      --border-glow: 0 0 28px rgba(0,212,255,0.45), 0 0 60px rgba(0,212,255,0.18), 0 0 100px rgba(0,212,255,0.06);
+      --panel-glow: 0 0 16px rgba(0,212,255,0.15), 0 0 40px rgba(0,212,255,0.06);
     }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { min-height: 100%; }
+    html { min-height: 100%; background: #020810; }
     body {
       font-family: 'Jura', 'Segoe UI', system-ui, sans-serif;
       color: var(--text);
-      background: var(--bg0);
+      background:
+        radial-gradient(ellipse 80% 55% at 15% 5%, rgba(0,212,255,0.09), transparent 60%),
+        radial-gradient(ellipse 65% 45% at 85% 8%, rgba(168,85,247,0.08), transparent 56%),
+        radial-gradient(ellipse 50% 60% at 50% 98%, rgba(0,255,189,0.05), transparent 62%),
+        linear-gradient(155deg, #0a1c36 0%, #060e1c 45%, #030912 100%);
+      min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ─── ANIMATED BACKGROUND ─── */
-    .bg-layer {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 72% 52% at 12% 4%, rgba(0,212,255,0.11), transparent 62%),
-        radial-gradient(ellipse 60% 44% at 88% 7%, rgba(168,85,247,0.09), transparent 58%),
-        radial-gradient(ellipse 55% 65% at 50% 98%, rgba(0,255,189,0.06), transparent 65%),
-        linear-gradient(160deg, #0d1e38 0%, #060e1c 42%, #040c16 100%);
-      animation: bgDrift 22s ease-in-out infinite alternate;
-    }
-    @keyframes bgDrift {
-      from { opacity: 1; }
-      50%  { opacity: 0.82; }
-      to   { opacity: 1; }
-    }
-    .bg-grid {
+    /* ─── BACKGROUND GRID ─── */
+    body::before {
+      content: '';
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background-image:
-        linear-gradient(rgba(0,210,255,0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,210,255,0.022) 1px, transparent 1px);
-      background-size: 64px 64px;
+        linear-gradient(rgba(0,212,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.018) 1px, transparent 1px);
+      background-size: 60px 60px;
     }
 
-    /* ─── LAYOUT ─── */
+    /* ─── APP FRAME — Image 1 style glowing border ─── */
+    .app-frame {
+      position: relative; z-index: 1;
+      width: min(1540px, calc(100vw - 20px));
+      margin: 14px auto 40px;
+      border: 1.5px solid var(--gb-strong);
+      border-radius: 22px;
+      box-shadow: var(--border-glow), inset 0 0 40px rgba(0,212,255,0.04);
+      background: rgba(4,12,24,0.96);
+      overflow: hidden;
+    }
+    /* Corner accent lines */
+    .app-frame::before, .app-frame::after {
+      content: '';
+      position: absolute; z-index: 2; pointer-events: none;
+    }
+    .app-frame::before {
+      top: -1px; left: 80px; right: 80px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.8), rgba(168,85,247,0.5), transparent);
+    }
+    .app-frame::after {
+      bottom: -1px; left: 80px; right: 80px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), rgba(0,255,189,0.3), transparent);
+    }
+
     .wrap {
       position: relative; z-index: 1;
-      width: min(1520px, calc(100vw - 22px));
-      margin: 12px auto 36px;
+      padding: 12px 12px 16px;
     }
     .main-layout {
       display: grid;
-      grid-template-columns: 296px minmax(0,1fr) 316px;
-      gap: 14px;
+      grid-template-columns: 298px minmax(0,1fr) 318px;
+      gap: 12px;
       align-items: start;
     }
 
-    /* ─── GLASS PANEL ─── */
+    /* ─── GLASS PANEL — Image 1 panel border style ─── */
     .glass {
       background: var(--glass);
       border: 1px solid var(--gb);
       border-radius: var(--radius);
-      backdrop-filter: blur(24px) saturate(145%);
-      -webkit-backdrop-filter: blur(24px) saturate(145%);
-      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.07);
+      backdrop-filter: blur(20px) saturate(130%);
+      -webkit-backdrop-filter: blur(20px) saturate(130%);
+      box-shadow: var(--shadow), var(--panel-glow), inset 0 1px 0 rgba(255,255,255,0.06);
       position: relative;
       overflow: hidden;
+    }
+    .glass::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 15%; right: 15%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.55), rgba(168,85,247,0.35), transparent);
+      border-radius: var(--pill); pointer-events: none;
     }
     .glass::after {
       content: '';
       position: absolute;
-      bottom: 0; left: 8%; right: 8%; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,210,255,0.35), rgba(168,85,247,0.25), transparent);
-      border-radius: var(--pill);
-      opacity: 0.5;
-      pointer-events: none;
+      bottom: 0; left: 10%; right: 10%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.22), transparent);
+      border-radius: var(--pill); pointer-events: none;
     }
 
     /* ─── TOPBAR ─── */
     .topbar {
       position: sticky; top: 10px; z-index: 30;
-      padding: 14px 20px; margin-bottom: 14px;
+      padding: 12px 18px; margin-bottom: 12px;
     }
-    .tb-row { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+    .tb-row { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
 
-    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand { display: flex; align-items: center; gap: 13px; }
     .logo {
-      width: 46px; height: 46px; border-radius: 13px;
+      width: 44px; height: 44px; border-radius: 12px;
       display: grid; place-items: center;
       font-family: 'Orbitron', sans-serif; font-weight: 900;
-      font-size: 0.62rem; letter-spacing: 0.06em; color: #050c18;
-      background: linear-gradient(135deg, var(--cyan) 0%, #008fbb 50%, var(--violet) 100%);
-      box-shadow: var(--glow-c), 0 6px 18px rgba(0,0,0,0.4);
+      font-size: 0.58rem; letter-spacing: 0.06em; color: #030c18;
+      background: linear-gradient(135deg, #00d4ff 0%, #0088bb 45%, #a855f7 100%);
+      box-shadow: 0 0 20px rgba(0,212,255,0.5), 0 0 40px rgba(0,212,255,0.2), 0 4px 16px rgba(0,0,0,0.5);
     }
     .brand-name {
       font-family: 'Orbitron', sans-serif; font-weight: 700;
-      font-size: clamp(0.82rem, 2.4vw, 1.05rem);
-      letter-spacing: 0.08em; color: var(--text);
+      font-size: clamp(0.78rem, 2.2vw, 1rem); letter-spacing: 0.09em; color: var(--text);
     }
-    .brand-ver {
-      font-family: 'Orbitron', sans-serif; font-size: 0.6rem;
-      color: var(--cyan); letter-spacing: 0.12em; margin-left: 8px; opacity: 0.7;
-    }
-    .brand-sub { font-size: 0.76rem; color: var(--muted); margin-top: 2px; letter-spacing: 0.03em; }
+    .brand-ver { font-family: 'Orbitron', sans-serif; font-size: 0.55rem; color: var(--cyan); letter-spacing: 0.14em; margin-left: 8px; opacity: 0.75; }
+    .brand-sub { font-size: 0.74rem; color: var(--muted); margin-top: 2px; letter-spacing: 0.02em; }
 
-    /* Status Badges */
-    .badge-row { display: flex; gap: 7px; flex-wrap: wrap; }
+    /* ─── STATUS BADGES ─── */
+    .badge-row { display: flex; gap: 6px; flex-wrap: wrap; }
     .badge {
-      display: flex; align-items: center; gap: 6px;
-      padding: 6px 11px; border-radius: var(--pill);
-      border: 1px solid rgba(0,210,255,0.1);
-      background: rgba(0,210,255,0.04);
-      font-size: 0.72rem; color: var(--muted); letter-spacing: 0.03em; white-space: nowrap;
+      display: flex; align-items: center; gap: 6px; padding: 5px 10px;
+      border-radius: var(--pill); border: 1px solid rgba(0,212,255,0.14);
+      background: rgba(0,212,255,0.04); font-size: 0.7rem; color: var(--muted);
+      letter-spacing: 0.03em; white-space: nowrap;
     }
-    .bdot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: rgba(255,255,255,0.18); flex-shrink: 0;
-      transition: background .3s, box-shadow .3s;
-    }
+    .bdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.14); flex-shrink: 0; transition: background .3s, box-shadow .3s; }
     .bdot.on  { background: var(--teal); box-shadow: 0 0 8px var(--teal); }
     .bdot.mid { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
     .badge strong { color: var(--cyan); font-weight: 600; }
 
     /* ─── TABS ─── */
-    .tab-bar {
-      display: flex; gap: 0;
-      margin-top: 14px;
-      border-bottom: 1px solid rgba(0,210,255,0.08);
-    }
+    .tab-bar { display: flex; gap: 0; margin-top: 12px; border-bottom: 1px solid rgba(0,212,255,0.1); }
     .tab {
-      padding: 9px 20px;
+      padding: 8px 18px;
       border-radius: var(--radius-sm) var(--radius-sm) 0 0;
       border: 1px solid transparent; border-bottom: none;
-      font-family: 'Orbitron', sans-serif; font-size: 0.62rem;
-      font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase;
-      color: var(--muted); cursor: pointer; user-select: none;
-      transition: color .22s, background .22s, border-color .22s;
-      background: transparent;
+      font-family: 'Orbitron', sans-serif; font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+      cursor: pointer; user-select: none; background: transparent;
+      transition: color .2s, background .2s, border-color .2s;
     }
     .tab:hover { color: var(--soft); }
-    .tab.active {
-      color: var(--cyan); background: rgba(0,210,255,0.06);
-      border-color: rgba(0,210,255,0.18);
-      text-shadow: 0 0 14px rgba(0,210,255,0.55);
-    }
-    .tab-actions { display: flex; gap: 8px; margin-top: 14px; align-items: center; }
-    .kbd { display: inline-block; padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); font-size: 0.62rem; color: var(--muted); }
+    .tab.active { color: var(--cyan); background: rgba(0,212,255,0.07); border-color: var(--gb); text-shadow: 0 0 14px rgba(0,212,255,0.6); }
+    .tab-actions { display: flex; gap: 8px; margin-top: 12px; align-items: center; }
+    .kbd { display: inline-block; padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); font-size: 0.6rem; color: var(--muted); }
 
     /* ─── STACK ─── */
-    .panel { padding: 16px 18px; }
-    .stack    { display: grid; gap: 14px; }
-    .stack-sm { display: grid; gap: 10px; }
-    .stack-xs { display: grid; gap: 7px; }
+    .panel { padding: 14px 16px; }
+    .stack { display: grid; gap: 12px; }
+    .stack-sm { display: grid; gap: 9px; }
+    .stack-xs { display: grid; gap: 6px; }
     .section { display: none; }
     .section.active { display: block; }
-    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 14px; }
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 12px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
     /* ─── TYPOGRAPHY ─── */
-    h2 {
-      font-family: 'Orbitron', sans-serif; font-size: 0.64rem;
-      font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--muted);
-    }
-    h3 {
-      font-family: 'Orbitron', sans-serif; font-size: 0.6rem;
-      font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase;
-      color: var(--muted);
-    }
-    .section-title {
-      font-family: 'Orbitron', sans-serif; font-size: 0.92rem;
-      font-weight: 700; letter-spacing: 0.06em; color: var(--text);
-    }
-    .sub { font-size: 0.81rem; color: var(--muted); line-height: 1.6; }
-    .tiny { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+    h2 { font-family:'Orbitron',sans-serif; font-size:0.62rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); }
+    h3 { font-family:'Orbitron',sans-serif; font-size:0.58rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); }
+    .section-title { font-family:'Orbitron',sans-serif; font-size:0.88rem; font-weight:700; letter-spacing:0.05em; color:var(--text); }
+    .sub { font-size:0.79rem; color:var(--muted); line-height:1.6; }
+    .tiny { font-size:0.7rem; color:var(--muted); line-height:1.5; }
+    .divider { height:1px; background: linear-gradient(90deg,transparent,rgba(0,212,255,0.12),transparent); }
 
-    /* ─── DIVIDER ─── */
-    .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,210,255,0.1), transparent); }
-
-    /* ─── MINI CARDS (status) ─── */
-    .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .mini-card {
-      padding: 11px 12px; border-radius: var(--radius-md);
-      border: 1px solid rgba(0,210,255,0.07);
-      background: rgba(0,210,255,0.025);
-    }
-    .m-label { font-size: 0.65rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
-    .m-val {
-      font-family: 'Orbitron', sans-serif; font-size: 0.84rem;
-      font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums;
-    }
-    .m-val.glow { color: var(--cyan); text-shadow: 0 0 12px rgba(0,212,255,0.45); }
+    /* ─── STATUS CARDS ─── */
+    .mini-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+    .mini-card { padding:10px 11px; border-radius:var(--radius-md); border:1px solid rgba(0,212,255,0.09); background:rgba(0,212,255,0.03); }
+    .m-label { font-size:0.63rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+    .m-val { font-family:'Orbitron',sans-serif; font-size:0.82rem; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; }
+    .m-val.glow { color:var(--cyan); text-shadow:0 0 12px rgba(0,212,255,0.5); }
 
     /* ─── PHASE RAIL ─── */
-    .phase-list { display: grid; gap: 7px; }
+    .phase-list { display:grid; gap:6px; }
     .phase-item {
-      display: grid; grid-template-columns: 26px 1fr 9px;
-      gap: 9px; align-items: center;
-      padding: 9px 11px; border-radius: var(--radius-md);
-      border: 1px solid rgba(255,255,255,0.04);
-      background: rgba(255,255,255,0.015);
-      transition: all .3s ease;
+      display:grid; grid-template-columns:25px 1fr 8px; gap:8px; align-items:center;
+      padding:8px 10px; border-radius:var(--radius-md);
+      border:1px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.015);
+      transition:all .3s ease;
     }
-    .phase-item.active {
-      background: rgba(0,210,255,0.055);
-      border-color: rgba(0,210,255,0.2);
-      box-shadow: 0 0 18px rgba(0,210,255,0.07), inset 0 0 20px rgba(0,210,255,0.03);
-    }
-    .p-num {
-      width: 26px; height: 26px; border-radius: 8px;
-      display: grid; place-items: center;
-      font-family: 'Orbitron', sans-serif; font-size: 0.6rem; font-weight: 700;
-      color: var(--muted); background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06); transition: all .3s;
-    }
-    .phase-item.active .p-num { background: rgba(0,210,255,0.14); color: var(--cyan); border-color: rgba(0,210,255,0.3); }
-    .p-name { font-size: 0.8rem; font-weight: 500; color: var(--soft); transition: color .3s; }
-    .p-prompt { font-size: 0.69rem; color: var(--muted); margin-top: 2px; line-height: 1.4; }
-    .phase-item.active .p-name { color: var(--text); }
-    .p-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
-      transition: all .3s;
-    }
-    .phase-item.active .p-dot {
-      background: var(--cyan); border-color: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan), 0 0 22px rgba(0,212,255,0.45);
-      animation: dotPulse 2.2s ease-in-out infinite;
-    }
-    @keyframes dotPulse {
-      0%,100% { box-shadow: 0 0 10px var(--cyan), 0 0 22px rgba(0,212,255,0.45); }
-      50% { box-shadow: 0 0 18px var(--cyan), 0 0 36px rgba(0,212,255,0.7), 0 0 55px rgba(0,212,255,0.2); }
-    }
+    .phase-item.active { background:rgba(0,212,255,0.06); border-color:rgba(0,212,255,0.25); box-shadow:0 0 18px rgba(0,212,255,0.08), inset 0 0 16px rgba(0,212,255,0.03); }
+    .p-num { width:25px; height:25px; border-radius:7px; display:grid; place-items:center; font-family:'Orbitron',sans-serif; font-size:0.58rem; font-weight:700; color:var(--muted); background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); transition:all .3s; }
+    .phase-item.active .p-num { background:rgba(0,212,255,0.15); color:var(--cyan); border-color:rgba(0,212,255,0.35); }
+    .p-name { font-size:0.78rem; font-weight:500; color:var(--soft); transition:color .3s; }
+    .p-prompt { font-size:0.67rem; color:var(--muted); margin-top:2px; line-height:1.35; }
+    .phase-item.active .p-name { color:var(--text); }
+    .p-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); transition:all .3s; }
+    .phase-item.active .p-dot { background:var(--cyan); border-color:var(--cyan); box-shadow:0 0 10px var(--cyan),0 0 22px rgba(0,212,255,0.5); animation:dotPulse 2.2s ease-in-out infinite; }
+    @keyframes dotPulse { 0%,100%{box-shadow:0 0 10px var(--cyan),0 0 22px rgba(0,212,255,0.45);} 50%{box-shadow:0 0 18px var(--cyan),0 0 36px rgba(0,212,255,0.7),0 0 55px rgba(0,212,255,0.2);} }
 
     /* ─── ENERGY METER ─── */
-    .meter-track {
-      height: 5px; border-radius: var(--pill);
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.04);
-      overflow: hidden;
-    }
-    .meter-fill {
-      height: 100%; width: 0%; border-radius: var(--pill);
-      background: linear-gradient(90deg, var(--cyan), var(--teal));
-      box-shadow: 0 0 8px rgba(0,212,255,0.7);
-      transition: width .4s ease;
-    }
+    .meter-track { height:5px; border-radius:var(--pill); background:rgba(255,255,255,0.05); overflow:hidden; }
+    .meter-fill { height:100%; width:0%; border-radius:var(--pill); background:linear-gradient(90deg,var(--cyan),var(--teal)); box-shadow:0 0 8px rgba(0,212,255,0.7); transition:width .4s ease; }
 
     /* ─── CONTROLS ─── */
-    .control { display: grid; gap: 8px; }
-    .ctrl-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-    label { font-size: 0.78rem; font-weight: 500; color: var(--soft); letter-spacing: 0.02em; }
-    .val {
-      font-family: 'Orbitron', sans-serif; font-size: 0.68rem;
-      font-weight: 600; color: var(--cyan); min-width: 58px; text-align: right;
-    }
+    .control { display:grid; gap:7px; }
+    .ctrl-row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    label { font-size:0.76rem; font-weight:500; color:var(--soft); letter-spacing:0.02em; }
+    .val { font-family:'Orbitron',sans-serif; font-size:0.66rem; font-weight:600; color:var(--cyan); min-width:56px; text-align:right; }
 
-    input[type="range"] {
-      width: 100%; appearance: none; height: 5px; border-radius: var(--pill);
-      background: linear-gradient(90deg, rgba(0,210,255,0.28), rgba(168,85,247,0.16));
-      border: none; outline: none; cursor: pointer;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      appearance: none; width: 17px; height: 17px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #fff, var(--cyan) 60%, #005a88 100%);
-      box-shadow: 0 0 0 3px rgba(0,210,255,0.22), 0 0 14px rgba(0,210,255,0.55);
-      cursor: pointer; transition: box-shadow .18s;
-    }
-    input[type="range"]:hover::-webkit-slider-thumb {
-      box-shadow: 0 0 0 4px rgba(0,210,255,0.32), 0 0 24px rgba(0,210,255,0.75);
-    }
-    input[type="range"]::-moz-range-thumb {
-      width: 17px; height: 17px; border-radius: 50%; border: none;
-      background: var(--cyan); box-shadow: 0 0 12px rgba(0,210,255,0.55); cursor: pointer;
-    }
+    input[type="range"] { width:100%; appearance:none; height:4px; border-radius:var(--pill); background:linear-gradient(90deg,rgba(0,212,255,0.3),rgba(168,85,247,0.18)); border:none; outline:none; cursor:pointer; }
+    input[type="range"]::-webkit-slider-thumb { appearance:none; width:16px; height:16px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#fff,var(--cyan) 60%,#005a88 100%); box-shadow:0 0 0 2px rgba(0,212,255,0.25),0 0 12px rgba(0,212,255,0.6); cursor:pointer; transition:box-shadow .18s; }
+    input[type="range"]:hover::-webkit-slider-thumb { box-shadow:0 0 0 3px rgba(0,212,255,0.35),0 0 22px rgba(0,212,255,0.8); }
+    input[type="range"]::-moz-range-thumb { width:16px;height:16px;border-radius:50%;border:none;background:var(--cyan);box-shadow:0 0 12px rgba(0,212,255,0.6);cursor:pointer; }
 
     select, input[type="text"], input[type="number"], textarea {
-      width: 100%;
-      background: rgba(0,210,255,0.035);
-      color: var(--text); padding: 10px 13px;
-      border-radius: var(--radius-md); border: 1px solid rgba(0,210,255,0.11);
-      font-family: 'Jura', sans-serif; font-size: 0.83rem; font-weight: 500;
-      outline: none; transition: border-color .2s, box-shadow .2s;
+      width:100%; background:rgba(0,212,255,0.04); color:var(--text);
+      padding:9px 12px; border-radius:var(--radius-md); border:1px solid rgba(0,212,255,0.14);
+      font-family:'Jura',sans-serif; font-size:0.82rem; font-weight:500; outline:none;
+      transition:border-color .2s,box-shadow .2s;
     }
-    select:focus, input[type="text"]:focus, textarea:focus {
-      border-color: rgba(0,210,255,0.35);
-      box-shadow: 0 0 0 3px rgba(0,210,255,0.07), var(--glow-soft);
-    }
-    select option { background: #0a1628; }
-    textarea { min-height: 108px; resize: vertical; line-height: 1.55; }
+    select:focus, input[type="text"]:focus, textarea:focus { border-color:rgba(0,212,255,0.4); box-shadow:0 0 0 2px rgba(0,212,255,0.08),var(--glow-soft); }
+    select option { background:#081422; }
+    textarea { min-height:100px; resize:vertical; line-height:1.55; }
 
-    /* ─── BUTTONS ─── */
+    /* ─── BUTTONS — Image 2 style ─── */
     button {
-      appearance: none; padding: 10px 15px;
-      border-radius: var(--radius-md); border: 1px solid rgba(0,210,255,0.14);
-      background: rgba(0,210,255,0.04);
-      color: var(--soft); font-family: 'Jura', sans-serif;
-      font-size: 0.81rem; font-weight: 600; cursor: pointer;
-      min-height: 40px; letter-spacing: 0.03em;
-      transition: transform .16s, border-color .18s, box-shadow .18s, color .18s, background .18s;
-      position: relative; overflow: hidden;
+      appearance:none; padding:9px 14px;
+      border-radius:var(--radius-md);
+      border:1px solid rgba(0,212,255,0.2);
+      background:rgba(5,16,32,0.85);
+      color:var(--soft); font-family:'Jura',sans-serif;
+      font-size:0.8rem; font-weight:600; cursor:pointer;
+      min-height:38px; letter-spacing:0.04em;
+      transition:transform .15s,border-color .18s,box-shadow .18s,color .18s,background .18s;
+      position:relative; overflow:hidden;
     }
-    button::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 55%);
-      pointer-events: none;
-    }
-    button:hover {
-      transform: translateY(-1px); color: var(--text);
-      border-color: rgba(0,210,255,0.32);
-      box-shadow: 0 0 16px rgba(0,210,255,0.14), 0 4px 14px rgba(0,0,0,0.3);
-    }
-    button:active { transform: translateY(0); }
-    button.primary {
-      background: linear-gradient(135deg, rgba(0,210,255,0.16), rgba(168,85,247,0.12));
-      border-color: rgba(0,210,255,0.28); color: var(--cyan);
-    }
-    button.primary:hover { box-shadow: var(--glow-c), 0 4px 14px rgba(0,0,0,0.3); }
-    button.secondary { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.07); color: var(--muted); }
-    button.danger-btn {
-      background: rgba(255,85,85,0.07); border-color: rgba(255,85,85,0.18); color: #ff8888;
-    }
-    button.danger-btn:hover { box-shadow: 0 0 16px rgba(255,85,85,0.18); border-color: rgba(255,85,85,0.36); }
-    button.warn-btn {
-      background: rgba(255,170,48,0.07); border-color: rgba(255,170,48,0.18); color: var(--amber);
-    }
-    button.warn-btn:hover { box-shadow: 0 0 16px rgba(255,170,48,0.18); }
-    .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    button::after { content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.05) 0%,transparent 60%);pointer-events:none; }
+    button:hover { transform:translateY(-1px); color:var(--text); border-color:rgba(0,212,255,0.45); box-shadow:0 0 18px rgba(0,212,255,0.2),0 4px 16px rgba(0,0,0,0.35); }
+    button:active { transform:translateY(0); }
 
-    /* ─── PRESET BTNS (Basic) ─── */
-    .preset-list { display: grid; gap: 7px; }
+    /* Primary: Image 2 "Post" button style */
+    button.primary {
+      background:linear-gradient(145deg,rgba(0,80,120,0.7),rgba(0,50,90,0.8));
+      border:1.5px solid rgba(0,212,255,0.55);
+      color:var(--cyan); font-weight:700;
+      box-shadow:0 0 12px rgba(0,212,255,0.18), inset 0 1px 0 rgba(0,212,255,0.2);
+    }
+    button.primary:hover { background:linear-gradient(145deg,rgba(0,95,140,0.75),rgba(0,65,105,0.85)); box-shadow:var(--glow-c),0 4px 16px rgba(0,0,0,0.4); }
+
+    /* Secondary: Image 2 "Invite" button style */
+    button.secondary { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.14); color:var(--soft); }
+    button.secondary:hover { border-color:rgba(255,255,255,0.28); box-shadow:0 4px 14px rgba(0,0,0,0.3); }
+
+    button.danger-btn { background:rgba(60,10,10,0.7); border:1px solid rgba(255,85,85,0.22); color:#ff8888; }
+    button.danger-btn:hover { box-shadow:0 0 16px rgba(255,85,85,0.2); border-color:rgba(255,85,85,0.4); }
+    button.warn-btn { background:rgba(50,30,0,0.7); border:1px solid rgba(255,170,48,0.22); color:var(--amber); }
+    button.warn-btn:hover { box-shadow:0 0 16px rgba(255,170,48,0.2); }
+
+    /* Monroe-themed teal accent button */
+    button.teal-btn { background:linear-gradient(145deg,rgba(0,80,70,0.7),rgba(0,55,50,0.8)); border:1.5px solid rgba(0,255,189,0.45); color:var(--teal); box-shadow:0 0 10px rgba(0,255,189,0.14); }
+    button.teal-btn:hover { box-shadow:var(--glow-t),0 4px 14px rgba(0,0,0,0.4); }
+
+    .btn-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+    .btn-row { display:flex; gap:7px; flex-wrap:wrap; }
+
+    /* ─── ORBIT INDICATOR ─── */
+    .orbit-ring {
+      display:flex; align-items:center; justify-content:center;
+      width:32px; height:32px; border-radius:50%;
+      border:1.5px solid rgba(0,212,255,0.3);
+      background:rgba(0,212,255,0.05);
+      position:relative; flex-shrink:0;
+    }
+    .orbit-dot {
+      width:7px; height:7px; border-radius:50%;
+      background:var(--cyan); box-shadow:0 0 8px var(--cyan);
+      position:absolute;
+      animation:orbitSpin var(--orbit-period,8s) linear infinite;
+    }
+    @keyframes orbitSpin { from{transform:rotate(0deg) translateX(11px);} to{transform:rotate(360deg) translateX(11px);} }
+    .orbit-label { display:flex; align-items:center; gap:8px; }
+
+    /* ─── PRESET BUTTONS ─── */
+    .preset-list { display:grid; gap:6px; }
     .preset-btn {
-      text-align: left; padding: 11px 14px; border-radius: var(--radius-md);
-      border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02);
-      cursor: pointer; transition: all .2s; width: 100%; min-height: auto;
-      color: var(--text);
+      text-align:left; padding:10px 13px; border-radius:var(--radius-md);
+      border:1px solid rgba(255,255,255,0.07); background:rgba(255,255,255,0.025);
+      cursor:pointer; transition:all .2s; width:100%; min-height:auto; color:var(--text);
     }
-    .preset-btn:hover { border-color: rgba(0,210,255,0.18); background: rgba(0,210,255,0.04); }
+    .preset-btn:hover { border-color:rgba(0,212,255,0.22); background:rgba(0,212,255,0.05); }
     .preset-btn.preset-active {
-      border-color: rgba(0,210,255,0.32); background: rgba(0,210,255,0.07);
-      box-shadow: 0 0 16px rgba(0,210,255,0.1);
+      border-color:rgba(0,212,255,0.45); background:rgba(0,212,255,0.08);
+      box-shadow:0 0 14px rgba(0,212,255,0.12),inset 0 1px 0 rgba(0,212,255,0.15);
     }
-    .pb-name { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-    .preset-btn.preset-active .pb-name { color: var(--cyan); text-shadow: 0 0 10px rgba(0,210,255,0.4); }
-    .pb-desc { font-size: 0.73rem; color: var(--muted); line-height: 1.4; }
+    .pb-name { font-size:0.83rem; font-weight:600; color:var(--text); margin-bottom:2px; }
+    .preset-btn.preset-active .pb-name { color:var(--cyan); text-shadow:0 0 10px rgba(0,212,255,0.45); }
+    .pb-desc { font-size:0.71rem; color:var(--muted); line-height:1.4; }
 
     /* ─── INFO CARDS ─── */
-    .info-card {
-      padding: 12px 14px; border-radius: var(--radius-md);
-      border: 1px solid rgba(0,210,255,0.08); background: rgba(0,210,255,0.025);
-    }
-    .ic-label { font-size: 0.63rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-family: 'Orbitron', sans-serif; margin-bottom: 5px; }
-    .ic-val { font-size: 0.88rem; font-weight: 600; color: var(--text); }
-    .ic-val.glow { color: var(--cyan); text-shadow: 0 0 10px rgba(0,210,255,0.35); }
+    .info-card { padding:11px 13px; border-radius:var(--radius-md); border:1px solid rgba(0,212,255,0.1); background:rgba(0,212,255,0.03); }
+    .ic-label { font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); font-family:'Orbitron',sans-serif; margin-bottom:5px; }
+    .ic-val { font-size:0.86rem; font-weight:600; color:var(--text); }
+    .ic-val.glow { color:var(--cyan); text-shadow:0 0 10px rgba(0,212,255,0.38); }
 
     /* ─── SAFE BOX ─── */
-    .safe-box {
-      padding: 12px 14px; border-radius: var(--radius-md);
-      border: 1px solid rgba(255,170,48,0.1); background: rgba(255,170,48,0.03);
-    }
+    .safe-box { padding:11px 13px; border-radius:var(--radius-md); border:1px solid rgba(255,170,48,0.12); background:rgba(255,170,48,0.03); }
 
     /* ─── PROMPT BOX ─── */
-    .prompt-box {
-      padding: 14px 16px; border-radius: var(--radius-md);
-      border: 1px solid rgba(0,210,255,0.12); background: rgba(0,210,255,0.04);
-    }
-    .prompt-label { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-family: 'Orbitron', sans-serif; margin-bottom: 7px; }
-    .prompt-text { font-size: 0.84rem; color: var(--soft); line-height: 1.65; }
+    .prompt-box { padding:12px 14px; border-radius:var(--radius-md); border:1px solid rgba(0,212,255,0.14); background:rgba(0,212,255,0.04); }
+    .prompt-label { font-size:0.6rem; letter-spacing:0.13em; text-transform:uppercase; color:var(--muted); font-family:'Orbitron',sans-serif; margin-bottom:6px; }
+    .prompt-text { font-size:0.82rem; color:var(--soft); line-height:1.65; }
 
     /* ─── CATALOGUE ─── */
-    .catalogue { display: grid; gap: 8px; }
-    .cat-item {
-      display: grid; grid-template-columns: 1fr auto;
-      gap: 12px; align-items: start; padding: 12px;
-      border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.05);
-      background: rgba(255,255,255,0.018); transition: border-color .2s;
-    }
-    .cat-item:hover { border-color: rgba(0,210,255,0.12); }
-    .cat-name { font-size: 0.84rem; font-weight: 600; color: var(--text); }
-    .cat-desc { font-size: 0.72rem; color: var(--muted); margin-top: 3px; line-height: 1.4; }
-    .dur-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
-    .dur-btn { padding: 4px 9px; font-size: 0.69rem; min-height: auto; border-radius: 8px; }
+    .catalogue { display:grid; gap:7px; }
+    .cat-item { display:grid; grid-template-columns:1fr auto; gap:11px; align-items:start; padding:11px; border-radius:var(--radius-md); border:1px solid rgba(255,255,255,0.05); background:rgba(255,255,255,0.018); transition:border-color .2s; }
+    .cat-item:hover { border-color:rgba(0,212,255,0.14); }
+    .cat-name { font-size:0.82rem; font-weight:600; color:var(--text); }
+    .cat-desc { font-size:0.7rem; color:var(--muted); margin-top:3px; line-height:1.4; }
+    .dur-row { display:flex; gap:4px; flex-wrap:wrap; margin-top:7px; }
+    .dur-btn { padding:3px 8px; font-size:0.67rem; min-height:auto; border-radius:7px; }
 
     /* ─── QUEUE ─── */
-    .queue-list { display: grid; gap: 8px; min-height: 50px; }
-    .queue-item {
-      padding: 11px 13px; border-radius: var(--radius-md);
-      border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02);
-    }
-    .queue-item.now { border-color: rgba(0,255,189,0.2); background: rgba(0,255,189,0.045); box-shadow: 0 0 14px rgba(0,255,189,0.06); }
-    .qi-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-    .qi-name { font-size: 0.83rem; font-weight: 600; color: var(--text); }
-    .qi-now { font-size: 0.62rem; color: var(--teal); font-family: 'Orbitron', sans-serif; letter-spacing: 0.1em; }
-    .qi-dur { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
-    .qi-acts { display: flex; gap: 5px; }
-    .qi-acts button { padding: 5px 9px; min-height: auto; font-size: 0.7rem; border-radius: 8px; }
+    .queue-list { display:grid; gap:7px; min-height:44px; }
+    .queue-item { padding:10px 12px; border-radius:var(--radius-md); border:1px solid rgba(255,255,255,0.05); background:rgba(255,255,255,0.02); }
+    .queue-item.now { border-color:rgba(0,255,189,0.25); background:rgba(0,255,189,0.05); box-shadow:0 0 12px rgba(0,255,189,0.07); }
+    .qi-row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .qi-name { font-size:0.81rem; font-weight:600; color:var(--text); }
+    .qi-now { font-size:0.6rem; color:var(--teal); font-family:'Orbitron',sans-serif; letter-spacing:0.1em; margin-left:7px; }
+    .qi-dur { font-size:0.7rem; color:var(--muted); margin-top:2px; }
+    .qi-acts { display:flex; gap:4px; }
+    .qi-acts button { padding:4px 8px; min-height:auto; font-size:0.68rem; border-radius:7px; }
 
     /* ─── CANVAS ─── */
-    canvas#visualCanvas {
-      width: 100%; height: 330px; display: block;
-      border-radius: var(--radius-md); border: 1px solid rgba(0,210,255,0.09);
-      background: rgba(0,0,0,0.28);
-      box-shadow: inset 0 0 60px rgba(0,210,255,0.04), 0 0 22px rgba(0,210,255,0.06);
-    }
+    canvas#visualCanvas { width:100%; height:320px; display:block; border-radius:var(--radius-md); border:1px solid rgba(0,212,255,0.12); background:rgba(0,0,0,0.32); box-shadow:inset 0 0 50px rgba(0,212,255,0.04),0 0 20px rgba(0,212,255,0.07); }
 
     /* ─── LOG ─── */
-    .log {
-      min-height: 96px; background: rgba(0,0,0,0.22);
-      border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-md);
-      padding: 12px; white-space: pre-wrap; color: var(--muted);
-      font-size: 0.76rem; line-height: 1.62; font-family: 'Jura', monospace;
-    }
+    .log { min-height:90px; background:rgba(0,0,0,0.28); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius-md); padding:11px; white-space:pre-wrap; color:var(--muted); font-size:0.74rem; line-height:1.62; font-family:'Jura',monospace; }
 
     /* ─── JOURNAL ─── */
-    .journal-list { display: grid; gap: 7px; max-height: 260px; overflow-y: auto; }
-    .journal-list::-webkit-scrollbar { width: 3px; }
-    .journal-list::-webkit-scrollbar-thumb { background: rgba(0,210,255,0.18); border-radius: 3px; }
-    .j-entry {
-      padding: 10px 12px; border-radius: var(--radius-sm);
-      border: 1px solid rgba(255,255,255,0.04); background: rgba(255,255,255,0.018);
-    }
-    .j-ts { font-size: 0.65rem; color: var(--muted); margin-bottom: 5px; font-family: 'Orbitron', sans-serif; letter-spacing: 0.05em; }
-    .j-text { font-size: 0.79rem; color: var(--soft); line-height: 1.55; }
+    .journal-list { display:grid; gap:6px; max-height:240px; overflow-y:auto; }
+    .journal-list::-webkit-scrollbar { width:3px; }
+    .journal-list::-webkit-scrollbar-thumb { background:rgba(0,212,255,0.2); border-radius:3px; }
+    .j-entry { padding:9px 11px; border-radius:var(--radius-sm); border:1px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.018); }
+    .j-ts { font-size:0.62rem; color:var(--muted); margin-bottom:4px; font-family:'Orbitron',sans-serif; letter-spacing:0.05em; }
+    .j-text { font-size:0.77rem; color:var(--soft); line-height:1.55; }
+
+    /* ─── Monroe SECTION ─── */
+    .monroe-section { padding:12px 14px; border-radius:var(--radius-md); border:1px solid rgba(0,255,189,0.14); background:rgba(0,255,189,0.025); }
+    .monroe-title { font-family:'Orbitron',sans-serif; font-size:0.6rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--teal); margin-bottom:10px; display:flex; align-items:center; gap:7px; }
+    .monroe-title::before { content:''; width:18px; height:1px; background:var(--teal); opacity:0.5; }
+    .monroe-title::after  { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(0,255,189,0.4),transparent); }
 
     /* ─── OVERLAY ─── */
-    .overlay {
-      position: fixed; inset: 0; background: rgba(3,8,18,0.9);
-      display: none; z-index: 50;
-      backdrop-filter: blur(10px) saturate(120%); -webkit-backdrop-filter: blur(10px) saturate(120%);
-    }
-    .overlay.open { display: block; }
-    .overlay-shell { width: 100vw; height: 100dvh; position: relative; overflow: hidden; }
-    canvas#overlayCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-    .ov-hud, .ov-bot {
-      position: absolute; left: 16px; right: 16px;
-      display: flex; gap: 10px; align-items: center; justify-content: space-between;
-      z-index: 2; flex-wrap: wrap;
-    }
-    .ov-hud { top: max(16px, env(safe-area-inset-top)); padding-top: 10px; }
-    .ov-bot { bottom: max(16px, env(safe-area-inset-bottom)); padding-bottom: 10px; }
-    .hud-pill {
-      padding: 7px 14px; border-radius: var(--pill);
-      border: 1px solid rgba(0,210,255,0.2); background: rgba(4,10,22,0.72);
-      font-family: 'Orbitron', sans-serif; font-size: 0.68rem; letter-spacing: 0.07em;
-      color: var(--soft); backdrop-filter: blur(14px);
-    }
+    .overlay { position:fixed; inset:0; background:rgba(2,6,14,0.92); display:none; z-index:50; backdrop-filter:blur(10px) saturate(120%); -webkit-backdrop-filter:blur(10px) saturate(120%); }
+    .overlay.open { display:block; }
+    .overlay-shell { width:100vw; height:100dvh; position:relative; overflow:hidden; }
+    canvas#overlayCanvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+    .ov-hud, .ov-bot { position:absolute;left:16px;right:16px;display:flex;gap:10px;align-items:center;justify-content:space-between;z-index:2;flex-wrap:wrap; }
+    .ov-hud { top:max(16px,env(safe-area-inset-top)); padding-top:10px; }
+    .ov-bot { bottom:max(16px,env(safe-area-inset-bottom)); padding-bottom:10px; }
+    .hud-pill { padding:6px 13px; border-radius:var(--pill); border:1px solid rgba(0,212,255,0.22); background:rgba(3,8,18,0.75); font-family:'Orbitron',sans-serif; font-size:0.66rem; letter-spacing:0.07em; color:var(--soft); backdrop-filter:blur(14px); }
 
     /* ─── SCROLLBARS ─── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.18); }
-    ::-webkit-scrollbar-thumb { background: rgba(0,210,255,0.14); border-radius: 4px; }
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:rgba(0,0,0,0.18); }
+    ::-webkit-scrollbar-thumb { background:rgba(0,212,255,0.16); border-radius:4px; }
 
     /* ─── RESPONSIVE ─── */
-    @media (max-width: 1220px) { .main-layout { grid-template-columns: 1fr; } .hero-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 768px) { .wrap { width: calc(100vw - 12px); } .topbar { padding: 12px 14px; } .mini-grid { grid-template-columns: 1fr 1fr; } canvas#visualCanvas { height: 260px; } }
+    @media (max-width:1220px) { .main-layout{grid-template-columns:1fr;} .hero-grid{grid-template-columns:1fr;} .two-col{grid-template-columns:1fr;} }
+    @media (max-width:768px) { .wrap{padding:8px;} .topbar{padding:10px 12px;} .mini-grid{grid-template-columns:1fr 1fr;} canvas#visualCanvas{height:240px;} .three-col{grid-template-columns:1fr 1fr;} }
   </style>
 </head>
 <body>
-  <div class="bg-layer"></div>
-  <div class="bg-grid"></div>
 
-  <!-- FULLSCREEN OVERLAY -->
+  <!-- ═══ FULLSCREEN VISUAL OVERLAY ═══ -->
   <div class="overlay" id="visualOverlay">
     <div class="overlay-shell">
       <canvas id="overlayCanvas"></canvas>
@@ -493,10 +404,10 @@
           <div class="hud-pill" id="ovBeat">7.0 Hz</div>
         </div>
         <div class="btn-row">
-          <button class="secondary" id="prevVisBtn" style="min-height:auto;padding:7px 12px;font-size:0.74rem;">◀ Prev</button>
-          <button class="secondary" id="nextVisBtn" style="min-height:auto;padding:7px 12px;font-size:0.74rem;">Next ▶</button>
-          <button class="secondary" id="hideOvBtn" style="min-height:auto;padding:7px 12px;font-size:0.74rem;">Hide</button>
-          <button class="danger-btn" id="closeOvBtn" style="min-height:auto;padding:7px 12px;font-size:0.74rem;">Close ✕</button>
+          <button class="secondary" id="prevVisBtn" style="min-height:auto;padding:6px 11px;font-size:0.72rem;">◀ Prev</button>
+          <button class="secondary" id="nextVisBtn" style="min-height:auto;padding:6px 11px;font-size:0.72rem;">Next ▶</button>
+          <button class="secondary" id="hideOvBtn" style="min-height:auto;padding:6px 11px;font-size:0.72rem;">Hide</button>
+          <button class="danger-btn" id="closeOvBtn" style="min-height:auto;padding:6px 11px;font-size:0.72rem;">Close ✕</button>
         </div>
       </div>
       <div class="ov-bot">
@@ -506,29 +417,33 @@
     </div>
   </div>
 
+  <!-- ═══ APP FRAME ═══ -->
+  <div class="app-frame">
   <div class="wrap">
+
     <!-- TOPBAR -->
     <header class="glass topbar">
       <div class="tb-row">
         <div class="brand">
           <div class="logo">USS</div>
           <div>
-            <div style="display:flex;align-items:baseline;gap:0;">
+            <div style="display:flex;align-items:baseline;">
               <span class="brand-name">UNIFIED STATE STUDIO</span>
-              <span class="brand-ver">v5</span>
+              <span class="brand-ver">v5.1</span>
             </div>
-            <div class="brand-sub">Three modes · Binaural engine · LFO pulse · Session journal</div>
+            <div class="brand-sub">Binaural · Spatial orbit · Heartbeat · H+ tone · Monroe Focus levels</div>
           </div>
         </div>
         <div class="badge-row">
           <div class="badge"><span class="bdot" id="bdotAudio"></span>Audio: <strong id="badgeAudio">idle</strong></div>
+          <div class="badge"><span class="bdot" id="bdotOrbit"></span>Orbit: <strong id="badgeOrbit">stopped</strong></div>
+          <div class="badge"><span class="bdot" id="bdotHB"></span>Heartbeat: <strong id="badgeHB">off</strong></div>
           <div class="badge"><span class="bdot" id="bdotVis"></span>Visual: <strong id="badgeVisual">closed</strong></div>
-          <div class="badge"><span class="bdot" id="bdotHP"></span>Headphones: <strong id="badgeHP">untested</strong></div>
           <div class="badge">Mode: <strong id="badgeMode">Basic</strong></div>
         </div>
       </div>
-      <div class="tb-row" style="margin-top:12px;">
-        <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;">
+      <div class="tb-row" style="margin-top:11px;">
+        <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;">
           <div class="tab-bar" id="modeTabs">
             <div class="tab active" data-mode="basic">Basic</div>
             <div class="tab" data-mode="intermediate">Intermediate</div>
@@ -537,8 +452,8 @@
           <span class="tiny" style="padding-bottom:2px;"><span class="kbd">Space</span> play/pause &nbsp; <span class="kbd">Esc</span> stop &nbsp; <span class="kbd">G</span> ground &nbsp; <span class="kbd">O</span> overlay</span>
         </div>
         <div class="btn-row tab-actions">
-          <button class="secondary" id="openOvBtn" style="font-size:0.78rem;padding:8px 14px;">Open visualiser</button>
-          <button class="secondary" id="hpTestBtn" style="font-size:0.78rem;padding:8px 14px;">Headphone test</button>
+          <button class="secondary" id="openOvBtn" style="font-size:0.75rem;padding:7px 13px;">Open visualiser</button>
+          <button class="secondary" id="hpTestBtn" style="font-size:0.75rem;padding:7px 13px;">Headphone test</button>
         </div>
       </div>
     </header>
@@ -546,10 +461,9 @@
     <!-- MAIN GRID -->
     <div class="main-layout">
 
-      <!-- LEFT SIDEBAR -->
+      <!-- ─── LEFT SIDEBAR ─── -->
       <aside class="stack">
 
-        <!-- Session Controls -->
         <section class="glass panel stack-sm">
           <h2>Session Controls</h2>
           <div class="btn-grid">
@@ -559,13 +473,12 @@
             <button class="warn-btn" id="groundBtn">⊕ Ground</button>
           </div>
           <div class="btn-grid">
-            <button class="secondary" id="prevPhaseBtn" style="font-size:0.76rem;">← Prev phase</button>
-            <button class="secondary" id="nextPhaseBtn" style="font-size:0.76rem;">Next phase →</button>
+            <button class="secondary" id="prevPhaseBtn" style="font-size:0.73rem;">← Prev phase</button>
+            <button class="secondary" id="nextPhaseBtn" style="font-size:0.73rem;">Next phase →</button>
           </div>
-          <div class="tiny" style="color:var(--muted);opacity:0.7;">Visualiser is optional. Forced visuals as default is lazy UX.</div>
+          <div class="tiny" style="opacity:0.6;">Visualiser is optional. Forced visuals as default is lazy UX.</div>
         </section>
 
-        <!-- Status -->
         <section class="glass panel stack-sm">
           <h2>Status</h2>
           <div class="mini-grid">
@@ -575,25 +488,18 @@
             <div class="mini-card"><div class="m-label">Queue item</div><div class="m-val" id="queueStatusLabel">—</div></div>
           </div>
           <div>
-            <div class="ctrl-row" style="margin-bottom:6px;">
-              <label>Session energy</label>
-              <span class="val" id="energyLabel">0%</span>
-            </div>
+            <div class="ctrl-row" style="margin-bottom:5px;"><label>Session energy</label><span class="val" id="energyLabel">0%</span></div>
             <div class="meter-track"><div class="meter-fill" id="energyMeter"></div></div>
           </div>
         </section>
 
-        <!-- Phase Rail -->
         <section class="glass panel stack-sm">
-          <div class="ctrl-row">
-            <h2>Phase Rail</h2>
-            <span class="val" id="phaseIdxLabel">1 / 7</span>
-          </div>
+          <div class="ctrl-row"><h2>Phase Rail</h2><span class="val" id="phaseIdxLabel">1 / 7</span></div>
           <div class="phase-list" id="phaseList"></div>
         </section>
       </aside>
 
-      <!-- MAIN CONTENT -->
+      <!-- ─── MAIN CONTENT ─── -->
       <main class="stack">
 
         <!-- BASIC MODE -->
@@ -601,7 +507,7 @@
           <div class="stack">
             <div>
               <div class="section-title">Guided Session</div>
-              <div class="sub" style="margin-top:5px;">Choose a preset, set duration, and press start. Lab controls stay hidden where they belong.</div>
+              <div class="sub" style="margin-top:4px;">Choose a preset, set duration, and press start. Heartbeat, spatial orbit, and H+ tone activate automatically per Monroe Focus level.</div>
             </div>
             <div class="hero-grid">
               <div class="stack">
@@ -642,7 +548,7 @@
           <div class="stack">
             <div>
               <div class="section-title">Session Builder</div>
-              <div class="sub" style="margin-top:5px;">Build a queue, reorder it, run full playthroughs, and set your visual mode without diving into the engine like a raccoon in a fuse box.</div>
+              <div class="sub" style="margin-top:4px;">Build a queue, reorder it, run full playthroughs without diving into raw engine settings like a raccoon in a fuse box.</div>
             </div>
             <div class="hero-grid">
               <div class="stack">
@@ -661,14 +567,10 @@
                 <div class="control">
                   <div class="ctrl-row"><label for="intVisMode">Visual mode</label><span class="val" id="intVisModeVal">Orbit Field</span></div>
                   <select id="intVisMode">
-                    <option value="orbit">Orbit Field</option>
-                    <option value="flower">Flower of Life</option>
-                    <option value="metatron">Metatron Grid</option>
-                    <option value="fractal">Fractal Spiral</option>
-                    <option value="mandala">Mandala Bloom</option>
-                    <option value="starfield">Starfield Drift</option>
-                    <option value="tunnel">Quantum Tunnel</option>
-                    <option value="plasma">Neon Plasma</option>
+                    <option value="orbit">Orbit Field</option><option value="flower">Flower of Life</option>
+                    <option value="metatron">Metatron Grid</option><option value="fractal">Fractal Spiral</option>
+                    <option value="mandala">Mandala Bloom</option><option value="starfield">Starfield Drift</option>
+                    <option value="tunnel">Quantum Tunnel</option><option value="plasma">Neon Plasma</option>
                   </select>
                 </div>
               </div>
@@ -676,6 +578,16 @@
                 <div class="control">
                   <div class="ctrl-row"><label for="masterVol">Master volume</label><span class="val" id="masterVolVal">70%</span></div>
                   <input id="masterVol" type="range" min="0" max="100" value="70" step="1" />
+                </div>
+                <div class="control">
+                  <div class="ctrl-row">
+                    <div class="orbit-label">
+                      <div class="orbit-ring"><div class="orbit-dot" id="orbitDot"></div></div>
+                      <label for="noiseOrbitSpd">Noise orbit speed</label>
+                    </div>
+                    <span class="val" id="noiseOrbitSpdVal">Slow</span>
+                  </div>
+                  <input id="noiseOrbitSpd" type="range" min="0.05" max="3.0" value="0.5" step="0.05" />
                 </div>
                 <div class="control">
                   <div class="ctrl-row"><label for="animSpeed">Animation speed</label><span class="val" id="animSpeedVal">0.0060</span></div>
@@ -687,17 +599,13 @@
                 </div>
               </div>
             </div>
-
             <div class="hero-grid">
               <div class="stack">
                 <h3>Preset Catalogue</h3>
                 <div class="catalogue" id="catalogue"></div>
               </div>
               <div class="stack">
-                <div class="ctrl-row">
-                  <h3>Queue</h3>
-                  <span class="tiny" id="queueMeta">0 sessions</span>
-                </div>
+                <div class="ctrl-row"><h3>Queue</h3><span class="tiny" id="queueMeta">0 sessions</span></div>
                 <div class="queue-list" id="queueList"></div>
                 <div class="btn-row">
                   <button class="primary" id="playQueueBtn">▶ Start queue</button>
@@ -714,68 +622,69 @@
           <div class="stack">
             <div>
               <div class="section-title">Lab Console</div>
-              <div class="sub" style="margin-top:5px;">Direct engine controls, WAV export, and save/load. Powerful enough to matter, constrained enough to stay usable.</div>
+              <div class="sub" style="margin-top:4px;">Direct engine controls, Monroe parameters, WAV export, and save/load.</div>
             </div>
             <div class="hero-grid">
-              <!-- Left: Audio params -->
+              <!-- Audio Engine -->
               <div class="stack">
                 <h3>Audio Engine</h3>
-                <div class="control">
-                  <div class="ctrl-row"><label for="baseFreq">Carrier frequency</label><span class="val" id="baseFreqVal">180 Hz</span></div>
-                  <input id="baseFreq" type="range" min="80" max="400" value="180" step="1" />
-                </div>
-                <div class="control">
-                  <div class="ctrl-row"><label for="beatFreq">Beat frequency</label><span class="val" id="beatFreqVal">7.0 Hz</span></div>
-                  <input id="beatFreq" type="range" min="0.5" max="20" value="7" step="0.1" />
-                </div>
-                <div class="control">
-                  <div class="ctrl-row"><label for="toneGain">Tone gain</label><span class="val" id="toneGainVal">0.28</span></div>
-                  <input id="toneGain" type="range" min="0" max="0.8" value="0.28" step="0.01" />
-                </div>
-                <div class="control">
-                  <div class="ctrl-row"><label for="noiseGain">Noise gain</label><span class="val" id="noiseGainVal">0.12</span></div>
-                  <input id="noiseGain" type="range" min="0" max="0.6" value="0.12" step="0.01" />
-                </div>
-                <div class="control">
-                  <div class="ctrl-row"><label for="noiseCutoff">Noise filter</label><span class="val" id="noiseCutoffVal">1800 Hz</span></div>
-                  <input id="noiseCutoff" type="range" min="200" max="8000" value="1800" step="10" />
-                </div>
-                <div class="control">
-                  <div class="ctrl-row"><label for="pulseBpm">Pulse BPM (LFO)</label><span class="val" id="pulseBpmVal">58</span></div>
-                  <input id="pulseBpm" type="range" min="40" max="90" value="58" step="1" />
-                </div>
-                <div class="control">
-                  <div class="ctrl-row"><label for="pulseGain">Pulse depth</label><span class="val" id="pulseGainVal">0.12</span></div>
-                  <input id="pulseGain" type="range" min="0" max="0.5" value="0.12" step="0.01" />
-                </div>
-                <div class="control">
-                  <div class="ctrl-row"><label for="cueGain">Cue gain</label><span class="val" id="cueGainVal">0.18</span></div>
-                  <input id="cueGain" type="range" min="0" max="0.5" value="0.18" step="0.01" />
+                <div class="control"><div class="ctrl-row"><label for="baseFreq">Carrier frequency</label><span class="val" id="baseFreqVal">180 Hz</span></div><input id="baseFreq" type="range" min="80" max="400" value="180" step="1" /></div>
+                <div class="control"><div class="ctrl-row"><label for="beatFreq">Beat frequency</label><span class="val" id="beatFreqVal">7.0 Hz</span></div><input id="beatFreq" type="range" min="0.5" max="20" value="7" step="0.1" /></div>
+                <div class="control"><div class="ctrl-row"><label for="toneGain">Tone gain</label><span class="val" id="toneGainVal">0.28</span></div><input id="toneGain" type="range" min="0" max="0.8" value="0.28" step="0.01" /></div>
+                <div class="control"><div class="ctrl-row"><label for="noiseGain">Noise gain</label><span class="val" id="noiseGainVal">0.12</span></div><input id="noiseGain" type="range" min="0" max="0.6" value="0.12" step="0.01" /></div>
+                <div class="control"><div class="ctrl-row"><label for="noiseCutoff">Noise filter</label><span class="val" id="noiseCutoffVal">1800 Hz</span></div><input id="noiseCutoff" type="range" min="200" max="8000" value="1800" step="10" /></div>
+                <div class="control"><div class="ctrl-row"><label for="cueGain">Cue gain</label><span class="val" id="cueGainVal">0.18</span></div><input id="cueGain" type="range" min="0" max="0.5" value="0.18" step="0.01" /></div>
+
+                <!-- Monroe Parameters -->
+                <div class="monroe-section stack-sm" style="margin-top:4px;">
+                  <div class="monroe-title">Monroe Parameters</div>
+
+                  <div class="control">
+                    <div class="ctrl-row">
+                      <div class="orbit-label">
+                        <div class="orbit-ring" style="width:26px;height:26px;"><div class="orbit-dot" style="width:5px;height:5px;"></div></div>
+                        <label for="noiseOrbitSpdAdv">Noise orbit speed</label>
+                      </div>
+                      <span class="val" id="noiseOrbitSpdAdvVal">Slow</span>
+                    </div>
+                    <input id="noiseOrbitSpdAdv" type="range" min="0.05" max="3.0" value="0.5" step="0.05" />
+                  </div>
+
+                  <div class="control">
+                    <div class="ctrl-row"><label for="heartbeatBpm">Heartbeat BPM</label><span class="val" id="heartbeatBpmVal">60 BPM</span></div>
+                    <input id="heartbeatBpm" type="range" min="40" max="80" value="60" step="1" />
+                  </div>
+                  <div class="control">
+                    <div class="ctrl-row"><label for="heartbeatGain">Heartbeat gain</label><span class="val" id="heartbeatGainVal">0.14</span></div>
+                    <input id="heartbeatGain" type="range" min="0" max="0.4" value="0.14" step="0.01" />
+                  </div>
+                  <div class="control">
+                    <div class="ctrl-row"><label for="hplusGain">H+ tone gain</label><span class="val" id="hplusGainVal">0.08</span></div>
+                    <input id="hplusGain" type="range" min="0" max="0.25" value="0.08" step="0.005" />
+                  </div>
+
+                  <div class="three-col" style="margin-top:4px;">
+                    <div class="mini-card"><div class="m-label">Heartbeat</div><div class="m-val glow" id="hbStatusLabel">off</div></div>
+                    <div class="mini-card"><div class="m-label">H+ Tone</div><div class="m-val glow" id="hpStatusLabel">off</div></div>
+                    <div class="mini-card"><div class="m-label">Orbit</div><div class="m-val glow" id="orbitStatusLabel">stopped</div></div>
+                  </div>
                 </div>
               </div>
-              <!-- Right: Visual + canvas -->
+              <!-- Visual + Canvas -->
               <div class="stack">
                 <h3>Visual</h3>
-                <div class="control">
-                  <div class="ctrl-row"><label for="visMode">Mode</label><span class="val" id="visModeVal">Orbit Field</span></div>
+                <div class="control"><div class="ctrl-row"><label for="visMode">Mode</label><span class="val" id="visModeVal">Orbit Field</span></div>
                   <select id="visMode">
-                    <option value="orbit">Orbit Field</option>
-                    <option value="flower">Flower of Life</option>
-                    <option value="metatron">Metatron Grid</option>
-                    <option value="fractal">Fractal Spiral</option>
-                    <option value="mandala">Mandala Bloom</option>
-                    <option value="starfield">Starfield Drift</option>
-                    <option value="tunnel">Quantum Tunnel</option>
-                    <option value="plasma">Neon Plasma</option>
+                    <option value="orbit">Orbit Field</option><option value="flower">Flower of Life</option>
+                    <option value="metatron">Metatron Grid</option><option value="fractal">Fractal Spiral</option>
+                    <option value="mandala">Mandala Bloom</option><option value="starfield">Starfield Drift</option>
+                    <option value="tunnel">Quantum Tunnel</option><option value="plasma">Neon Plasma</option>
                   </select>
                 </div>
-                <div class="control">
-                  <div class="ctrl-row"><label for="visIntensity">Visual intensity</label><span class="val" id="visIntVal">1.0×</span></div>
-                  <input id="visIntensity" type="range" min="0.4" max="2.2" value="1" step="0.1" />
-                </div>
+                <div class="control"><div class="ctrl-row"><label for="visIntensity">Visual intensity</label><span class="val" id="visIntVal">1.0×</span></div><input id="visIntensity" type="range" min="0.4" max="2.2" value="1" step="0.1" /></div>
                 <canvas id="visualCanvas" width="960" height="420"></canvas>
                 <div>
-                  <h3 style="margin-bottom:8px;">Activity Log</h3>
+                  <h3 style="margin-bottom:7px;">Activity Log</h3>
                   <div class="log" id="activityLog">Ready.</div>
                 </div>
               </div>
@@ -798,49 +707,46 @@
                   <button class="primary" id="exportWavBtn">Export WAV</button>
                   <button class="secondary" id="copySummaryBtn">Copy summary</button>
                 </div>
-                <div class="tiny" style="margin-top:4px;">Renders current tone/noise/pulse mix offline. Will not magically read Spotify. Browser sandboxes are rude like that.</div>
+                <div class="tiny" style="margin-top:3px;">Renders binaural + spatial noise + pulse offline. Not Spotify. Browser sandboxes are rude like that.</div>
               </div>
             </div>
           </div>
         </section>
       </main>
 
-      <!-- RIGHT SIDEBAR -->
+      <!-- ─── RIGHT SIDEBAR ─── -->
       <aside class="stack">
-
-        <!-- Current Protocol -->
         <section class="glass panel stack-sm">
           <h2>Current Protocol</h2>
           <div class="info-card"><div class="ic-label">Preset</div><div class="ic-val glow" id="protoName">Gateway Threshold</div></div>
+          <div class="info-card"><div class="ic-label">Focus level</div><div class="ic-val" id="protoFocus">Gateway</div></div>
           <div class="info-card"><div class="ic-label">Description</div><div class="tiny" id="protoDesc">Body relaxation, stable awareness, threshold drift, and exploration-oriented pacing.</div></div>
           <div class="info-card"><div class="ic-label">Current prompt</div><div class="tiny" id="protoPrompt">Lengthen exhale. Observe without forcing anything.</div></div>
         </section>
 
-        <!-- Safety -->
         <section class="glass panel stack-sm">
           <h2>Safety</h2>
-          <div class="safe-box tiny">Headphones required for binaural effect. Do not use while driving or operating machinery. Avoid flicker visuals if you have photosensitive sensitivity.</div>
-          <div class="safe-box tiny">Private experimental tool. Not a medical device. Your pineal gland is not phoning home.</div>
+          <div class="safe-box tiny">Headphones required for binaural and spatial orbit effects. Do not use while driving or operating machinery. Avoid flicker visuals if photosensitive.</div>
+          <div class="safe-box tiny">Private experimental tool. Not a medical device. Monroe parameters approximate published Hemi-Sync research — individual response varies.</div>
         </section>
 
-        <!-- Journal -->
         <section class="glass panel stack-sm">
           <h2>Session Journal</h2>
           <textarea id="journalInput" placeholder="Record what changed, what repeated, and what was noise."></textarea>
           <div class="btn-row">
-            <button class="secondary" id="saveJournalBtn" style="flex:1;">Save entry</button>
-            <button class="secondary" id="clearJournalBtn" style="font-size:0.74rem;padding:8px 11px;">Clear all</button>
+            <button class="teal-btn" id="saveJournalBtn" style="flex:1;font-size:0.78rem;">Save entry</button>
+            <button class="secondary" id="clearJournalBtn" style="font-size:0.72rem;padding:7px 10px;">Clear all</button>
           </div>
           <div class="journal-list" id="journalList"></div>
         </section>
-
       </aside>
     </div>
   </div>
+  </div><!-- end app-frame -->
 
   <script>
     /* ═══════════════════════════════════════════════
-       DATA
+       DATA — Monroe Focus level accurate presets
     ═══════════════════════════════════════════════ */
     const phases = [
       { key:'arrival',    name:'Arrival',         durationWeight:0.12, prompt:'Lengthen exhale. Relax the jaw. Do not force anything.' },
@@ -852,113 +758,100 @@
       { key:'reflection', name:'Reflection',        durationWeight:0.06, prompt:'Write what changed before memory blurs.' }
     ];
 
+    // heartbeatBpm per preset aligns with Monroe's published target heart-rate ranges per focus level
     const presets = {
-      'Focus 10':          { desc:'Body relaxed, mind awake drift.',                              carrier:140, beat:7.0,  toneGain:0.26, noiseGain:0.12, pulseBpm:56, visual:'orbit' },
-      'Focus 12':          { desc:'Broader attention and symbolic openness.',                     carrier:136, beat:6.4,  toneGain:0.28, noiseGain:0.11, pulseBpm:54, visual:'flower' },
-      'Focus 15':          { desc:'Time loosening and deeper inward immersion.',                  carrier:128, beat:5.2,  toneGain:0.30, noiseGain:0.10, pulseBpm:52, visual:'fractal' },
-      'Focus 21':          { desc:'Expansion-oriented, spacious and detached.',                   carrier:122, beat:4.6,  toneGain:0.31, noiseGain:0.09, pulseBpm:50, visual:'metatron' },
-      'Return':            { desc:'Controlled reintegration and grounding.',                      carrier:156, beat:10.2, toneGain:0.22, noiseGain:0.06, pulseBpm:62, visual:'mandala' },
-      'Gateway Threshold': { desc:'Body relaxation, stable awareness, threshold drift, and exploration-oriented pacing.', carrier:140, beat:7.0, toneGain:0.28, noiseGain:0.12, pulseBpm:58, visual:'orbit' },
-      'Calm Descent':      { desc:'Stress reduction and downshift toward sleep-adjacent calm.',   carrier:132, beat:5.2,  toneGain:0.24, noiseGain:0.14, pulseBpm:52, visual:'mandala' },
-      'Focus Lock':        { desc:'More attentive and less dreamy.',                              carrier:155, beat:11.4, toneGain:0.26, noiseGain:0.08, pulseBpm:64, visual:'starfield' },
-      'Symbolic Vision':   { desc:'Imagery-friendly and slower.',                                 carrier:128, beat:6.0,  toneGain:0.29, noiseGain:0.11, pulseBpm:53, visual:'flower' },
-      'Observer Drift':    { desc:'Detached floating perspective.',                               carrier:122, beat:4.8,  toneGain:0.30, noiseGain:0.10, pulseBpm:50, visual:'fractal' }
+      'Focus 10':          { desc:'Body asleep, mind awake. Entry-level OBE preparation.', focus:'Focus 10', carrier:140, beat:7.0,  toneGain:0.26, noiseGain:0.12, pulseBpm:56, heartbeatBpm:58, hplusGain:0.06, visual:'orbit' },
+      'Focus 12':          { desc:'Expanded awareness. Broader attention and symbolic openness.', focus:'Focus 12', carrier:136, beat:6.4,  toneGain:0.28, noiseGain:0.11, pulseBpm:54, heartbeatBpm:55, hplusGain:0.07, visual:'flower' },
+      'Focus 15':          { desc:'No-time state. Deep inward immersion beyond temporal frame.', focus:'Focus 15', carrier:128, beat:5.2,  toneGain:0.30, noiseGain:0.10, pulseBpm:52, heartbeatBpm:52, hplusGain:0.08, visual:'fractal' },
+      'Focus 21':          { desc:'Other energy systems. Spacious, detached, expansion-oriented.', focus:'Focus 21', carrier:122, beat:4.6,  toneGain:0.31, noiseGain:0.09, pulseBpm:50, heartbeatBpm:50, hplusGain:0.09, visual:'metatron' },
+      'Return':            { desc:'Controlled reintegration and grounding back to C-1.', focus:'C-1', carrier:156, beat:10.2, toneGain:0.22, noiseGain:0.06, pulseBpm:62, heartbeatBpm:66, hplusGain:0.04, visual:'mandala' },
+      'Gateway Threshold': { desc:'Body relaxation, stable awareness, threshold drift, and exploration-oriented pacing.', focus:'Gateway', carrier:140, beat:7.0, toneGain:0.28, noiseGain:0.12, pulseBpm:58, heartbeatBpm:60, hplusGain:0.07, visual:'orbit' },
+      'Calm Descent':      { desc:'Stress reduction and downshift toward sleep-adjacent calm.', focus:'Focus 10', carrier:132, beat:5.2,  toneGain:0.24, noiseGain:0.14, pulseBpm:52, heartbeatBpm:58, hplusGain:0.06, visual:'mandala' },
+      'Focus Lock':        { desc:'More attentive, less dreamy. Higher alpha/low beta.', focus:'Focus 10', carrier:155, beat:11.4, toneGain:0.26, noiseGain:0.08, pulseBpm:64, heartbeatBpm:64, hplusGain:0.05, visual:'starfield' },
+      'Symbolic Vision':   { desc:'Imagery-friendly. Slower, visually receptive.', focus:'Focus 12', carrier:128, beat:6.0,  toneGain:0.29, noiseGain:0.11, pulseBpm:53, heartbeatBpm:54, hplusGain:0.07, visual:'flower' },
+      'Observer Drift':    { desc:'Detached floating perspective. Non-attachment practice.', focus:'Focus 15', carrier:122, beat:4.8,  toneGain:0.30, noiseGain:0.10, pulseBpm:50, heartbeatBpm:51, hplusGain:0.08, visual:'fractal' }
     };
 
-    // FIX: derive from Object.keys, no manual duplication
-    const ALL_PRESETS    = Object.keys(presets);
-    const BASIC_PRESETS  = ['Gateway Threshold','Calm Descent','Focus Lock','Symbolic Vision','Observer Drift','Return'];
+    const ALL_PRESETS   = Object.keys(presets);
+    const BASIC_PRESETS = ['Gateway Threshold','Calm Descent','Focus Lock','Symbolic Vision','Observer Drift','Return'];
 
     /* ═══════════════════════════════════════════════
-       STATE — queue persisted to localStorage
+       STATE
     ═══════════════════════════════════════════════ */
     const state = {
-      mode: 'basic',
-      playing: false,
-      paused: false,
-      headphonesTested: false,
-      visualOverlay: false,
-      currentPreset: 'Gateway Threshold',
-      currentPhase: 0,
-      sessionMinutes: 20,
-      transitionSecs: 18,
-      seqMode: 'manual',
-      queue: loadQueue(),
-      queueIndex: 0,
-      elapsedSeconds: 0,
-      phaseElapsed: 0,
-      timerHandle: null,
-      lastTick: null,
-      visualMode: 'orbit',        // FIX: single source of truth
-      visualIntensity: 1,
-      panSpeed: 0.006,
-      visualToggle: 'optional',
-      intDefaultMinutes: 20,
+      mode: 'basic', playing: false, paused: false,
+      headphonesTested: false, visualOverlay: false,
+      currentPreset: 'Gateway Threshold', currentPhase: 0,
+      sessionMinutes: 20, transitionSecs: 18, seqMode: 'manual',
+      queue: loadQueue(), queueIndex: 0,
+      elapsedSeconds: 0, phaseElapsed: 0,
+      timerHandle: null, lastTick: null,
+      visualMode: 'orbit', visualIntensity: 1,
+      panSpeed: 0.006, visualToggle: 'optional', intDefaultMinutes: 20,
+      // Monroe / spatial audio state
+      noiseOrbitSpeed: 0.5,    // controls pan oscillation speed (0.05=very slow, 3.0=fast)
+      heartbeatBpm: 60,
+      heartbeatGain: 0.14,
+      hplusGain: 0.08,
       journal: JSON.parse(localStorage.getItem('uss-journal-v5') || '[]')
     };
 
-    function loadQueue() {
-      try { return JSON.parse(localStorage.getItem('uss-queue-v5') || '[]'); } catch { return []; }
-    }
-    function persistQueue() {
-      localStorage.setItem('uss-queue-v5', JSON.stringify(state.queue));
-    }
+    function loadQueue() { try { return JSON.parse(localStorage.getItem('uss-queue-v5') || '[]'); } catch { return []; } }
+    function persistQueue() { localStorage.setItem('uss-queue-v5', JSON.stringify(state.queue)); }
 
     /* ═══════════════════════════════════════════════
        DOM CACHE
     ═══════════════════════════════════════════════ */
     const $ = id => document.getElementById(id);
     const els = {
-      // badges
-      badgeAudio:$('badgeAudio'), badgeVisual:$('badgeVisual'), badgeHP:$('badgeHP'), badgeMode:$('badgeMode'),
-      bdotAudio:$('bdotAudio'), bdotVis:$('bdotVis'), bdotHP:$('bdotHP'),
-      // status
+      badgeAudio:$('badgeAudio'), badgeOrbit:$('badgeOrbit'), badgeHB:$('badgeHB'),
+      badgeVisual:$('badgeVisual'), badgeMode:$('badgeMode'),
+      bdotAudio:$('bdotAudio'), bdotOrbit:$('bdotOrbit'), bdotHB:$('bdotHB'), bdotVis:$('bdotVis'),
       currentPhaseLabel:$('currentPhaseLabel'), elapsedLabel:$('elapsedLabel'),
       phaseRemLabel:$('phaseRemLabel'), queueStatusLabel:$('queueStatusLabel'),
       energyLabel:$('energyLabel'), energyMeter:$('energyMeter'), phaseIdxLabel:$('phaseIdxLabel'),
       phaseList:$('phaseList'),
-      // basic
       basicProtoBadge:$('basicProtoBadge'), basicVisBadge:$('basicVisBadge'),
       basicPresetBtns:$('basicPresetBtns'),
       basicDuration:$('basicDuration'), basicDurVal:$('basicDurVal'),
       basicIntensity:$('basicIntensity'), basicIntVal:$('basicIntVal'),
-      basicVisToggle:$('basicVisToggle'), basicVisVal:$('basicVisVal'),
-      basicPrompt:$('basicPrompt'),
-      // intermediate
+      basicVisToggle:$('basicVisToggle'), basicVisVal:$('basicVisVal'), basicPrompt:$('basicPrompt'),
       seqMode:$('seqMode'), seqModeVal:$('seqModeVal'),
       transitionSecs:$('transitionSecs'), transSecsVal:$('transSecsVal'),
       intVisMode:$('intVisMode'), intVisModeVal:$('intVisModeVal'),
       masterVol:$('masterVol'), masterVolVal:$('masterVolVal'),
+      noiseOrbitSpd:$('noiseOrbitSpd'), noiseOrbitSpdVal:$('noiseOrbitSpdVal'),
+      noiseOrbitSpdAdv:$('noiseOrbitSpdAdv'), noiseOrbitSpdAdvVal:$('noiseOrbitSpdAdvVal'),
       animSpeed:$('animSpeed'), animSpeedVal:$('animSpeedVal'),
       intDuration:$('intDuration'), intDurVal:$('intDurVal'),
       catalogue:$('catalogue'), queueList:$('queueList'), queueMeta:$('queueMeta'),
-      // advanced
       baseFreq:$('baseFreq'), baseFreqVal:$('baseFreqVal'),
       beatFreq:$('beatFreq'), beatFreqVal:$('beatFreqVal'),
       toneGain:$('toneGain'), toneGainVal:$('toneGainVal'),
       noiseGain:$('noiseGain'), noiseGainVal:$('noiseGainVal'),
       noiseCutoff:$('noiseCutoff'), noiseCutoffVal:$('noiseCutoffVal'),
-      pulseBpm:$('pulseBpm'), pulseBpmVal:$('pulseBpmVal'),
-      pulseGain:$('pulseGain'), pulseGainVal:$('pulseGainVal'),
       cueGain:$('cueGain'), cueGainVal:$('cueGainVal'),
+      heartbeatBpm:$('heartbeatBpm'), heartbeatBpmVal:$('heartbeatBpmVal'),
+      heartbeatGain:$('heartbeatGain'), heartbeatGainVal:$('heartbeatGainVal'),
+      hplusGain:$('hplusGain'), hplusGainVal:$('hplusGainVal'),
+      hbStatusLabel:$('hbStatusLabel'), hpStatusLabel:$('hpStatusLabel'), orbitStatusLabel:$('orbitStatusLabel'),
       visMode:$('visMode'), visModeVal:$('visModeVal'),
       visIntensity:$('visIntensity'), visIntVal:$('visIntVal'),
       visualCanvas:$('visualCanvas'), overlayCanvas:$('overlayCanvas'),
       visualOverlay:$('visualOverlay'), activityLog:$('activityLog'),
       presetName:$('presetName'),
-      // overlay HUD
-      ovPhase:$('ovPhase'), ovMode:$('ovMode'), ovBeat:$('ovBeat'),
-      ovPrompt:$('ovPrompt'), ovTime:$('ovTime'),
-      // protocol
-      protoName:$('protoName'), protoDesc:$('protoDesc'), protoPrompt:$('protoPrompt'),
-      // journal
+      ovPhase:$('ovPhase'), ovMode:$('ovMode'), ovBeat:$('ovBeat'), ovPrompt:$('ovPrompt'), ovTime:$('ovTime'),
+      protoName:$('protoName'), protoFocus:$('protoFocus'), protoDesc:$('protoDesc'), protoPrompt:$('protoPrompt'),
       journalInput:$('journalInput'), journalList:$('journalList'),
     };
 
     /* ═══════════════════════════════════════════════
-       AUDIO ENGINE — FIX: LFO in graph, persistent context
+       AUDIO ENGINE
+       FIX: noisePan animated, LFO pulse, persistent context
+       NEW:  heartbeat scheduler, H+ tone, intro/outro
     ═══════════════════════════════════════════════ */
     let audio = null;
+    let hbHandle = null; // heartbeat interval handle
     let visualT = 0;
 
     function createAudioEngine() {
@@ -967,9 +860,8 @@
       master.gain.value = parseFloat(els.masterVol.value) / 100;
       master.connect(ctx.destination);
 
-      // Binaural oscillators (left / right channels)
-      const leftOsc = ctx.createOscillator();
-      const rightOsc = ctx.createOscillator();
+      // ── Binaural oscillators ──
+      const leftOsc = ctx.createOscillator(); const rightOsc = ctx.createOscillator();
       leftOsc.type = 'sine'; rightOsc.type = 'sine';
       const leftG = ctx.createGain(); const rightG = ctx.createGain();
       leftG.gain.value = 0.4; rightG.gain.value = 0.4;
@@ -978,45 +870,61 @@
       leftG.connect(merger, 0, 0); rightG.connect(merger, 0, 1);
       merger.connect(master);
 
-      // Pink-ish noise via filtered white noise
-      const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+      // ── Spatial orbiting noise ──
+      // noisePan.pan.value is animated frame-by-frame in animateLoop()
+      const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * 3, ctx.sampleRate);
       const nd = noiseBuffer.getChannelData(0);
       for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
       const noiseSource = ctx.createBufferSource();
       noiseSource.buffer = noiseBuffer; noiseSource.loop = true;
       const noiseFilter = ctx.createBiquadFilter(); noiseFilter.type = 'lowpass';
       const noiseGainNode = ctx.createGain();
-      const noisePan = ctx.createStereoPanner();
-      noiseSource.connect(noiseFilter); noiseFilter.connect(noisePan);
-      noisePan.connect(noiseGainNode); noiseGainNode.connect(master);
+      const noisePan = ctx.createStereoPanner(); // <-- ANIMATED in RAF loop
+      noiseSource.connect(noiseFilter);
+      noiseFilter.connect(noiseGainNode);
+      noiseGainNode.connect(noisePan);
+      noisePan.connect(master);
 
-      // FIX: Pulse driven by LFO entirely inside audio graph (no DOM-tick scheduling)
-      // LFO at pulseBpm/60 Hz modulates pulseEnv.gain around a DC offset
-      // Result: gain oscillates between 0 and pulseGain (smooth sine shape, zero artifacts)
-      const pulseOsc = ctx.createOscillator();
-      pulseOsc.type = 'sine'; pulseOsc.frequency.value = 80; // body-feel freq
+      // ── Pulse LFO (audio graph, not DOM tick) ──
+      const pulseOsc = ctx.createOscillator(); pulseOsc.type = 'sine'; pulseOsc.frequency.value = 80;
+      const lfoOsc = ctx.createOscillator(); lfoOsc.type = 'sine';
+      const pg = parseFloat(state.heartbeatGain); // reuse heartbeat gain for pulse depth
+      lfoOsc.frequency.value = 58 / 60; // initial
+      const lfoDepth = ctx.createGain(); lfoDepth.gain.value = 0.06;
+      const pulseEnv = ctx.createGain(); pulseEnv.gain.value = 0.06;
+      lfoOsc.connect(lfoDepth); lfoDepth.connect(pulseEnv.gain);
+      pulseOsc.connect(pulseEnv); pulseEnv.connect(master);
 
-      const lfoOsc = ctx.createOscillator();
-      lfoOsc.type = 'sine';
-      lfoOsc.frequency.value = parseFloat(els.pulseBpm.value) / 60;
+      // ── H+ Tone (harmonic carrier approximation) ──
+      // Fundamental ~108 Hz + 3rd harmonic + 5th harmonic, very low gain
+      // 108 Hz is within Monroe's documented carrier range for deep states
+      const hp1 = ctx.createOscillator(); hp1.type = 'sine'; hp1.frequency.value = 108;
+      const hp2 = ctx.createOscillator(); hp2.type = 'sine'; hp2.frequency.value = 324; // 3× harmonic
+      const hp3 = ctx.createOscillator(); hp3.type = 'sine'; hp3.frequency.value = 540; // 5× harmonic
+      // 40 Hz gamma AM modulation (characteristic of H+ advanced programs)
+      const hpLFO = ctx.createOscillator(); hpLFO.type = 'sine'; hpLFO.frequency.value = 40;
+      const hpLFODepth = ctx.createGain(); hpLFODepth.gain.value = 0.35;
+      const hpMix = ctx.createGain(); hpMix.gain.value = state.hplusGain * 0.4; // DC base
+      const hpMaster = ctx.createGain(); hpMaster.gain.value = state.hplusGain;
+      // harmonic gains (fundamental loudest, overtones softer)
+      const hpg1 = ctx.createGain(); hpg1.gain.value = 1.0;
+      const hpg2 = ctx.createGain(); hpg2.gain.value = 0.45;
+      const hpg3 = ctx.createGain(); hpg3.gain.value = 0.22;
+      hp1.connect(hpg1); hp2.connect(hpg2); hp3.connect(hpg3);
+      hpg1.connect(hpMix); hpg2.connect(hpMix); hpg3.connect(hpMix);
+      hpLFO.connect(hpLFODepth); hpLFODepth.connect(hpMaster.gain); // AM mod
+      hpMix.connect(hpMaster); hpMaster.connect(master);
 
-      const lfoDepth = ctx.createGain();
-      const pg = parseFloat(els.pulseGain.value);
-      lfoDepth.gain.value = pg * 0.45;
+      leftOsc.start(); rightOsc.start(); noiseSource.start();
+      pulseOsc.start(); lfoOsc.start();
+      hp1.start(); hp2.start(); hp3.start(); hpLFO.start();
 
-      const pulseEnv = ctx.createGain();
-      pulseEnv.gain.value = pg * 0.45; // DC offset; LFO adds [-0.45pg, +0.45pg] on top
-
-      lfoOsc.connect(lfoDepth);
-      lfoDepth.connect(pulseEnv.gain); // additive modulation
-      pulseOsc.connect(pulseEnv);
-      pulseEnv.connect(master);
-
-      leftOsc.start(); rightOsc.start(); noiseSource.start(); pulseOsc.start(); lfoOsc.start();
-      return { ctx, master, leftOsc, rightOsc, noiseSource, noiseFilter, noiseGainNode, noisePan, pulseOsc, lfoOsc, lfoDepth, pulseEnv };
+      return { ctx, master, leftOsc, rightOsc, noiseSource, noiseFilter, noiseGainNode, noisePan,
+               pulseOsc, lfoOsc, lfoDepth, pulseEnv,
+               hp1, hp2, hp3, hpLFO, hpLFODepth, hpMix, hpMaster, hpg1, hpg2, hpg3 };
     }
 
-    // FIX: pause = ramp to silence, NOT destroy context
+    /* ── PAUSE: ramp master to silence (context stays alive) ── */
     function pauseAudio() {
       if (!audio) return;
       const now = audio.ctx.currentTime;
@@ -1034,17 +942,18 @@
     function startAudio() {
       if (audio) { resumeAudio(); return; }
       audio = createAudioEngine();
-      updateAudioParams(true);
+      updateAudioParams(false);
       log('Audio engine started.');
     }
 
     function stopAudio() {
       if (!audio) return;
+      stopHeartbeat();
       const ctx = audio.ctx;
       const now = ctx.currentTime;
       audio.master.gain.cancelScheduledValues(now);
-      audio.master.gain.exponentialRampToValueAtTime(0.0001, now + 1.0);
-      setTimeout(() => { try { ctx.close(); } catch(e) {} audio = null; }, 1300);
+      audio.master.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
+      setTimeout(() => { try { ctx.close(); } catch(e){} audio = null; }, 1400);
       log('Audio engine stopped.');
     }
 
@@ -1060,12 +969,100 @@
       audio.noiseFilter.frequency.linearRampToValueAtTime(s.noiseCutoff, end);
       audio.noiseGainNode.gain.linearRampToValueAtTime(s.noiseGain, end);
       if (!state.paused) audio.master.gain.linearRampToValueAtTime(s.masterVolume, end);
-      // FIX: update LFO frequency and depth directly (all in audio graph)
-      audio.lfoOsc.frequency.setValueAtTime(s.pulseBpm / 60, now);
-      audio.lfoDepth.gain.setValueAtTime(s.pulseGain * 0.45, now);
-      audio.pulseEnv.gain.value = s.pulseGain * 0.45;
+      // H+ gain
+      audio.hpMaster.gain.setValueAtTime(state.hplusGain, now);
+      audio.hpMix.gain.setValueAtTime(state.hplusGain * 0.4, now);
+      // Update H+ harmonic frequencies to track carrier
+      audio.hp1.frequency.linearRampToValueAtTime(108, end);
+      audio.hp2.frequency.linearRampToValueAtTime(324, end);
+      audio.hp3.frequency.linearRampToValueAtTime(540, end);
       if (withCue) playCue(audio.ctx, audio.master, s.cueGain);
       syncBadges();
+    }
+
+    /* ══ HEARTBEAT SCHEDULER — Monroe-accurate lub-dub ══
+       Monroe's heartbeat entrainment uses two-pulse "lub-dub" at the target BPM
+       to entrain cardiac rhythm via somatic resonance.
+       Lub: ~65Hz sharp decay | Dub: ~52Hz softer, 290ms after
+    ══════════════════════════════════════════════════════ */
+    function startHeartbeat() {
+      stopHeartbeat();
+      if (!audio || state.heartbeatGain <= 0) return;
+      const bpm = state.heartbeatBpm;
+      const interval = Math.round(60000 / bpm);
+      // Schedule immediate first beat
+      scheduleHBeat(audio.ctx.currentTime + 0.08);
+      hbHandle = setInterval(() => {
+        if (audio && state.playing && !state.paused) {
+          scheduleHBeat(audio.ctx.currentTime + 0.05); // 50ms lookahead
+        }
+      }, interval);
+      log(`Heartbeat started: ${bpm} BPM`);
+    }
+
+    function stopHeartbeat() {
+      if (hbHandle) { clearInterval(hbHandle); hbHandle = null; }
+    }
+
+    function scheduleHBeat(when) {
+      if (!audio) return;
+      const g = state.heartbeatGain;
+      // Lub — lower freq, stronger
+      playDrumTone(audio.ctx, audio.master, when,        65, 0.15, g * 1.0);
+      // Dub — slightly higher, softer, 290ms after
+      playDrumTone(audio.ctx, audio.master, when + 0.29, 52, 0.12, g * 0.64);
+    }
+
+    function playDrumTone(ctx, output, when, startFreq, dur, gainVal) {
+      if (!ctx || gainVal <= 0) return;
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(startFreq, when);
+      osc.frequency.exponentialRampToValueAtTime(startFreq * 0.22, when + dur);
+      env.gain.setValueAtTime(0.0001, when);
+      env.gain.linearRampToValueAtTime(Math.max(0.001, gainVal), when + 0.004);
+      env.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+      osc.connect(env); env.connect(output);
+      osc.start(when); osc.stop(when + dur + 0.06);
+    }
+
+    /* ══ INTRO / OUTRO SEQUENCES ══
+       Monroe's sessions open with a "resonant tuning" (voiced tone) and alert tones.
+       We approximate with a three-bell ascending/descending tonal cue.
+    ══════════════════════════════════════════════════════ */
+    function playIntroSequence(ctx, master, onComplete) {
+      if (!ctx) { if (onComplete) onComplete(); return; }
+      // Three ascending tones: 396 → 528 → 639 Hz (Solfeggio approximate)
+      const freqs = [396, 528, 639];
+      const now = ctx.currentTime + 0.15;
+      freqs.forEach((freq, i) => {
+        const osc = ctx.createOscillator(); const env = ctx.createGain();
+        osc.type = 'sine'; osc.frequency.value = freq;
+        env.gain.setValueAtTime(0.0001, now + i * 0.55);
+        env.gain.linearRampToValueAtTime(0.14, now + i * 0.55 + 0.04);
+        env.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.55 + 0.42);
+        osc.connect(env); env.connect(master);
+        osc.start(now + i * 0.55); osc.stop(now + i * 0.55 + 0.5);
+      });
+      const totalDur = (freqs.length * 0.55 + 0.5) * 1000;
+      if (onComplete) setTimeout(onComplete, totalDur);
+    }
+
+    function playOutroSequence(ctx, master) {
+      if (!ctx) return;
+      // Three descending tones: 639 → 528 → 396 Hz
+      const freqs = [639, 528, 396];
+      const now = ctx.currentTime + 0.1;
+      freqs.forEach((freq, i) => {
+        const osc = ctx.createOscillator(); const env = ctx.createGain();
+        osc.type = 'sine'; osc.frequency.value = freq;
+        env.gain.setValueAtTime(0.0001, now + i * 0.6);
+        env.gain.linearRampToValueAtTime(0.12, now + i * 0.6 + 0.04);
+        env.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.6 + 0.5);
+        osc.connect(env); env.connect(master);
+        osc.start(now + i * 0.6); osc.stop(now + i * 0.6 + 0.6);
+      });
     }
 
     function playCue(ctx, master, gainVal = 0.16) {
@@ -1082,20 +1079,18 @@
     }
 
     /* ═══════════════════════════════════════════════
-       SESSION MANAGEMENT — FIX: unified pause owner
+       SESSION MANAGEMENT
     ═══════════════════════════════════════════════ */
     function currentSettings() {
       return {
-        carrier: parseFloat(els.baseFreq.value),
-        beat: parseFloat(els.beatFreq.value),
-        toneGain: parseFloat(els.toneGain.value),
-        noiseGain: parseFloat(els.noiseGain.value),
-        noiseCutoff: parseFloat(els.noiseCutoff.value),
-        pulseBpm: parseFloat(els.pulseBpm.value),
-        pulseGain: parseFloat(els.pulseGain.value),
-        cueGain: parseFloat(els.cueGain.value),
-        masterVolume: parseFloat(els.masterVol.value) / 100,
-        panSpeed: state.panSpeed
+        carrier:       parseFloat(els.baseFreq.value),
+        beat:          parseFloat(els.beatFreq.value),
+        toneGain:      parseFloat(els.toneGain.value),
+        noiseGain:     parseFloat(els.noiseGain.value),
+        noiseCutoff:   parseFloat(els.noiseCutoff.value),
+        cueGain:       parseFloat(els.cueGain.value),
+        masterVolume:  parseFloat(els.masterVol.value) / 100,
+        panSpeed:      state.panSpeed
       };
     }
 
@@ -1114,63 +1109,60 @@
 
     function startSession() {
       if (state.mode === 'intermediate' && state.queue.length) {
-        const item = state.queue[state.queueIndex];
-        if (item) applyPreset(item.name);
+        const item = state.queue[state.queueIndex]; if (item) applyPreset(item.name);
       }
       state.sessionMinutes = currentSessionMinutes();
-      state.playing = true;
-      state.paused = false;
-      state.elapsedSeconds = 0;
-      state.phaseElapsed = 0;
-      state.currentPhase = 0;
+      state.playing = true; state.paused = false;
+      state.elapsedSeconds = 0; state.phaseElapsed = 0; state.currentPhase = 0;
       state.lastTick = Date.now();
+
+      // Start audio, play intro, then kick heartbeat
       startAudio();
-      updateAudioParams(true);
+      if (audio) {
+        playIntroSequence(audio.ctx, audio.master, () => {
+          if (audio && state.playing) startHeartbeat();
+        });
+        updateAudioParams(false);
+      }
+
       if (state.visualToggle === 'auto') openOverlay();
       if (state.timerHandle) clearInterval(state.timerHandle);
       state.timerHandle = setInterval(tickSession, 250);
-      renderPhaseRail();
-      updateTimeDisplays();
-      syncBadges();
-      log('Session started.');
+      renderPhaseRail(); updateTimeDisplays(); syncBadges();
+      log('Session started. Intro sequence playing…');
     }
 
-    // FIX: startOrResume ONLY handles start, NOT resume (pause owns resume)
+    // startOrResume only starts — pauseSession owns the pause/resume toggle
     function startOrResume() {
       if (!state.playing) { startSession(); return; }
-      // already playing — no-op
       syncBadges();
     }
 
-    // FIX: pauseSession is SOLE owner of pause+resume toggle
     function pauseSession() {
       if (!state.playing) return;
       if (!state.paused) {
         state.paused = true;
         pauseAudio();
+        stopHeartbeat();
         log('Session paused.');
       } else {
         state.paused = false;
         state.lastTick = Date.now();
         resumeAudio();
+        startHeartbeat();
         log('Session resumed.');
       }
       syncBadges();
     }
 
     function stopSession() {
-      state.playing = false;
-      state.paused = false;
-      state.elapsedSeconds = 0;
-      state.phaseElapsed = 0;
-      state.currentPhase = 0;
-      state.queueIndex = 0;
-      if (state.timerHandle) clearInterval(state.timerHandle);
-      state.timerHandle = null;
+      if (audio) playOutroSequence(audio.ctx, audio.master);
+      state.playing = false; state.paused = false;
+      state.elapsedSeconds = 0; state.phaseElapsed = 0;
+      state.currentPhase = 0; state.queueIndex = 0;
+      if (state.timerHandle) clearInterval(state.timerHandle); state.timerHandle = null;
       stopAudio();
-      renderPhaseRail();
-      updateTimeDisplays();
-      syncBadges();
+      renderPhaseRail(); updateTimeDisplays(); syncBadges();
     }
 
     function tickSession() {
@@ -1178,8 +1170,7 @@
       const now = Date.now();
       const dt = (now - state.lastTick) / 1000;
       state.lastTick = now;
-      state.elapsedSeconds += dt;
-      state.phaseElapsed += dt;
+      state.elapsedSeconds += dt; state.phaseElapsed += dt;
       const durations = phaseDurationSeconds(currentSessionMinutes());
       if (state.phaseElapsed >= (durations[state.currentPhase] || 20)) {
         state.phaseElapsed = 0;
@@ -1197,9 +1188,7 @@
             state.elapsedSeconds = 0; state.phaseElapsed = 0; state.currentPhase = 0;
             renderQueue(); renderPhaseRail(); updateAudioParams(true);
             log(`Queue: ${item.name}`);
-          } else {
-            stopSession(); log('Session complete.'); return;
-          }
+          } else { stopSession(); log('Session complete.'); return; }
         }
       }
       updateTimeDisplays();
@@ -1211,7 +1200,7 @@
       els.phaseRemLabel.textContent = fmt(currentPhaseRemaining());
       els.ovTime.textContent = fmt(state.elapsedSeconds);
       const s = currentSettings();
-      const energy = Math.min(100, Math.round(((s.toneGain + s.noiseGain + s.pulseGain) / 1.8) * 100));
+      const energy = Math.min(100, Math.round(((s.toneGain + s.noiseGain + state.heartbeatGain) / 1.8) * 100));
       els.energyLabel.textContent = `${energy}%`;
       els.energyMeter.style.width = `${energy}%`;
       syncBadges();
@@ -1223,64 +1212,73 @@
     }
 
     /* ═══════════════════════════════════════════════
-       PRESET & STATE MANAGEMENT
+       PRESET & STATE
     ═══════════════════════════════════════════════ */
     function applyPreset(name) {
       state.currentPreset = name;
       const p = presets[name]; if (!p) return;
-      els.baseFreq.value = p.carrier;
-      els.beatFreq.value = p.beat;
-      els.toneGain.value = p.toneGain;
-      els.noiseGain.value = p.noiseGain;
-      els.pulseBpm.value = p.pulseBpm;
-      // FIX: update single source of truth, then sync both selects from it
+      els.baseFreq.value = p.carrier; els.beatFreq.value = p.beat;
+      els.toneGain.value = p.toneGain; els.noiseGain.value = p.noiseGain;
+      // Apply Monroe heartbeat BPM from preset
+      state.heartbeatBpm = p.heartbeatBpm || 60;
+      els.heartbeatBpm.value = state.heartbeatBpm;
+      state.hplusGain = p.hplusGain || 0.08;
+      els.hplusGain.value = state.hplusGain;
       setVisMode(p.visual);
-      updateLabels();
-      syncBadges();
-      updateAudioParams(false);
+      updateLabels(); syncBadges(); updateAudioParams(false);
+      // Restart heartbeat at new BPM if playing
+      if (state.playing && !state.paused) startHeartbeat();
       renderBasicPresets();
-      log(`Preset: ${name}`);
+      log(`Preset: ${name} | Focus: ${p.focus} | HB: ${state.heartbeatBpm} BPM`);
     }
 
-    // FIX: single function to set visualMode and sync all UI
     function setVisMode(mode) {
       state.visualMode = mode;
-      els.visMode.value = mode;
-      els.intVisMode.value = mode;
+      els.visMode.value = mode; els.intVisMode.value = mode;
     }
 
     function cycleVisual(dir = 1) {
       const modes = ['orbit','flower','metatron','fractal','mandala','starfield','tunnel','plasma'];
       let idx = modes.indexOf(state.visualMode);
-      if (idx < 0) idx = 0;
       idx = (idx + dir + modes.length) % modes.length;
-      setVisMode(modes[idx]);
-      updateLabels();
-      syncBadges();
+      setVisMode(modes[idx]); updateLabels(); syncBadges();
       log(`Visual: ${labelMode(state.visualMode)}`);
     }
 
     function labelMode(v) {
-      return { orbit:'Orbit Field', flower:'Flower of Life', metatron:'Metatron Grid', fractal:'Fractal Spiral', mandala:'Mandala Bloom', starfield:'Starfield Drift', tunnel:'Quantum Tunnel', plasma:'Neon Plasma' }[v] || v;
+      return { orbit:'Orbit Field',flower:'Flower of Life',metatron:'Metatron Grid',fractal:'Fractal Spiral',mandala:'Mandala Bloom',starfield:'Starfield Drift',tunnel:'Quantum Tunnel',plasma:'Neon Plasma' }[v] || v;
     }
-    function labelSeq(v) { return { manual:'Manual', full:'Full Focus path', gateway:'Gateway path' }[v] || v; }
+    function labelSeq(v) { return { manual:'Manual',full:'Full Focus path',gateway:'Gateway path' }[v] || v; }
+    function orbitSpeedLabel(v) {
+      const n = Number(v);
+      if (n < 0.2)  return 'Glacial';
+      if (n < 0.5)  return 'Very slow';
+      if (n < 0.9)  return 'Slow';
+      if (n < 1.5)  return 'Medium';
+      if (n < 2.2)  return 'Fast';
+      return 'Rapid';
+    }
 
     /* ═══════════════════════════════════════════════
-       RENDER FUNCTIONS
+       RENDER & SYNC
     ═══════════════════════════════════════════════ */
     function syncBadges() {
-      const playing = state.playing && !state.paused;
       els.badgeAudio.textContent = state.playing ? (state.paused ? 'paused' : 'active') : 'idle';
       els.bdotAudio.className = 'bdot' + (state.playing && !state.paused ? ' on' : state.paused ? ' mid' : '');
+      const orbiting = state.playing && !state.paused;
+      els.badgeOrbit.textContent = orbiting ? 'active' : 'stopped';
+      els.bdotOrbit.className = 'bdot' + (orbiting ? ' on' : '');
+      const hbActive = !!hbHandle;
+      els.badgeHB.textContent = hbActive ? `${state.heartbeatBpm} BPM` : 'off';
+      els.bdotHB.className = 'bdot' + (hbActive ? ' on' : '');
       els.badgeVisual.textContent = state.visualOverlay ? 'open' : (state.visualToggle === 'off' ? 'off' : 'closed');
       els.bdotVis.className = 'bdot' + (state.visualOverlay ? ' on' : '');
-      els.badgeHP.textContent = state.headphonesTested ? 'tested ✓' : 'untested';
-      els.bdotHP.className = 'bdot' + (state.headphonesTested ? ' on' : '');
       els.badgeMode.textContent = state.mode[0].toUpperCase() + state.mode.slice(1);
       els.basicProtoBadge.textContent = state.currentPreset;
       els.basicVisBadge.textContent = state.visualToggle === 'off' ? 'disabled' : state.visualToggle === 'auto' ? 'auto-open' : 'optional';
       const p = presets[state.currentPreset];
       els.protoName.textContent = state.currentPreset;
+      els.protoFocus.textContent = p?.focus || '—';
       els.protoDesc.textContent = p?.desc || '';
       els.protoPrompt.textContent = phases[state.currentPhase]?.prompt || '';
       els.basicPrompt.textContent = phases[state.currentPhase]?.prompt || '';
@@ -1288,14 +1286,23 @@
       els.ovBeat.textContent = `${parseFloat(els.beatFreq.value).toFixed(1)} Hz`;
       els.ovPhase.textContent = `Phase: ${phases[state.currentPhase]?.name || 'Idle'}`;
       els.ovPrompt.textContent = phases[state.currentPhase]?.prompt || 'Lengthen exhale.';
+      // Monroe panel status
+      els.hbStatusLabel.textContent = hbActive ? `${state.heartbeatBpm} BPM` : 'off';
+      els.hpStatusLabel.textContent = state.hplusGain > 0.01 ? 'on' : 'off';
+      els.orbitStatusLabel.textContent = orbiting ? 'orbiting' : 'stopped';
+      // CSS orbit ring animation speed
+      const orbitPeriodSec = (2 * Math.PI / (0.72 * state.noiseOrbitSpeed)).toFixed(1);
+      document.querySelectorAll('.orbit-dot').forEach(d => d.parentElement.style.setProperty('--orbit-period', orbitPeriodSec + 's'));
     }
 
     function updateLabels() {
       els.basicDurVal.textContent = `${els.basicDuration.value} min`;
       els.basicIntVal.textContent = `${parseFloat(els.basicIntensity.value).toFixed(1)}×`;
-      els.basicVisVal.textContent = { optional:'Optional', auto:'Auto-open', off:'Disabled' }[state.visualToggle] || 'Optional';
+      els.basicVisVal.textContent = { optional:'Optional',auto:'Auto-open',off:'Disabled' }[state.visualToggle] || 'Optional';
       els.transSecsVal.textContent = `${els.transitionSecs.value} s`;
       els.masterVolVal.textContent = `${els.masterVol.value}%`;
+      const os = orbitSpeedLabel(state.noiseOrbitSpeed);
+      els.noiseOrbitSpdVal.textContent = os; els.noiseOrbitSpdAdvVal.textContent = os;
       els.animSpeedVal.textContent = Number(els.animSpeed.value).toFixed(4);
       els.intDurVal.textContent = `${els.intDuration.value} min`;
       els.seqModeVal.textContent = labelSeq(els.seqMode.value);
@@ -1306,9 +1313,10 @@
       els.toneGainVal.textContent = parseFloat(els.toneGain.value).toFixed(2);
       els.noiseGainVal.textContent = parseFloat(els.noiseGain.value).toFixed(2);
       els.noiseCutoffVal.textContent = `${els.noiseCutoff.value} Hz`;
-      els.pulseBpmVal.textContent = els.pulseBpm.value;
-      els.pulseGainVal.textContent = parseFloat(els.pulseGain.value).toFixed(2);
       els.cueGainVal.textContent = parseFloat(els.cueGain.value).toFixed(2);
+      els.heartbeatBpmVal.textContent = `${els.heartbeatBpm.value} BPM`;
+      els.heartbeatGainVal.textContent = parseFloat(els.heartbeatGain.value).toFixed(2);
+      els.hplusGainVal.textContent = parseFloat(els.hplusGain.value).toFixed(3);
       els.visIntVal.textContent = `${parseFloat(els.visIntensity.value).toFixed(1)}×`;
     }
 
@@ -1324,10 +1332,7 @@
       phases.forEach((phase, i) => {
         const div = document.createElement('div');
         div.className = 'phase-item' + (i === state.currentPhase ? ' active' : '');
-        div.innerHTML = `
-          <div class="p-num">${i+1}</div>
-          <div><div class="p-name">${phase.name}</div><div class="p-prompt">${phase.prompt}</div></div>
-          <div class="p-dot"></div>`;
+        div.innerHTML = `<div class="p-num">${i+1}</div><div><div class="p-name">${phase.name}</div><div class="p-prompt">${phase.prompt}</div></div><div class="p-dot"></div>`;
         els.phaseList.appendChild(div);
       });
       els.phaseIdxLabel.textContent = `${state.currentPhase+1} / ${phases.length}`;
@@ -1350,17 +1355,14 @@
       els.catalogue.innerHTML = '';
       const dur = Number(els.intDuration.value);
       ALL_PRESETS.forEach(name => {
-        const item = document.createElement('div');
-        item.className = 'cat-item';
+        const item = document.createElement('div'); item.className = 'cat-item';
         item.innerHTML = `
           <div>
             <div class="cat-name">${name}</div>
             <div class="cat-desc">${presets[name].desc}</div>
-            <div class="dur-row">
-              ${[10,20,30,45].map(m => `<button class="secondary dur-btn" data-add="${name}" data-mins="${m}">${m}m</button>`).join('')}
-            </div>
+            <div class="dur-row">${[10,20,30,45].map(m => `<button class="secondary dur-btn" data-add="${name}" data-mins="${m}">${m}m</button>`).join('')}</div>
           </div>
-          <button class="primary" data-add="${name}" data-mins="${dur}" style="align-self:center;padding:8px 12px;font-size:0.76rem;">+ Add</button>`;
+          <button class="primary" data-add="${name}" data-mins="${dur}" style="align-self:center;padding:7px 11px;font-size:0.74rem;">+ Add</button>`;
         els.catalogue.appendChild(item);
       });
     }
@@ -1368,105 +1370,67 @@
     function renderQueue() {
       if (!state.queue.length) {
         els.queueList.innerHTML = '<div class="queue-item"><div class="tiny">No sessions queued. Add from catalogue.</div></div>';
-        els.queueMeta.textContent = '0 sessions';
-        els.queueStatusLabel.textContent = '—';
-        return;
+        els.queueMeta.textContent = '0 sessions'; els.queueStatusLabel.textContent = '—'; return;
       }
       const totalMins = state.queue.reduce((a, q) => a + q.durationMinutes, 0);
-      els.queueMeta.textContent = `${state.queue.length} session${state.queue.length > 1 ? 's' : ''} · ${totalMins} min`;
+      els.queueMeta.textContent = `${state.queue.length} session${state.queue.length>1?'s':''} · ${totalMins} min`;
       els.queueStatusLabel.textContent = state.playing ? `${state.queueIndex+1} / ${state.queue.length}` : `0 / ${state.queue.length}`;
       els.queueList.innerHTML = '';
       state.queue.forEach((item, i) => {
         const isNow = state.playing && i === state.queueIndex;
-        const div = document.createElement('div');
-        div.className = 'queue-item' + (isNow ? ' now' : '');
-        div.innerHTML = `
-          <div class="qi-row">
-            <div>
-              <span class="qi-name">${item.name}</span>
-              ${isNow ? '<span class="qi-now" style="margin-left:8px;">▶ NOW</span>' : ''}
-              <div class="qi-dur">${item.durationMinutes} min</div>
-            </div>
-            <div class="qi-acts">
-              <button class="secondary" data-action="up" data-id="${item.id}">↑</button>
-              <button class="secondary" data-action="down" data-id="${item.id}">↓</button>
-              <button class="danger-btn" data-action="remove" data-id="${item.id}">✕</button>
-            </div>
-          </div>`;
+        const div = document.createElement('div'); div.className = 'queue-item' + (isNow ? ' now' : '');
+        div.innerHTML = `<div class="qi-row"><div><span class="qi-name">${item.name}</span>${isNow?'<span class="qi-now">▶ NOW</span>':''}<div class="qi-dur">${item.durationMinutes} min</div></div><div class="qi-acts"><button class="secondary" data-action="up" data-id="${item.id}">↑</button><button class="secondary" data-action="down" data-id="${item.id}">↓</button><button class="danger-btn" data-action="remove" data-id="${item.id}">✕</button></div></div>`;
         els.queueList.appendChild(div);
       });
     }
 
-    function addToQueue(name, mins) {
-      state.queue.push({ id: Date.now() + Math.random(), name, durationMinutes: mins, preset: presets[name] });
-      persistQueue();
-      renderQueue();
-      log(`Queued: ${name} × ${mins} min`);
-    }
-    function moveQueue(id, dir) {
-      const idx = state.queue.findIndex(x => String(x.id) === String(id));
-      if (idx < 0) return;
-      const swap = dir === 'up' ? idx - 1 : idx + 1;
-      if (swap < 0 || swap >= state.queue.length) return;
-      [state.queue[idx], state.queue[swap]] = [state.queue[swap], state.queue[idx]];
-      persistQueue(); renderQueue();
-    }
-    function removeQueue(id) {
-      state.queue = state.queue.filter(x => String(x.id) !== String(id));
-      if (state.queueIndex >= state.queue.length) state.queueIndex = Math.max(0, state.queue.length - 1);
-      persistQueue(); renderQueue();
-    }
+    function addToQueue(name, mins) { state.queue.push({ id:Date.now()+Math.random(), name, durationMinutes:mins }); persistQueue(); renderQueue(); log(`Queued: ${name} × ${mins} min`); }
+    function moveQueue(id, dir) { const idx=state.queue.findIndex(x=>String(x.id)===String(id)); if(idx<0)return; const sw=dir==='up'?idx-1:idx+1; if(sw<0||sw>=state.queue.length)return; [state.queue[idx],state.queue[sw]]=[state.queue[sw],state.queue[idx]]; persistQueue(); renderQueue(); }
+    function removeQueue(id) { state.queue=state.queue.filter(x=>String(x.id)!==String(id)); if(state.queueIndex>=state.queue.length)state.queueIndex=Math.max(0,state.queue.length-1); persistQueue(); renderQueue(); }
 
     function renderJournal() {
-      if (!state.journal.length) {
-        els.journalList.innerHTML = '<div class="j-entry"><div class="tiny">No entries yet.</div></div>';
-        return;
-      }
-      els.journalList.innerHTML = state.journal
-        .map(j => `<div class="j-entry"><div class="j-ts">${j.ts}</div><div class="j-text">${j.text}</div></div>`)
-        .join('');
+      if (!state.journal.length) { els.journalList.innerHTML='<div class="j-entry"><div class="tiny">No entries yet.</div></div>'; return; }
+      els.journalList.innerHTML = state.journal.map(j=>`<div class="j-entry"><div class="j-ts">${j.ts}</div><div class="j-text">${j.text}</div></div>`).join('');
     }
 
     function log(msg) {
       const stamp = new Date().toLocaleTimeString();
       const prev = els.activityLog.textContent.trim();
-      els.activityLog.textContent = `[${stamp}] ${msg}\n` + (prev === 'Ready.' ? '' : prev);
+      els.activityLog.textContent = `[${stamp}] ${msg}\n` + (prev==='Ready.'?'':prev);
     }
 
     /* ═══════════════════════════════════════════════
-       OVERLAY & VISUAL
+       OVERLAY & ANIMATION
     ═══════════════════════════════════════════════ */
-    function openOverlay() {
-      state.visualOverlay = true;
-      els.visualOverlay.classList.add('open');
-      resizeCanvases(); syncBadges();
-    }
-    function closeOverlay() {
-      state.visualOverlay = false;
-      els.visualOverlay.classList.remove('open');
-      syncBadges();
-    }
+    function openOverlay() { state.visualOverlay=true; els.visualOverlay.classList.add('open'); resizeCanvases(); syncBadges(); }
+    function closeOverlay() { state.visualOverlay=false; els.visualOverlay.classList.remove('open'); syncBadges(); }
 
     function resizeCanvases() {
       const dpr = Math.max(1, window.devicePixelRatio || 1);
       [els.visualCanvas, els.overlayCanvas].forEach(canvas => {
         const rect = canvas.getBoundingClientRect();
-        const fallback = canvas === els.overlayCanvas ? Math.max(window.innerHeight, 600) : 340;
+        const fallback = canvas === els.overlayCanvas ? Math.max(window.innerHeight, 600) : 320;
         const w = Math.max(320, Math.floor(rect.width || window.innerWidth));
         const h = Math.max(220, Math.floor(rect.height || fallback));
-        canvas.width = Math.floor(w * dpr);
-        canvas.height = Math.floor(h * dpr);
+        canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
         canvas.getContext('2d').setTransform(1,0,0,1,0,0);
       });
     }
 
     /* ═══════════════════════════════════════════════
-       ANIMATION LOOP — FIX: single RAF, single visualT,
-       main canvas draws only when Advanced tab active
+       ANIMATION LOOP — single RAF, single visualT
+       FIX: noise pan animated here (RAF speed = smooth audio panning)
     ═══════════════════════════════════════════════ */
     function animateLoop() {
-      visualT += 0.012 * (state.playing && !state.paused ? 1 : 0.32);
-      // FIX: only draw main canvas when Advanced tab is visible
+      visualT += 0.012 * (state.playing && !state.paused ? 1 : 0.3);
+
+      // ── SPATIAL NOISE ORBIT ──
+      // Animate the StereoPanner pan value as a sine wave
+      // Full L→R→L cycle time = 2π / (0.72 × noiseOrbitSpeed) seconds
+      if (audio && state.playing && !state.paused) {
+        audio.noisePan.pan.value = Math.sin(visualT * state.noiseOrbitSpeed);
+      }
+
       if (state.mode === 'advanced') {
         drawVisual(els.visualCanvas.getContext('2d'), els.visualCanvas, state.visualMode, state.visualIntensity, false);
       }
@@ -1481,176 +1445,87 @@
     ═══════════════════════════════════════════════ */
     function drawVisual(ctx, canvas, mode, intensity, overlay) {
       const dpr = Math.max(1, window.devicePixelRatio || 1);
-      const w = Math.max(1, canvas.width / dpr);
-      const h = Math.max(1, canvas.height / dpr);
-      const cx = w / 2, cy = h / 2;
+      const w = Math.max(1, canvas.width / dpr), h = Math.max(1, canvas.height / dpr);
+      const cx = w/2, cy = h/2;
       const beat = parseFloat(els.beatFreq.value || 7);
-      const pg = parseFloat(els.pulseGain.value || 0.12);
       const ng = parseFloat(els.noiseGain.value || 0.12);
       const tg = parseFloat(els.toneGain.value || 0.28);
-      const t = visualT;
-      const motion = state.playing && !state.paused ? 1 : 0.28;
+      const hg = state.heartbeatGain;
+      const t = visualT, motion = state.playing && !state.paused ? 1 : 0.28;
       const amp = intensity;
       const beatWave = 0.5 + 0.5 * Math.sin(t * (0.7 + beat * 0.05));
       const breathWave = 0.5 + 0.5 * Math.sin(t * 0.23);
-      const energy = Math.min(1.7, 0.45 + tg * 0.85 + pg * 0.7 + ng * 0.4 + beat / 40);
+      const energy = Math.min(1.7, 0.45 + tg * 0.85 + hg * 0.7 + ng * 0.4 + beat / 40);
       const scale = amp * (0.92 + beatWave * 0.16 + breathWave * 0.08);
       const lw = overlay ? 1.5 : 1.15;
 
-      ctx.save();
-      ctx.scale(dpr, dpr);
-      ctx.clearRect(0, 0, w, h);
+      ctx.save(); ctx.scale(dpr, dpr); ctx.clearRect(0, 0, w, h);
+      const bg = ctx.createRadialGradient(cx,cy,10,cx,cy,Math.max(w,h)*0.58);
+      bg.addColorStop(0,`rgba(0,212,255,${overlay?0.1:0.075})`); bg.addColorStop(0.35,`rgba(168,85,247,${overlay?0.07:0.05})`);
+      bg.addColorStop(0.72,'rgba(5,14,30,0.16)'); bg.addColorStop(1,`rgba(2,6,14,${overlay?0.2:0.12})`);
+      ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
 
-      const bg = ctx.createRadialGradient(cx, cy, 10, cx, cy, Math.max(w,h) * 0.58);
-      bg.addColorStop(0, `rgba(0,210,255,${overlay ? 0.11 : 0.08})`);
-      bg.addColorStop(0.35, `rgba(168,85,247,${overlay ? 0.08 : 0.055})`);
-      bg.addColorStop(0.72, `rgba(5,14,30,0.18)`);
-      bg.addColorStop(1, `rgba(2,6,14,${overlay ? 0.22 : 0.14})`);
-      ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+      ctx.save(); ctx.translate(cx,cy); ctx.globalCompositeOperation='lighter';
 
-      ctx.save(); ctx.translate(cx, cy); ctx.globalCompositeOperation = 'lighter';
+      const hs=(h,s,l,a)=>`hsla(${h},${s}%,${l}%,${a})`;
+      const ln=(hue,alpha,width=lw)=>{ctx.strokeStyle=hs(hue,92,74,alpha);ctx.lineWidth=width;};
+      const glowDot=(x,y,r,hue,alpha)=>{const g=ctx.createRadialGradient(x,y,0,x,y,r*4.5);g.addColorStop(0,hs(hue,100,88,alpha));g.addColorStop(0.3,hs(hue+6,100,74,alpha*0.65));g.addColorStop(1,hs(hue+16,100,52,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*4.5,0,Math.PI*2);ctx.fill();ctx.fillStyle=hs(hue,100,85,alpha*0.95);ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();};
+      const ring=(r,hue,alpha,wobble=0,width=lw)=>{ctx.beginPath();for(let i=0;i<=220;i++){const a=i/220*Math.PI*2,rr=r+Math.sin(a*6+t*1.2)*wobble+Math.cos(a*3-t*0.8)*wobble*0.4,x=Math.cos(a)*rr,y=Math.sin(a)*rr;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ln(hue,alpha,width);ctx.stroke();};
 
-      function hs(h,s,l,a) { return `hsla(${h},${s}%,${l}%,${a})`; }
-      function ln(hue, alpha, width=lw) { ctx.strokeStyle = hs(hue,92,74,alpha); ctx.lineWidth = width; }
-      function glowDot(x, y, r, hue, alpha) {
-        const g = ctx.createRadialGradient(x,y,0,x,y,r*4.5);
-        g.addColorStop(0, hs(hue,100,88,alpha)); g.addColorStop(0.3, hs(hue+6,100,74,alpha*0.65)); g.addColorStop(1, hs(hue+16,100,52,0));
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x,y,r*4.5,0,Math.PI*2); ctx.fill();
-        ctx.fillStyle = hs(hue,100,85,alpha*0.95); ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
-      }
-      function ring(r, hue, alpha, wobble=0, width=lw) {
-        ctx.beginPath();
-        for (let i=0;i<=220;i++) {
-          const a=i/220*Math.PI*2;
-          const rr=r+Math.sin(a*6+t*1.2)*wobble+Math.cos(a*3-t*0.8)*wobble*0.4;
-          const x=Math.cos(a)*rr, y=Math.sin(a)*rr;
-          i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-        }
-        ln(hue,alpha,width); ctx.stroke();
-      }
-
-      // baseline rotating cross
-      ctx.save(); ctx.rotate(t*0.04*motion);
-      for (let i=0;i<3;i++) {
-        ln(192+i*14,0.045+i*0.018,0.9); ctx.beginPath();
-        ctx.moveTo(-w*0.44,0); ctx.lineTo(w*0.44,0); ctx.stroke(); ctx.rotate(Math.PI/3);
-      }
+      // baseline cross glow
+      ctx.save();ctx.rotate(t*0.04*motion);
+      for(let i=0;i<3;i++){ln(192+i*14,0.04+i*0.016,0.85);ctx.beginPath();ctx.moveTo(-w*0.44,0);ctx.lineTo(w*0.44,0);ctx.stroke();ctx.rotate(Math.PI/3);}
       ctx.restore();
 
-      if (mode==='orbit') {
-        const maxR = Math.min(w,h)*0.36*scale;
-        for (let i=0;i<10;i++) ring(28+i*(maxR/10),190+i*8,0.07+i*0.026,1.5+i*0.3*beatWave);
-        for (let arm=0;arm<24;arm++) {
-          const a = t*(0.38+state.panSpeed*18)+arm*(Math.PI*2/24);
-          const r = 42+(arm%6)*18+Math.sin(t*1.3+arm)*16+beatWave*40*scale;
-          const x = Math.cos(a)*r, y = Math.sin(a)*(r*0.78);
-          glowDot(x,y,2.2+energy*1.4,184+arm*5,0.24+(arm%4)*0.055);
-          ln(196+arm*2,0.07,0.85); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(x*0.55,y*0.55); ctx.stroke();
-        }
-        const coreR = 18+beatWave*5+energy*12;
-        const cg = ctx.createRadialGradient(0,0,0,0,0,coreR*4);
-        cg.addColorStop(0,'rgba(255,255,255,0.3)'); cg.addColorStop(0.2,'rgba(0,210,255,0.22)'); cg.addColorStop(1,'rgba(0,210,255,0)');
-        ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(0,0,coreR*4,0,Math.PI*2); ctx.fill();
-        glowDot(0,0,coreR,190,0.3);
-      } else if (mode==='flower') {
-        const petalR = Math.min(w,h)*0.11*scale;
-        for (let layer=0;layer<4;layer++) {
-          const rr=36+layer*34*scale; ctx.save(); ctx.rotate(t*0.12*(layer+1)*motion);
-          for (let i=0;i<6;i++) {
-            const a=i*Math.PI/3, x=Math.cos(a)*rr, y=Math.sin(a)*rr;
-            ln(188+layer*10,0.18+layer*0.04,1.05); ctx.beginPath(); ctx.arc(x,y,petalR+layer*8+beatWave*3,0,Math.PI*2); ctx.stroke();
-            glowDot(x,y,1.8+layer*0.3,194+layer*14,0.15);
-          }
-          ctx.restore();
-        }
-        for (let i=0;i<12;i++) {
-          const a=i*Math.PI/6+t*0.08;
-          ln(202+i*3,0.07,0.8); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*150*scale,Math.sin(a)*150*scale); ctx.stroke();
-        }
-        glowDot(0,0,14+energy*4,192,0.22);
-      } else if (mode==='metatron') {
+      if(mode==='orbit'){
+        const maxR=Math.min(w,h)*0.36*scale;
+        for(let i=0;i<10;i++)ring(28+i*(maxR/10),190+i*8,0.065+i*0.025,1.5+i*0.3*beatWave);
+        for(let arm=0;arm<24;arm++){const a=t*(0.38+state.panSpeed*18)+arm*(Math.PI*2/24),r=42+(arm%6)*18+Math.sin(t*1.3+arm)*16+beatWave*40*scale,x=Math.cos(a)*r,y=Math.sin(a)*(r*0.78);glowDot(x,y,2.2+energy*1.4,184+arm*5,0.22+(arm%4)*0.05);ln(196+arm*2,0.065,0.82);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(x*0.55,y*0.55);ctx.stroke();}
+        const coreR=18+beatWave*5+energy*12,cg=ctx.createRadialGradient(0,0,0,0,0,coreR*4);
+        cg.addColorStop(0,'rgba(255,255,255,0.28)');cg.addColorStop(0.2,'rgba(0,212,255,0.2)');cg.addColorStop(1,'rgba(0,212,255,0)');
+        ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,coreR*4,0,Math.PI*2);ctx.fill();glowDot(0,0,coreR,190,0.28);
+      }else if(mode==='flower'){
+        const petalR=Math.min(w,h)*0.11*scale;
+        for(let layer=0;layer<4;layer++){const rr=36+layer*34*scale;ctx.save();ctx.rotate(t*0.12*(layer+1)*motion);for(let i=0;i<6;i++){const a=i*Math.PI/3,x=Math.cos(a)*rr,y=Math.sin(a)*rr;ln(188+layer*10,0.17+layer*0.04,1.05);ctx.beginPath();ctx.arc(x,y,petalR+layer*8+beatWave*3,0,Math.PI*2);ctx.stroke();glowDot(x,y,1.8+layer*0.3,194+layer*14,0.14);}ctx.restore();}
+        for(let i=0;i<12;i++){const a=i*Math.PI/6+t*0.08;ln(202+i*3,0.065,0.78);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*150*scale,Math.sin(a)*150*scale);ctx.stroke();}
+        glowDot(0,0,14+energy*4,192,0.2);
+      }else if(mode==='metatron'){
         const pts=[];
-        for (let ri=1;ri<=3;ri++) {
-          const rr=ri*48*scale;
-          for (let i=0;i<6;i++) { const a=i*Math.PI/3+t*0.05*ri; pts.push([Math.cos(a)*rr,Math.sin(a)*rr]); }
-        }
+        for(let ri=1;ri<=3;ri++){const rr=ri*48*scale;for(let i=0;i<6;i++){const a=i*Math.PI/3+t*0.05*ri;pts.push([Math.cos(a)*rr,Math.sin(a)*rr]);}}
         pts.push([0,0]);
-        for (let i=0;i<pts.length;i++) for (let j=i+1;j<pts.length;j++) {
-          const d=Math.hypot(pts[i][0]-pts[j][0],pts[i][1]-pts[j][1]);
-          if (d<230*scale) { ln(190+((i+j)%8)*6,0.065+Math.max(0,0.11-d/2500),0.82); ctx.beginPath(); ctx.moveTo(pts[i][0],pts[i][1]); ctx.lineTo(pts[j][0],pts[j][1]); ctx.stroke(); }
-        }
-        pts.forEach((p,i) => { ring(Math.hypot(p[0],p[1])*0.12+7,187+i*5,0.065,0.75,0.72); glowDot(p[0],p[1],2.2+(i%3)*0.6,184+i*4,0.22); });
-      } else if (mode==='fractal') {
-        for (let arm=0;arm<3;arm++) {
-          ctx.save(); ctx.rotate(arm*Math.PI*2/3+t*0.08);
-          ln(190+arm*14,0.17,1.05); ctx.beginPath();
-          for (let i=0;i<950;i++) {
-            const a=i*0.078+t*(0.7+arm*0.08), r=i*0.17*scale+Math.sin(i*0.13+t*1.2)*6+beatWave*10;
-            const x=Math.cos(a)*r, y=Math.sin(a)*r*0.72;
-            i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-          }
-          ctx.stroke(); ctx.restore();
-        }
-        for (let i=0;i<46;i++) { const a=i*0.41+t*0.3, r=44+i*4.1*scale; glowDot(Math.cos(a)*r,Math.sin(a*1.07)*r*0.7,1.2+(i%5)*0.18,200+i,0.11); }
-      } else if (mode==='mandala') {
-        for (let layer=0;layer<4;layer++) {
-          ctx.save(); ctx.rotate(t*0.14*(layer%2===0?1:-1)*motion);
-          for (let i=0;i<12;i++) {
-            ctx.save(); ctx.rotate(i*Math.PI/6);
-            ln(190+layer*11+i*1.2,0.09+layer*0.03,0.92); ctx.beginPath();
-            ctx.moveTo(0,0); ctx.bezierCurveTo(24*scale,-36*scale,88*scale,16*scale,0,(112+layer*26)*scale);
-            ctx.stroke(); ctx.restore();
-          }
-          ctx.restore();
-        }
-        for (let i=0;i<5;i++) ring(26+i*28*scale,196+i*8,0.09+i*0.03,0.78+i*0.17);
-        glowDot(0,0,10+beatWave*4,188,0.22);
-      } else if (mode==='starfield') {
+        for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const d=Math.hypot(pts[i][0]-pts[j][0],pts[i][1]-pts[j][1]);if(d<230*scale){ln(190+((i+j)%8)*6,0.06+Math.max(0,0.1-d/2500),0.8);ctx.beginPath();ctx.moveTo(pts[i][0],pts[i][1]);ctx.lineTo(pts[j][0],pts[j][1]);ctx.stroke();}}
+        pts.forEach((p,i)=>{ring(Math.hypot(p[0],p[1])*0.12+7,187+i*5,0.06,0.75,0.7);glowDot(p[0],p[1],2.2+(i%3)*0.6,184+i*4,0.2);});
+      }else if(mode==='fractal'){
+        for(let arm=0;arm<3;arm++){ctx.save();ctx.rotate(arm*Math.PI*2/3+t*0.08);ln(190+arm*14,0.16,1.05);ctx.beginPath();for(let i=0;i<950;i++){const a=i*0.078+t*(0.7+arm*0.08),r=i*0.17*scale+Math.sin(i*0.13+t*1.2)*6+beatWave*10,x=Math.cos(a)*r,y=Math.sin(a)*r*0.72;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();ctx.restore();}
+        for(let i=0;i<46;i++){const a=i*0.41+t*0.3,r=44+i*4.1*scale;glowDot(Math.cos(a)*r,Math.sin(a*1.07)*r*0.7,1.2+(i%5)*0.18,200+i,0.1);}
+      }else if(mode==='mandala'){
+        for(let layer=0;layer<4;layer++){ctx.save();ctx.rotate(t*0.14*(layer%2===0?1:-1)*motion);for(let i=0;i<12;i++){ctx.save();ctx.rotate(i*Math.PI/6);ln(190+layer*11+i*1.2,0.088+layer*0.03,0.9);ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(24*scale,-36*scale,88*scale,16*scale,0,(112+layer*26)*scale);ctx.stroke();ctx.restore();}ctx.restore();}
+        for(let i=0;i<5;i++)ring(26+i*28*scale,196+i*8,0.085+i*0.028,0.78+i*0.17);
+        glowDot(0,0,10+beatWave*4,188,0.2);
+      }else if(mode==='starfield'){
         const depth=overlay?950:820;
-        for (let i=0;i<280;i++) {
-          const seed=i*17.713;
-          const z=(i*29+(t*260*(0.35+state.panSpeed*12)))%depth;
-          const x=Math.sin(seed*1.37)*780, y=Math.cos(seed*1.11)*470;
-          const k=460/(z+70), px=x*k, py=y*k;
-          const size=Math.max(0.5,(1-z/depth)*3.8*scale);
-          ctx.strokeStyle=hs(187+(i%70),100,78,0.055+(1-z/depth)*0.34); ctx.lineWidth=size*0.7;
-          ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px*(1+size*0.06),py*(1+size*0.06)); ctx.stroke();
-          ctx.fillStyle=hs(192+(i%50),100,84,0.14+(1-z/depth)*0.6); ctx.beginPath(); ctx.arc(px,py,size,0,Math.PI*2); ctx.fill();
-        }
-        glowDot(0,0,12+energy*8,192,0.17);
-      } else if (mode==='tunnel') {
-        ctx.save(); ctx.scale(1,0.72);
-        for (let i=0;i<18;i++) {
-          const d=((i/18)+(t*0.09*motion))%1;
-          const rr=24+Math.pow(d,1.45)*Math.min(w,h)*0.54*scale;
-          ring(rr,190+i*4,0.04+(1-d)*0.21,1.5+beatWave*3,0.85+(1-d));
-        }
+        for(let i=0;i<280;i++){const seed=i*17.713,z=(i*29+(t*260*(0.35+state.panSpeed*12)))%depth,x=Math.sin(seed*1.37)*780,y=Math.cos(seed*1.11)*470,k=460/(z+70),px=x*k,py=y*k,size=Math.max(0.5,(1-z/depth)*3.8*scale);ctx.strokeStyle=hs(187+(i%70),100,78,0.05+(1-z/depth)*0.32);ctx.lineWidth=size*0.7;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px*(1+size*0.06),py*(1+size*0.06));ctx.stroke();ctx.fillStyle=hs(192+(i%50),100,84,0.13+(1-z/depth)*0.58);ctx.beginPath();ctx.arc(px,py,size,0,Math.PI*2);ctx.fill();}
+        glowDot(0,0,12+energy*8,192,0.16);
+      }else if(mode==='tunnel'){
+        ctx.save();ctx.scale(1,0.72);
+        for(let i=0;i<18;i++){const d=((i/18)+(t*0.09*motion))%1,rr=24+Math.pow(d,1.45)*Math.min(w,h)*0.54*scale;ring(rr,190+i*4,0.04+(1-d)*0.2,1.5+beatWave*3,0.84+(1-d));}
         ctx.restore();
-        for (let i=0;i<14;i++) { const a=i*Math.PI/7+t*0.2; ln(202+i*2,0.075,0.78); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*240*scale,Math.sin(a)*170*scale); ctx.stroke(); }
-        glowDot(0,0,14+beatWave*8,186,0.26);
-      } else if (mode==='plasma') {
-        for (let layer=0;layer<5;layer++) {
-          ctx.beginPath();
-          for (let x=-w*0.5;x<=w*0.5;x+=6) {
-            const y=Math.sin(x*0.014+t*(0.9+layer*0.16))*(20+layer*8)+Math.cos(x*0.009-t*0.6+layer)*(16+beatWave*12)+Math.sin(x*0.025-t*1.4)*8;
-            x===-w*0.5?ctx.moveTo(x,y+(layer-2)*48*scale):ctx.lineTo(x,y+(layer-2)*48*scale);
-          }
-          ln(184+layer*14,0.10+layer*0.034,0.98+layer*0.14); ctx.stroke();
-        }
-        for (let i=0;i<36;i++) { const a=i*Math.PI/18+t*0.25, r=40+Math.sin(t*0.9+i)*28+(i%6)*10; glowDot(Math.cos(a)*r*scale,Math.sin(a*1.3)*r*0.55*scale,1.6+(i%4)*0.44,188+i*2,0.11); }
+        for(let i=0;i<14;i++){const a=i*Math.PI/7+t*0.2;ln(202+i*2,0.072,0.76);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*240*scale,Math.sin(a)*170*scale);ctx.stroke();}
+        glowDot(0,0,14+beatWave*8,186,0.24);
+      }else if(mode==='plasma'){
+        for(let layer=0;layer<5;layer++){ctx.beginPath();for(let x=-w*0.5;x<=w*0.5;x+=6){const y=Math.sin(x*0.014+t*(0.9+layer*0.16))*(20+layer*8)+Math.cos(x*0.009-t*0.6+layer)*(16+beatWave*12)+Math.sin(x*0.025-t*1.4)*8;x===-w*0.5?ctx.moveTo(x,y+(layer-2)*48*scale):ctx.lineTo(x,y+(layer-2)*48*scale);}ln(184+layer*14,0.1+layer*0.032,0.96+layer*0.13);ctx.stroke();}
+        for(let i=0;i<36;i++){const a=i*Math.PI/18+t*0.25,r=40+Math.sin(t*0.9+i)*28+(i%6)*10;glowDot(Math.cos(a)*r*scale,Math.sin(a*1.3)*r*0.55*scale,1.6+(i%4)*0.44,188+i*2,0.1);}
       }
 
       ctx.restore(); ctx.restore();
     }
 
     /* ═══════════════════════════════════════════════
-       GROUND / HEADPHONE TEST
+       UTILS
     ═══════════════════════════════════════════════ */
     function groundNow() {
-      applyPreset('Return');
-      state.currentPhase = phases.findIndex(p => p.key === 'return');
-      renderPhaseRail(); updateAudioParams(true);
-      log('Grounding profile applied.');
+      applyPreset('Return'); state.currentPhase = phases.findIndex(p => p.key === 'return');
+      renderPhaseRail(); updateAudioParams(true); log('Grounding profile applied.');
     }
 
     function headphoneTest() {
@@ -1660,37 +1535,31 @@
       const lo = ctx.createOscillator(), ro = ctx.createOscillator();
       const lg = ctx.createGain(), rg = ctx.createGain();
       lo.frequency.value = 330; ro.frequency.value = 440;
-      lg.gain.value = 0.22; rg.gain.value = 0.22;
+      lg.gain.value = 0.2; rg.gain.value = 0.2;
       lo.connect(lg); ro.connect(rg); lg.connect(merger,0,0); rg.connect(merger,0,1); merger.connect(ctx.destination);
       lo.start(); ro.start();
-      setTimeout(() => { try { lo.stop(); ro.stop(); ctx.close(); } catch(e){} }, 1200);
-      log('Headphone test: L=330Hz R=440Hz');
+      setTimeout(() => { try{lo.stop();ro.stop();ctx.close();}catch(e){} }, 1200);
+      log('Headphone test: L=330Hz R=440Hz · Verify distinct tones per ear');
     }
 
-    /* ═══════════════════════════════════════════════
-       SAVE / LOAD / EXPORT
-    ═══════════════════════════════════════════════ */
     function saveJournal() {
       const text = els.journalInput.value.trim(); if (!text) return;
-      state.journal.unshift({ ts: new Date().toLocaleString(), text });
+      state.journal.unshift({ ts:new Date().toLocaleString(), text });
       state.journal = state.journal.slice(0, 24);
       localStorage.setItem('uss-journal-v5', JSON.stringify(state.journal));
-      els.journalInput.value = '';
-      renderJournal(); log('Journal entry saved.');
+      els.journalInput.value = ''; renderJournal(); log('Journal entry saved.');
     }
 
     function clearJournal() {
       if (!confirm('Clear all journal entries?')) return;
-      state.journal = [];
-      localStorage.removeItem('uss-journal-v5');
-      renderJournal(); log('Journal cleared.');
+      state.journal = []; localStorage.removeItem('uss-journal-v5'); renderJournal(); log('Journal cleared.');
     }
 
     function savePresetJson() {
-      const payload = { name: els.presetName.value || 'My State Variant', preset: state.currentPreset, settings: currentSettings(), visualToggle: state.visualToggle, sessionMinutes: currentSessionMinutes(), transitionSeconds: Number(els.transitionSecs.value) };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = `${payload.name.replace(/\s+/g,'_').toLowerCase()}.json`; a.click();
+      const payload = { name:els.presetName.value||'My State Variant', preset:state.currentPreset, settings:currentSettings(), visualToggle:state.visualToggle, sessionMinutes:currentSessionMinutes(), transitionSeconds:Number(els.transitionSecs.value), noiseOrbitSpeed:state.noiseOrbitSpeed, heartbeatBpm:state.heartbeatBpm, heartbeatGain:state.heartbeatGain, hplusGain:state.hplusGain };
+      const blob = new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+      const url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href=url; a.download=`${payload.name.replace(/\s+/g,'_').toLowerCase()}.json`; a.click();
       URL.revokeObjectURL(url); log('Preset JSON saved.');
     }
 
@@ -1706,16 +1575,18 @@
           if (s.toneGain   != null) els.toneGain.value    = s.toneGain;
           if (s.noiseGain  != null) els.noiseGain.value   = s.noiseGain;
           if (s.noiseCutoff!= null) els.noiseCutoff.value = s.noiseCutoff;
-          if (s.pulseBpm   != null) els.pulseBpm.value    = s.pulseBpm;
-          if (s.pulseGain  != null) els.pulseGain.value   = s.pulseGain;
           if (s.cueGain    != null) els.cueGain.value     = s.cueGain;
-          if (s.masterVolume!= null) els.masterVol.value  = Math.round(s.masterVolume * 100);
-          if (s.panSpeed   != null) { state.panSpeed = s.panSpeed; els.animSpeed.value = s.panSpeed; }
+          if (s.masterVolume!= null) els.masterVol.value  = Math.round(s.masterVolume*100);
+          if (s.panSpeed   != null) { state.panSpeed=s.panSpeed; els.animSpeed.value=s.panSpeed; }
           if (s.visualMode)  setVisMode(s.visualMode);
-          if (s.visualIntensity != null) { state.visualIntensity = Number(s.visualIntensity); els.visIntensity.value = s.visualIntensity; }
-          if (pl.visualToggle) { state.visualToggle = pl.visualToggle; els.basicVisToggle.value = pl.visualToggle; }
+          if (s.visualIntensity != null) { state.visualIntensity=Number(s.visualIntensity); els.visIntensity.value=s.visualIntensity; }
+          if (pl.visualToggle) { state.visualToggle=pl.visualToggle; els.basicVisToggle.value=pl.visualToggle; }
           if (pl.transitionSeconds != null) els.transitionSecs.value = pl.transitionSeconds;
           if (pl.sessionMinutes    != null) els.basicDuration.value  = pl.sessionMinutes;
+          if (pl.noiseOrbitSpeed   != null) { state.noiseOrbitSpeed=pl.noiseOrbitSpeed; els.noiseOrbitSpd.value=pl.noiseOrbitSpeed; els.noiseOrbitSpdAdv.value=pl.noiseOrbitSpeed; }
+          if (pl.heartbeatBpm   != null) { state.heartbeatBpm=pl.heartbeatBpm; els.heartbeatBpm.value=pl.heartbeatBpm; }
+          if (pl.heartbeatGain  != null) { state.heartbeatGain=pl.heartbeatGain; els.heartbeatGain.value=pl.heartbeatGain; }
+          if (pl.hplusGain      != null) { state.hplusGain=pl.hplusGain; els.hplusGain.value=pl.hplusGain; }
           updateLabels(); syncBadges(); renderBasicPresets(); updateAudioParams(false);
           log('Preset JSON loaded.');
         } catch { alert('Invalid preset file.'); }
@@ -1727,52 +1598,49 @@
       const btn = $('exportWavBtn');
       btn.textContent = 'Rendering…'; btn.disabled = true;
       try {
-        const durS = Math.max(5, currentSessionMinutes() * 60);
-        const sr = 44100;
+        const durS = Math.max(5, currentSessionMinutes() * 60), sr = 44100;
         const off = new OfflineAudioContext(2, durS * sr, sr);
         const s = currentSettings();
         const lo = off.createOscillator(), ro = off.createOscillator();
         lo.type='sine'; ro.type='sine'; lo.frequency.value=s.carrier; ro.frequency.value=s.carrier+s.beat;
-        const merger = off.createChannelMerger(2), lg = off.createGain(), rg = off.createGain();
+        const merger=off.createChannelMerger(2),lg=off.createGain(),rg=off.createGain();
         lg.gain.value=0.4; rg.gain.value=0.4;
         lo.connect(lg); ro.connect(rg); lg.connect(merger,0,0); rg.connect(merger,0,1);
-        const nb = off.createBuffer(1, off.sampleRate*durS, off.sampleRate);
-        const nd = nb.getChannelData(0); for (let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1;
-        const ns = off.createBufferSource(); ns.buffer=nb;
-        const nf = off.createBiquadFilter(); nf.type='lowpass'; nf.frequency.value=s.noiseCutoff;
-        const ng = off.createGain(); ng.gain.value=s.noiseGain;
-        const np = off.createStereoPanner();
+        const nb=off.createBuffer(1,off.sampleRate*durS,off.sampleRate);
+        const nd=nb.getChannelData(0); for(let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1;
+        const ns=off.createBufferSource(); ns.buffer=nb;
+        const nf=off.createBiquadFilter(); nf.type='lowpass'; nf.frequency.value=s.noiseCutoff;
+        const ng=off.createGain(); ng.gain.value=s.noiseGain;
+        const np=off.createStereoPanner();
+        // Offline orbit: approximate with slow sine on pan
+        for(let t=0;t<durS;t+=0.5) { const panV=Math.sin(t*0.72*state.noiseOrbitSpeed); np.pan.setValueAtTime(panV,t); }
         ns.connect(nf); nf.connect(np); np.connect(ng);
-        const po = off.createOscillator(); po.type='sine'; po.frequency.value=80;
-        const pg = off.createGain(); pg.gain.value=0.0001; po.connect(pg);
-        const interval = 60/s.pulseBpm;
-        for (let t=0;t<durS;t+=interval) {
-          pg.gain.setValueAtTime(0.0001,t);
-          pg.gain.linearRampToValueAtTime(s.pulseGain,Math.min(durS,t+0.05));
-          pg.gain.exponentialRampToValueAtTime(0.0001,Math.min(durS,t+0.45));
+        const master=off.createGain(); master.gain.value=s.masterVolume;
+        merger.connect(master); ng.connect(master); master.connect(off.destination);
+        // Heartbeat in offline
+        const hbInterval=60/state.heartbeatBpm;
+        for(let t=0;t<durS;t+=hbInterval){
+          const pumpBeat=(when,freq,dur,gain)=>{const osc=off.createOscillator();const env=off.createGain();osc.type='sine';osc.frequency.setValueAtTime(freq,when);osc.frequency.exponentialRampToValueAtTime(freq*0.22,when+dur);env.gain.setValueAtTime(0.0001,when);env.gain.linearRampToValueAtTime(Math.max(0.001,gain),when+0.004);env.gain.exponentialRampToValueAtTime(0.0001,when+dur);osc.connect(env);env.connect(master);osc.start(when);osc.stop(Math.min(durS,when+dur+0.06));};
+          if(t<durS){pumpBeat(t,65,0.15,state.heartbeatGain*1.0);}
+          if(t+0.29<durS){pumpBeat(t+0.29,52,0.12,state.heartbeatGain*0.64);}
         }
-        const master = off.createGain(); master.gain.value=s.masterVolume;
-        merger.connect(master); ng.connect(master); pg.connect(master); master.connect(off.destination);
-        lo.start(0); ro.start(0); ns.start(0); po.start(0);
-        const rendered = await off.startRendering();
-        const wav = audioBufferToWav(rendered);
-        const blob = new Blob([wav], {type:'audio/wav'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href=url; a.download='uss_export.wav'; a.click();
-        URL.revokeObjectURL(url);
-        log('WAV export complete.');
-      } catch(e) { log(`WAV export failed: ${e.message}`); }
-      btn.textContent = 'Export WAV'; btn.disabled = false;
+        lo.start(0);ro.start(0);ns.start(0);
+        const rendered=await off.startRendering();
+        const wav=audioBufferToWav(rendered);
+        const blob=new Blob([wav],{type:'audio/wav'});
+        const url=URL.createObjectURL(blob),a=document.createElement('a');
+        a.href=url; a.download='uss_export.wav'; a.click();
+        URL.revokeObjectURL(url); log('WAV export complete.');
+      } catch(e){ log(`WAV export failed: ${e.message}`); }
+      btn.textContent='Export WAV'; btn.disabled=false;
     }
 
-    function audioBufferToWav(buffer) {
-      const ch=buffer.numberOfChannels, sr=buffer.sampleRate, fmt=1, bd=16, samples=buffer.length;
-      const ba=ch*bd/8, br=sr*ba, ds=samples*ba;
-      const buf=new ArrayBuffer(44+ds), view=new DataView(buf);
-      let o=0;
+    function audioBufferToWav(buffer){
+      const ch=buffer.numberOfChannels,sr=buffer.sampleRate,fmt=1,bd=16,samples=buffer.length;
+      const ba=ch*bd/8,br=sr*ba,ds=samples*ba;
+      const buf=new ArrayBuffer(44+ds),view=new DataView(buf);let o=0;
       const ws=s=>{for(let i=0;i<s.length;i++)view.setUint8(o++,s.charCodeAt(i));};
-      const wu32=v=>{view.setUint32(o,v,true);o+=4;};
-      const wu16=v=>{view.setUint16(o,v,true);o+=2;};
+      const wu32=v=>{view.setUint32(o,v,true);o+=4;};const wu16=v=>{view.setUint16(o,v,true);o+=2;};
       ws('RIFF');wu32(36+ds);ws('WAVE');ws('fmt ');wu32(16);wu16(fmt);wu16(ch);wu32(sr);wu32(br);wu16(ba);wu16(bd);ws('data');wu32(ds);
       const cd=[];for(let c=0;c<ch;c++)cd.push(buffer.getChannelData(c));
       for(let i=0;i<samples;i++)for(let c=0;c<ch;c++){let s=Math.max(-1,Math.min(1,cd[c][i]));view.setInt16(o,s<0?s*0x8000:s*0x7FFF,true);o+=2;}
@@ -1780,27 +1648,23 @@
     }
 
     async function copySummary() {
-      const txt = `Unified State Studio v5\nPreset: ${state.currentPreset}\nPhase: ${phases[state.currentPhase].name}\nCarrier: ${els.baseFreq.value} Hz\nBeat: ${parseFloat(els.beatFreq.value).toFixed(1)} Hz\nVisual: ${labelMode(state.visualMode)}\nDuration: ${currentSessionMinutes()} min`;
-      try { await navigator.clipboard.writeText(txt); log('Summary copied to clipboard.'); }
-      catch { log('Clipboard copy failed.'); }
+      const txt=`Unified State Studio v5.1\nPreset: ${state.currentPreset}\nFocus Level: ${presets[state.currentPreset]?.focus||'—'}\nPhase: ${phases[state.currentPhase].name}\nCarrier: ${els.baseFreq.value} Hz\nBeat: ${parseFloat(els.beatFreq.value).toFixed(1)} Hz\nHeartbeat: ${state.heartbeatBpm} BPM\nH+ Gain: ${state.hplusGain.toFixed(3)}\nNoise orbit: ${orbitSpeedLabel(state.noiseOrbitSpeed)}\nVisual: ${labelMode(state.visualMode)}\nDuration: ${currentSessionMinutes()} min`;
+      try{await navigator.clipboard.writeText(txt);log('Summary copied.');}catch{log('Clipboard copy failed.');}
     }
 
     /* ═══════════════════════════════════════════════
        EVENT HANDLERS
     ═══════════════════════════════════════════════ */
-    $('modeTabs').addEventListener('click', e => {
-      const tab = e.target.closest('.tab'); if (!tab) return;
-      state.mode = tab.dataset.mode; renderTabs();
-    });
+    $('modeTabs').addEventListener('click', e => { const tab=e.target.closest('.tab'); if(!tab)return; state.mode=tab.dataset.mode; renderTabs(); });
 
     document.body.addEventListener('click', e => {
-      const add = e.target.dataset.add;
-      if (add) { addToQueue(add, Number(e.target.dataset.mins || els.intDuration.value)); return; }
-      const action = e.target.dataset.action, id = e.target.dataset.id;
-      if (!action) return;
-      if (action==='up') moveQueue(id,'up');
-      if (action==='down') moveQueue(id,'down');
-      if (action==='remove') removeQueue(id);
+      const add=e.target.dataset.add;
+      if(add){addToQueue(add,Number(e.target.dataset.mins||els.intDuration.value));return;}
+      const action=e.target.dataset.action,id=e.target.dataset.id;
+      if(!action)return;
+      if(action==='up')moveQueue(id,'up');
+      if(action==='down')moveQueue(id,'down');
+      if(action==='remove')removeQueue(id);
       renderQueue();
     });
 
@@ -1808,84 +1672,88 @@
     $('pauseBtn').addEventListener('click', pauseSession);
     $('stopBtn').addEventListener('click', stopSession);
     $('groundBtn').addEventListener('click', groundNow);
-    $('prevPhaseBtn').addEventListener('click', () => { if (state.currentPhase>0){state.currentPhase--;state.phaseElapsed=0;renderPhaseRail();updateTimeDisplays();} });
-    $('nextPhaseBtn').addEventListener('click', () => { if (state.currentPhase<phases.length-1){state.currentPhase++;state.phaseElapsed=0;renderPhaseRail();updateTimeDisplays();} });
+    $('prevPhaseBtn').addEventListener('click', () => { if(state.currentPhase>0){state.currentPhase--;state.phaseElapsed=0;renderPhaseRail();updateTimeDisplays();} });
+    $('nextPhaseBtn').addEventListener('click', () => { if(state.currentPhase<phases.length-1){state.currentPhase++;state.phaseElapsed=0;renderPhaseRail();updateTimeDisplays();} });
     $('hpTestBtn').addEventListener('click', headphoneTest);
     $('openOvBtn').addEventListener('click', openOverlay);
     $('hideOvBtn').addEventListener('click', closeOverlay);
     $('closeOvBtn').addEventListener('click', closeOverlay);
     $('prevVisBtn').addEventListener('click', () => cycleVisual(-1));
     $('nextVisBtn').addEventListener('click', () => cycleVisual(1));
-
-    $('playQueueBtn').addEventListener('click', () => {
-      state.mode='intermediate'; renderTabs();
-      if (!state.queue.length){alert('Add at least one session to the queue first.');return;}
-      state.queueIndex=0; startSession(); renderQueue();
-    });
-    $('skipQueueBtn').addEventListener('click', () => {
-      if (!state.playing || !state.queue.length) return;
-      if (state.queueIndex < state.queue.length-1) {
-        state.queueIndex++; applyPreset(state.queue[state.queueIndex].name);
-        state.elapsedSeconds=0;state.phaseElapsed=0;state.currentPhase=0;
-        renderQueue();renderPhaseRail();updateAudioParams(true);log('Skipped to next.');
-      } else stopSession();
-    });
+    $('playQueueBtn').addEventListener('click', () => { state.mode='intermediate';renderTabs();if(!state.queue.length){alert('Add at least one session first.');return;}state.queueIndex=0;startSession();renderQueue(); });
+    $('skipQueueBtn').addEventListener('click', () => { if(!state.playing||!state.queue.length)return;if(state.queueIndex<state.queue.length-1){state.queueIndex++;applyPreset(state.queue[state.queueIndex].name);state.elapsedSeconds=0;state.phaseElapsed=0;state.currentPhase=0;renderQueue();renderPhaseRail();updateAudioParams(true);log('Skipped.');}else stopSession(); });
     $('clearQueueBtn').addEventListener('click', () => { state.queue=[];state.queueIndex=0;persistQueue();renderQueue();log('Queue cleared.'); });
     $('saveJournalBtn').addEventListener('click', saveJournal);
     $('clearJournalBtn').addEventListener('click', clearJournal);
     $('savePresetBtn').addEventListener('click', savePresetJson);
     $('loadPresetBtn').addEventListener('click', () => $('presetFile').click());
-    $('presetFile').addEventListener('change', e => { if (e.target.files[0]) loadPresetFile(e.target.files[0]); });
+    $('presetFile').addEventListener('change', e => { if(e.target.files[0])loadPresetFile(e.target.files[0]); });
     $('exportWavBtn').addEventListener('click', exportWav);
     $('copySummaryBtn').addEventListener('click', copySummary);
 
-    // Slider / select event wiring
+    // Slider wiring
     els.basicDuration.addEventListener('input', () => { updateLabels(); state.sessionMinutes=Number(els.basicDuration.value); });
     els.basicIntensity.addEventListener('input', () => { state.visualIntensity=Number(els.basicIntensity.value); els.visIntensity.value=state.visualIntensity; updateLabels(); });
     els.basicVisToggle.addEventListener('change', () => { state.visualToggle=els.basicVisToggle.value; updateLabels(); syncBadges(); });
     els.seqMode.addEventListener('change', updateLabels);
     els.transitionSecs.addEventListener('input', updateLabels);
     els.masterVol.addEventListener('input', () => { updateLabels(); updateAudioParams(false); });
+
+    // Noise orbit speed — both sliders sync to each other and to state
+    function updateOrbitSpeed(v) {
+      state.noiseOrbitSpeed = Number(v);
+      els.noiseOrbitSpd.value = v; els.noiseOrbitSpdAdv.value = v;
+      updateLabels(); syncBadges();
+    }
+    els.noiseOrbitSpd.addEventListener('input', e => updateOrbitSpeed(e.target.value));
+    els.noiseOrbitSpdAdv.addEventListener('input', e => updateOrbitSpeed(e.target.value));
+
     els.animSpeed.addEventListener('input', () => { state.panSpeed=Number(els.animSpeed.value); updateLabels(); });
     els.intDuration.addEventListener('input', () => { state.intDefaultMinutes=Number(els.intDuration.value); updateLabels(); renderCatalogue(); });
     els.intVisMode.addEventListener('change', () => { setVisMode(els.intVisMode.value); updateLabels(); syncBadges(); });
     els.visMode.addEventListener('change', () => { setVisMode(els.visMode.value); updateLabels(); syncBadges(); });
     els.visIntensity.addEventListener('input', () => { state.visualIntensity=Number(els.visIntensity.value); els.basicIntensity.value=state.visualIntensity; updateLabels(); });
-    ['baseFreq','beatFreq','toneGain','noiseGain','noiseCutoff','pulseBpm','pulseGain','cueGain'].forEach(id => {
+
+    // Monroe parameter sliders
+    els.heartbeatBpm.addEventListener('input', () => {
+      state.heartbeatBpm = Number(els.heartbeatBpm.value);
+      updateLabels();
+      if (state.playing && !state.paused) startHeartbeat(); // restart at new BPM
+    });
+    els.heartbeatGain.addEventListener('input', () => { state.heartbeatGain=Number(els.heartbeatGain.value); updateLabels(); });
+    els.hplusGain.addEventListener('input', () => {
+      state.hplusGain = Number(els.hplusGain.value);
+      if (audio) { audio.hpMaster.gain.setValueAtTime(state.hplusGain, audio.ctx.currentTime); audio.hpMix.gain.setValueAtTime(state.hplusGain*0.4, audio.ctx.currentTime); }
+      updateLabels(); syncBadges();
+    });
+
+    ['baseFreq','beatFreq','toneGain','noiseGain','noiseCutoff','cueGain'].forEach(id => {
       $(id).addEventListener('input', () => { updateLabels(); updateAudioParams(false); });
     });
 
     window.addEventListener('resize', resizeCanvases);
 
-    /* ═══════════════════════════════════════════════
-       FIX: KEYBOARD SHORTCUTS
-    ═══════════════════════════════════════════════ */
+    // Keyboard shortcuts
     document.addEventListener('keydown', e => {
-      if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
-      if (e.key === ' ') { e.preventDefault(); state.playing ? pauseSession() : startOrResume(); }
-      if (e.key === 'Escape') stopSession();
-      if (e.key.toLowerCase() === 'g') groundNow();
-      if (e.key.toLowerCase() === 'o') { state.visualOverlay ? closeOverlay() : openOverlay(); }
-      if (e.key.toLowerCase() === 'k') headphoneTest();
+      if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+      if(e.key===' '){e.preventDefault(); state.playing ? pauseSession() : startOrResume();}
+      if(e.key==='Escape') stopSession();
+      if(e.key.toLowerCase()==='g') groundNow();
+      if(e.key.toLowerCase()==='o'){state.visualOverlay?closeOverlay():openOverlay();}
+      if(e.key.toLowerCase()==='k') headphoneTest();
     });
 
     /* ═══════════════════════════════════════════════
        INIT
     ═══════════════════════════════════════════════ */
     function init() {
-      updateLabels();
-      renderTabs();
-      renderPhaseRail();
-      renderBasicPresets();
-      renderCatalogue();
-      renderQueue();
-      renderJournal();
-      resizeCanvases();
+      updateLabels(); renderTabs(); renderPhaseRail();
+      renderBasicPresets(); renderCatalogue(); renderQueue();
+      renderJournal(); resizeCanvases();
       applyPreset(state.currentPreset);
-      syncBadges();
-      updateTimeDisplays();
+      syncBadges(); updateTimeDisplays();
       animateLoop();
-      log('Unified State Studio v5 ready. All systems nominal.');
+      log('Unified State Studio v5.1 ready. Spatial orbit · Heartbeat · H+ tone · Intro/Outro active.');
     }
 
     init();
