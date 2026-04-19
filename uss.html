@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unified State Studio v5.3</title>
+  <title>Unified State Studio v5.4</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Jura:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -323,9 +323,9 @@
         <div>
           <div style="display:flex;align-items:baseline;">
             <span class="brand-name">UNIFIED STATE STUDIO</span>
-            <span class="brand-ver">v5.3</span>
+            <span class="brand-ver">v5.4</span>
           </div>
-          <div class="brand-sub">Binaural · Spatial orbit · Heartbeat · H+ · Spectral visualiser · Monroe Focus</div>
+          <div class="brand-sub">Binaural · Crossfade noise orbit · Heartbeat lookahead · Screen-off persistence</div>
         </div>
       </div>
       <div class="badge-row">
@@ -669,10 +669,9 @@
   </div><!-- end main-layout -->
 </div><!-- end wrap -->
 </div><!-- end app-frame -->
-
 <script>
 /* ══════════════════════════════════════════════
-   DEFAULTS — used for reset buttons (FIX #4)
+   DEFAULTS
 ══════════════════════════════════════════════ */
 const DEFAULTS = {
   basicDuration:20, basicIntensity:1.0, basicVisToggle:'optional',
@@ -782,188 +781,374 @@ const els={
 };
 
 /* ══════════════════════════════════════════════
-   AUDIO — FIX #1: Pink noise (Voss-McCartney)
-   FIX #2: Pan LFO in audio graph (not RAF-driven)
+   AUDIO ENGINE v5.4
+   FIX #1/#2: Crossfade chunk scheduler — no loop seam, no static
+   FIX #3: Never suspend; MediaSession + NoSleep + lookahead beats
 ══════════════════════════════════════════════ */
-let audio=null,hbHandle=null,visualT=0,lastFrameTime=null;
+let audio = null, hbHandle = null, visualT = 0, lastFrameTime = null;
 
-/* FIX #1: Stereo pink noise buffer — eliminates white noise static */
-function createPinkNoiseBuffer(ctx, duration=8) {
+// ── Noise chunk constants ──
+// Two alternating pink noise buffers, 12s chunks, 0.8s crossfade overlap.
+// At the handover (t=12 to t=12.8): chunk A fades 1→0, chunk B fades 0→1.
+// No discrete loop boundary anywhere — zero click artefacts.
+const NOISE_CHUNK = 12.0; // seconds between chunk start times
+const NOISE_FADE  = 0.8;  // crossfade overlap duration (seconds)
+let _noiseNext    = 0;    // AudioContext time for next chunk start
+let _noiseHandle  = null; // setInterval for scheduling ahead
+let _chunkIdx     = 0;    // alternates 0/1 to select bufA or bufB
+
+// ── Heartbeat lookahead constants ──
+// Pre-schedule beats 15s into audio graph. Immune to setInterval throttling
+// when tab is hidden or screen is off. 3s replenishment interval.
+const HB_LOOKAHEAD = 15.0;
+const HB_SCHED_MS  = 3000;
+let _nextBeatTime  = 0;
+
+// ── NoSleep: silent audio element keeps Chrome Android from suspending context ──
+let _keepAliveAudio = null;
+
+/* ── Pink noise generator (Voss-McCartney IIR, stereo, no boundary fades) ── */
+function createPinkNoiseBuffer(ctx, duration = 12.8) {
   const len = Math.floor(ctx.sampleRate * duration);
   const buf = ctx.createBuffer(2, len, ctx.sampleRate);
-  for (let ch=0; ch<2; ch++) {
+  for (let ch = 0; ch < 2; ch++) {
     const d = buf.getChannelData(ch);
     let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
-    for (let i=0; i<len; i++) {
-      const w = Math.random()*2-1;
+    for (let i = 0; i < len; i++) {
+      const w = Math.random() * 2 - 1;
       b0=0.99886*b0+w*0.0555179; b1=0.99332*b1+w*0.0750759;
       b2=0.96900*b2+w*0.1538520; b3=0.86650*b3+w*0.3104856;
       b4=0.55000*b4+w*0.5329522; b5=-0.7616*b5-w*0.0168980;
-      const pink=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11;
-      b6=w*0.115926;
-      d[i]=Math.max(-1,Math.min(1,pink));
+      const pink = (b0+b1+b2+b3+b4+b5+b6+w*0.5362) * 0.11;
+      b6 = w * 0.115926;
+      d[i] = Math.max(-1, Math.min(1, pink));
     }
-    // Soft fade at loop boundaries to prevent click artefacts
-    const fade=Math.floor(ctx.sampleRate*0.04);
-    for(let i=0;i<fade;i++){const t=i/fade;d[i]*=t;d[len-1-i]*=t;}
   }
   return buf;
 }
 
+/* ── Schedule one crossfade chunk ── */
+function _schedulePinkChunk(ctx, dest, bufA, bufB) {
+  const buf = (_chunkIdx % 2 === 0) ? bufA : bufB;
+  _chunkIdx++;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const env = ctx.createGain();
+  const t0 = _noiseNext;
+  const t1 = t0 + NOISE_FADE;             // fade-in complete
+  const t2 = t0 + NOISE_CHUNK;            // fade-out begins
+  const t3 = t0 + NOISE_CHUNK + NOISE_FADE; // fade-out complete / source ends
+  env.gain.setValueAtTime(0.0001, t0);
+  env.gain.linearRampToValueAtTime(1.0, t1);
+  env.gain.setValueAtTime(1.0, t2);
+  env.gain.linearRampToValueAtTime(0.0001, t3);
+  src.connect(env);
+  env.connect(dest);
+  src.start(t0);
+  src.stop(t3 + 0.1);
+  _noiseNext += NOISE_CHUNK; // next chunk starts CHUNK seconds after this one
+}
+
+/* ── Start noise crossfade scheduler ── */
+function startNoiseScheduler() {
+  if (!audio) return;
+  _noiseNext = audio.ctx.currentTime;
+  _chunkIdx  = 0;
+  // Pre-schedule 2 chunks: chunk 1 starts now, chunk 2 starts at +12s (overlaps end of 1)
+  _schedulePinkChunk(audio.ctx, audio.noiseFilter, audio.noiseBufA, audio.noiseBufB);
+  _schedulePinkChunk(audio.ctx, audio.noiseFilter, audio.noiseBufA, audio.noiseBufB);
+  // Keep 2 chunks ahead of current time
+  _noiseHandle = setInterval(() => {
+    if (!audio) return;
+    while (_noiseNext < audio.ctx.currentTime + NOISE_CHUNK * 2) {
+      _schedulePinkChunk(audio.ctx, audio.noiseFilter, audio.noiseBufA, audio.noiseBufB);
+    }
+  }, NOISE_CHUNK * 800); // replenish every ~80% of chunk duration
+}
+
+function stopNoiseScheduler() {
+  if (_noiseHandle) { clearInterval(_noiseHandle); _noiseHandle = null; }
+}
+
+/* ── Audio engine: no noiseSource (scheduler manages it), panDepth 0.78 ── */
 function createAudioEngine() {
   const ctx = new(window.AudioContext||window.webkitAudioContext)();
   const master = ctx.createGain();
-  master.gain.value = parseFloat(els.masterVol.value)/100;
+  master.gain.value = parseFloat(els.masterVol.value) / 100;
   master.connect(ctx.destination);
 
   // Binaural oscillators
-  const leftOsc=ctx.createOscillator(); const rightOsc=ctx.createOscillator();
-  leftOsc.type='sine'; rightOsc.type='sine';
-  const leftG=ctx.createGain(); const rightG=ctx.createGain();
-  leftG.gain.value=0.4; rightG.gain.value=0.4;
-  const merger=ctx.createChannelMerger(2);
-  leftOsc.connect(leftG); rightOsc.connect(rightG);
-  leftG.connect(merger,0,0); rightG.connect(merger,0,1); merger.connect(master);
+  const leftOsc  = ctx.createOscillator(); leftOsc.type  = 'sine';
+  const rightOsc = ctx.createOscillator(); rightOsc.type = 'sine';
+  const leftG = ctx.createGain(); leftG.gain.value  = 0.4;
+  const rightG= ctx.createGain(); rightG.gain.value = 0.4;
+  const merger = ctx.createChannelMerger(2);
+  leftOsc.connect(leftG);   rightOsc.connect(rightG);
+  leftG.connect(merger,0,0); rightG.connect(merger,0,1);
+  merger.connect(master);
 
-  // FIX #1: Pink noise buffer, stereo, 8 seconds
-  const noiseSource=ctx.createBufferSource();
-  noiseSource.buffer=createPinkNoiseBuffer(ctx,8);
-  noiseSource.loop=true;
-  const noiseFilter=ctx.createBiquadFilter(); noiseFilter.type='lowpass';
-  const noiseGainNode=ctx.createGain();
-  const noisePan=ctx.createStereoPanner();
-  noiseSource.connect(noiseFilter); noiseFilter.connect(noiseGainNode);
-  noiseGainNode.connect(noisePan); noisePan.connect(master);
+  // Noise chain — sources managed externally by crossfade scheduler
+  const noiseFilter   = ctx.createBiquadFilter(); noiseFilter.type = 'lowpass';
+  const noiseGainNode = ctx.createGain();
+  const noisePan      = ctx.createStereoPanner();
+  noiseFilter.connect(noiseGainNode);
+  noiseGainNode.connect(noisePan);
+  noisePan.connect(master);
 
-  // FIX #2: Pan LFO runs INSIDE audio graph — immune to page-hide/screensaver
-  // frequency = noiseOrbitSpeed * 0.115 Hz (slow orbit at 0.5 = ~17s period)
-  const panLFO=ctx.createOscillator(); panLFO.type='sine';
-  panLFO.frequency.value=state.noiseOrbitSpeed*0.115;
-  const panDepth=ctx.createGain(); panDepth.gain.value=0.95;
+  // Pan LFO in audio graph — unaffected by page visibility
+  // panDepth 0.78 (was 0.95): spacious but less extreme; reduces seam perception
+  const panLFO   = ctx.createOscillator(); panLFO.type = 'sine';
+  panLFO.frequency.value = state.noiseOrbitSpeed * 0.115;
+  const panDepth = ctx.createGain(); panDepth.gain.value = 0.78;
   panLFO.connect(panDepth); panDepth.connect(noisePan.pan);
   panLFO.start();
 
-  // H+ tone (108/324/540 Hz with 40Hz gamma AM)
+  // H+ tone stack (108/324/540 Hz, 40Hz gamma AM)
   const hp1=ctx.createOscillator(); hp1.type='sine'; hp1.frequency.value=108;
   const hp2=ctx.createOscillator(); hp2.type='sine'; hp2.frequency.value=324;
   const hp3=ctx.createOscillator(); hp3.type='sine'; hp3.frequency.value=540;
   const hpLFO=ctx.createOscillator(); hpLFO.type='sine'; hpLFO.frequency.value=40;
   const hpLFODepth=ctx.createGain(); hpLFODepth.gain.value=0.35;
-  const hpMix=ctx.createGain(); hpMix.gain.value=state.hplusGain*0.4;
+  const hpMix=ctx.createGain();    hpMix.gain.value=state.hplusGain*0.4;
   const hpMaster=ctx.createGain(); hpMaster.gain.value=state.hplusGain;
-  const hpg1=ctx.createGain(),hpg2=ctx.createGain(),hpg3=ctx.createGain();
-  hpg1.gain.value=1.0; hpg2.gain.value=0.45; hpg3.gain.value=0.22;
+  const hpg1=ctx.createGain(); hpg1.gain.value=1.0;
+  const hpg2=ctx.createGain(); hpg2.gain.value=0.45;
+  const hpg3=ctx.createGain(); hpg3.gain.value=0.22;
   hp1.connect(hpg1); hp2.connect(hpg2); hp3.connect(hpg3);
   hpg1.connect(hpMix); hpg2.connect(hpMix); hpg3.connect(hpMix);
   hpLFO.connect(hpLFODepth); hpLFODepth.connect(hpMaster.gain);
   hpMix.connect(hpMaster); hpMaster.connect(master);
 
-  leftOsc.start(); rightOsc.start(); noiseSource.start();
+  // Pre-generate TWO alternating noise buffers (CPU done once, zero runtime spikes)
+  const noiseBufA = createPinkNoiseBuffer(ctx, NOISE_CHUNK + NOISE_FADE);
+  const noiseBufB = createPinkNoiseBuffer(ctx, NOISE_CHUNK + NOISE_FADE);
+
+  leftOsc.start(); rightOsc.start();
   hp1.start(); hp2.start(); hp3.start(); hpLFO.start();
 
-  return{ctx,master,leftOsc,rightOsc,noiseSource,noiseFilter,noiseGainNode,noisePan,
-         panLFO,panDepth,hp1,hp2,hp3,hpLFO,hpLFODepth,hpMix,hpMaster};
+  // Monitor ctx state: auto-resume if browser suspends us
+  ctx.onstatechange = () => {
+    if (ctx.state === 'suspended' && state.playing && !state.paused) {
+      ctx.resume().then(() => {
+        log('AudioContext auto-resumed after suspension.');
+        _rescheduleLookahead();
+      }).catch(() => {});
+    }
+  };
+
+  return { ctx, master, leftOsc, rightOsc, noiseFilter, noiseGainNode, noisePan,
+           panLFO, panDepth, hp1, hp2, hp3, hpLFO, hpLFODepth, hpMix, hpMaster,
+           noiseBufA, noiseBufB };
 }
 
-// FIX #2: Pause by ramping master to silence — context stays alive, pan LFO keeps running
-function pauseAudio(){
-  if(!audio)return;
-  const now=audio.ctx.currentTime;
+function pauseAudio() {
+  if (!audio) return;
+  const now = audio.ctx.currentTime;
   audio.master.gain.cancelScheduledValues(now);
-  audio.master.gain.exponentialRampToValueAtTime(0.0001,now+0.35);
+  audio.master.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
 }
-function resumeAudio(){
-  if(!audio)return;
-  const vol=Math.max(0.001,parseFloat(els.masterVol.value)/100);
-  const now=audio.ctx.currentTime;
+function resumeAudio() {
+  if (!audio) return;
+  const vol = Math.max(0.001, parseFloat(els.masterVol.value) / 100);
+  const now = audio.ctx.currentTime;
   audio.master.gain.cancelScheduledValues(now);
-  audio.master.gain.exponentialRampToValueAtTime(vol,now+0.4);
+  audio.master.gain.exponentialRampToValueAtTime(vol, now + 0.4);
 }
-function startAudio(){if(audio){resumeAudio();return;}audio=createAudioEngine();updateAudioParams(false);log('Audio engine started.');}
-function stopAudio(){
-  if(!audio)return; stopHeartbeat();
-  const ctx=audio.ctx,now=ctx.currentTime;
+function startAudio() {
+  if (audio) { resumeAudio(); return; }
+  audio = createAudioEngine();
+  updateAudioParams(false);
+  startNoiseScheduler();
+  setupMediaSession();
+  startKeepAlive();
+  log('Audio engine started — crossfade scheduler active.');
+}
+function stopAudio() {
+  if (!audio) return;
+  stopHeartbeat(); stopNoiseScheduler();
+  teardownMediaSession(); stopKeepAlive();
+  const ctx = audio.ctx, now = ctx.currentTime;
   audio.master.gain.cancelScheduledValues(now);
-  audio.master.gain.exponentialRampToValueAtTime(0.0001,now+1.1);
-  setTimeout(()=>{try{ctx.close();}catch(e){}audio=null;},1400);
+  audio.master.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
+  setTimeout(() => { try { ctx.close(); } catch(e) {} audio = null; }, 1400);
   log('Audio engine stopped.');
 }
-function updateAudioParams(withCue){
-  if(!audio)return;
-  const s=currentSettings(); const now=audio.ctx.currentTime;
-  const end=now+Math.min(Number(els.transitionSecs.value),20);
+function updateAudioParams(withCue) {
+  if (!audio) return;
+  const s = currentSettings(), now = audio.ctx.currentTime;
+  const end = now + Math.min(Number(els.transitionSecs.value), 20);
   audio.leftOsc.frequency.cancelScheduledValues(now);
   audio.rightOsc.frequency.cancelScheduledValues(now);
-  audio.leftOsc.frequency.linearRampToValueAtTime(s.carrier,end);
-  audio.rightOsc.frequency.linearRampToValueAtTime(s.carrier+s.beat,end);
-  audio.noiseFilter.frequency.linearRampToValueAtTime(s.noiseCutoff,end);
-  audio.noiseGainNode.gain.linearRampToValueAtTime(s.noiseGain,end);
-  if(!state.paused) audio.master.gain.linearRampToValueAtTime(s.masterVolume,end);
-  audio.hpMaster.gain.setValueAtTime(state.hplusGain,now);
-  audio.hpMix.gain.setValueAtTime(state.hplusGain*0.4,now);
-  if(withCue)playCue(audio.ctx,audio.master,s.cueGain);
+  audio.leftOsc.frequency.linearRampToValueAtTime(s.carrier, end);
+  audio.rightOsc.frequency.linearRampToValueAtTime(s.carrier + s.beat, end);
+  audio.noiseFilter.frequency.linearRampToValueAtTime(s.noiseCutoff, end);
+  audio.noiseGainNode.gain.linearRampToValueAtTime(s.noiseGain, end);
+  if (!state.paused) audio.master.gain.linearRampToValueAtTime(s.masterVolume, end);
+  audio.hpMaster.gain.setValueAtTime(state.hplusGain, now);
+  audio.hpMix.gain.setValueAtTime(state.hplusGain * 0.4, now);
+  if (withCue) playCue(audio.ctx, audio.master, s.cueGain);
   syncBadges();
 }
-function playCue(ctx,master,gainVal=0.16){
-  const now=ctx.currentTime;
-  const osc=ctx.createOscillator(),g=ctx.createGain();
-  osc.type='sine'; osc.frequency.setValueAtTime(540,now); osc.frequency.exponentialRampToValueAtTime(720,now+0.28);
-  g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(Math.max(0.0002,gainVal),now+0.03); g.gain.exponentialRampToValueAtTime(0.0001,now+0.45);
+function playCue(ctx, master, gainVal=0.16) {
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator(), g = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(540, now); osc.frequency.exponentialRampToValueAtTime(720, now+0.28);
+  g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(Math.max(0.0002,gainVal), now+0.03);
+  g.gain.exponentialRampToValueAtTime(0.0001, now+0.45);
   osc.connect(g); g.connect(master); osc.start(now); osc.stop(now+0.55);
 }
 
-/* ── HEARTBEAT ── */
-function startHeartbeat(){
+/* ── HEARTBEAT — lookahead scheduler ──
+   Pre-schedules HB_LOOKAHEAD seconds of beats into the audio graph.
+   Beats fire from the audio engine even when setInterval is throttled.
+   Works with screen off, background tab, battery save mode.          ── */
+function startHeartbeat() {
   stopHeartbeat();
-  if(!audio||state.heartbeatGain<=0)return;
-  const interval=Math.round(60000/state.heartbeatBpm);
-  scheduleHBeat(audio.ctx.currentTime+0.08);
-  hbHandle=setInterval(()=>{if(audio&&state.playing&&!state.paused)scheduleHBeat(audio.ctx.currentTime+0.05);},interval);
-  log(`Heartbeat: ${state.heartbeatBpm} BPM`);
+  if (!audio || state.heartbeatGain <= 0) return;
+  _nextBeatTime = audio.ctx.currentTime + 0.1;
+  _scheduleBeats(audio.ctx.currentTime + HB_LOOKAHEAD);
+  hbHandle = setInterval(() => {
+    if (audio && state.playing && !state.paused) {
+      _scheduleBeats(audio.ctx.currentTime + HB_LOOKAHEAD);
+    }
+  }, HB_SCHED_MS);
+  log(`Heartbeat: ${state.heartbeatBpm} BPM — ${HB_LOOKAHEAD}s lookahead`);
 }
-function stopHeartbeat(){if(hbHandle){clearInterval(hbHandle);hbHandle=null;}}
-function scheduleHBeat(when){if(!audio)return;const g=state.heartbeatGain;playDrum(audio.ctx,audio.master,when,65,0.15,g);playDrum(audio.ctx,audio.master,when+0.29,52,0.12,g*0.64);}
-function playDrum(ctx,output,when,freq,dur,gain){
-  if(!ctx||gain<=0)return;
-  const osc=ctx.createOscillator(),env=ctx.createGain();
-  osc.type='sine'; osc.frequency.setValueAtTime(freq,when); osc.frequency.exponentialRampToValueAtTime(freq*0.22,when+dur);
-  env.gain.setValueAtTime(0.0001,when); env.gain.linearRampToValueAtTime(Math.max(0.001,gain),when+0.004); env.gain.exponentialRampToValueAtTime(0.0001,when+dur);
-  osc.connect(env); env.connect(output); osc.start(when); osc.stop(when+dur+0.06);
-}
-
-/* ── INTRO/OUTRO ── */
-function playIntroSequence(ctx,master,onComplete){
-  if(!ctx){if(onComplete)onComplete();return;}
-  const freqs=[396,528,639],now=ctx.currentTime+0.15;
-  freqs.forEach((freq,i)=>{const osc=ctx.createOscillator(),env=ctx.createGain();osc.type='sine';osc.frequency.value=freq;env.gain.setValueAtTime(0.0001,now+i*0.55);env.gain.linearRampToValueAtTime(0.14,now+i*0.55+0.04);env.gain.exponentialRampToValueAtTime(0.0001,now+i*0.55+0.42);osc.connect(env);env.connect(master);osc.start(now+i*0.55);osc.stop(now+i*0.55+0.5);});
-  if(onComplete)setTimeout(onComplete,(freqs.length*0.55+0.5)*1000);
-}
-function playOutroSequence(ctx,master){
-  if(!ctx)return;
-  const freqs=[639,528,396],now=ctx.currentTime+0.1;
-  freqs.forEach((freq,i)=>{const osc=ctx.createOscillator(),env=ctx.createGain();osc.type='sine';osc.frequency.value=freq;env.gain.setValueAtTime(0.0001,now+i*0.6);env.gain.linearRampToValueAtTime(0.12,now+i*0.6+0.04);env.gain.exponentialRampToValueAtTime(0.0001,now+i*0.6+0.5);osc.connect(env);env.connect(master);osc.start(now+i*0.6);osc.stop(now+i*0.6+0.6);});
-}
-
-/* ══════════════════════════════════════════════
-   FIX #2: VISIBILITY HANDLER
-   Suspend AudioContext when page hidden (background/screensaver).
-   Resume cleanly on return. Prevents audio freezing/looping.
-══════════════════════════════════════════════ */
-document.addEventListener('visibilitychange',()=>{
-  if(!audio)return;
-  if(document.hidden){
-    audio.ctx.suspend().catch(()=>{});
-    stopHeartbeat(); // clear interval — unreliable when hidden
-    log('Page hidden — audio suspended.');
-  }else{
-    audio.ctx.resume().then(()=>{
-      state.lastTick=Date.now(); // reset tick to avoid huge dt jump on return
-      lastFrameTime=null;
-      if(state.playing&&!state.paused)startHeartbeat();
-      log('Page visible — audio resumed.');
-    }).catch(()=>{});
+function _scheduleBeats(until) {
+  if (!audio) return;
+  const g = state.heartbeatGain;
+  while (_nextBeatTime < until) {
+    playDrum(audio.ctx, audio.master, _nextBeatTime, 65, 0.15, g);
+    playDrum(audio.ctx, audio.master, _nextBeatTime + 0.29, 52, 0.12, g * 0.64);
+    _nextBeatTime += 60 / state.heartbeatBpm;
   }
+}
+function stopHeartbeat() {
+  if (hbHandle) { clearInterval(hbHandle); hbHandle = null; }
+}
+function playDrum(ctx, output, when, freq, dur, gain) {
+  if (!ctx || gain <= 0) return;
+  const osc = ctx.createOscillator(), env = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, when);
+  osc.frequency.exponentialRampToValueAtTime(freq * 0.22, when + dur);
+  env.gain.setValueAtTime(0.0001, when);
+  env.gain.linearRampToValueAtTime(Math.max(0.001, gain), when + 0.004);
+  env.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+  osc.connect(env); env.connect(output); osc.start(when); osc.stop(when + dur + 0.06);
+}
+
+/* ── Reschedule lookahead on page return or auto-resume ── */
+function _rescheduleLookahead() {
+  if (!audio || !state.playing || state.paused) return;
+  _scheduleBeats(audio.ctx.currentTime + HB_LOOKAHEAD);
+  while (_noiseNext < audio.ctx.currentTime + NOISE_CHUNK * 2) {
+    _schedulePinkChunk(audio.ctx, audio.noiseFilter, audio.noiseBufA, audio.noiseBufB);
+  }
+}
+
+/* ── MEDIASESSION — tells Android this is a music player; audio survives screen-off ── */
+function setupMediaSession() {
+  if (!('mediaSession' in navigator)) return;
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: 'Unified State Studio',
+      artist: state.currentPreset + ' · ' + (presets[state.currentPreset]?.focus || 'Monroe Focus'),
+      album: 'Private Session'
+    });
+    navigator.mediaSession.setActionHandler('play',  () => startOrResume());
+    navigator.mediaSession.setActionHandler('pause', () => pauseSession());
+    navigator.mediaSession.setActionHandler('stop',  () => stopSession());
+    navigator.mediaSession.playbackState = 'playing';
+    log('MediaSession active — audio continues when screen is off.');
+  } catch(e) {}
+}
+function teardownMediaSession() {
+  if (!('mediaSession' in navigator)) return;
+  try {
+    navigator.mediaSession.playbackState = 'none';
+    ['play','pause','stop'].forEach(a => { try { navigator.mediaSession.setActionHandler(a, null); } catch(e) {} });
+  } catch(e) {}
+}
+
+/* ── NOSLEEP — tiny silent Audio element prevents Chrome from killing AudioContext ──
+   Chrome Android respects "audio is playing" even for a silent 8000Hz mono WAV.    ── */
+function _buildSilentWavUrl() {
+  const sr=8000,ch=1,bd=16,n=1,ba=ch*bd/8,br=sr*ba,ds=n*ba;
+  const buf=new ArrayBuffer(44+ds),v=new DataView(buf);let o=0;
+  const s=str=>{for(let i=0;i<str.length;i++)v.setUint8(o++,str.charCodeAt(i));};
+  s('RIFF');v.setUint32(o,36+ds,true);o+=4;s('WAVE');s('fmt ');
+  v.setUint32(o,16,true);o+=4;v.setUint16(o,1,true);o+=2;v.setUint16(o,ch,true);o+=2;
+  v.setUint32(o,sr,true);o+=4;v.setUint32(o,br,true);o+=4;
+  v.setUint16(o,ba,true);o+=2;v.setUint16(o,bd,true);o+=2;
+  s('data');v.setUint32(o,ds,true);o+=4; // data bytes are 0 (silence)
+  return URL.createObjectURL(new Blob([buf],{type:'audio/wav'}));
+}
+function startKeepAlive() {
+  if (_keepAliveAudio) return;
+  try {
+    _keepAliveAudio = new Audio(_buildSilentWavUrl());
+    _keepAliveAudio.loop = true;
+    _keepAliveAudio.volume = 0.001;
+    _keepAliveAudio.play().catch(() => {});
+  } catch(e) {}
+}
+function stopKeepAlive() {
+  if (!_keepAliveAudio) return;
+  try { _keepAliveAudio.pause(); } catch(e) {}
+  _keepAliveAudio = null;
+}
+
+/* ── VISIBILITY HANDLER v5.4: NO SUSPEND — audio continues when page hidden ──
+   We removed ctx.suspend(). Audio plays through background/screen-off.
+   On return: ensure context is running, top up lookahead.              ── */
+document.addEventListener('visibilitychange', () => {
+  if (!audio) return;
+  if (!document.hidden) {
+    // Page became visible — ensure ctx running, top up pre-scheduled audio
+    audio.ctx.resume().then(() => {
+      state.lastTick = Date.now();
+      lastFrameTime = null;
+      if (state.playing && !state.paused) {
+        _rescheduleLookahead();
+        log('Page visible — lookahead topped up.');
+      }
+    }).catch(() => {});
+  }
+  // DO NOT suspend on hide — audio continues playing
 });
+
+/* ── PERIODIC CONTEXT POLL: backup auto-resume if browser force-suspends ── */
+setInterval(() => {
+  if (!audio || !state.playing || state.paused) return;
+  if (audio.ctx.state === 'suspended') {
+    audio.ctx.resume().catch(() => {});
+  }
+}, 3000);
+
+/* ── Intro / Outro sequences ── */
+function playIntroSequence(ctx, master, onComplete) {
+  if (!ctx) { if (onComplete) onComplete(); return; }
+  const freqs=[396,528,639], now=ctx.currentTime+0.15;
+  freqs.forEach((freq,i)=>{
+    const osc=ctx.createOscillator(),env=ctx.createGain();osc.type='sine';osc.frequency.value=freq;
+    env.gain.setValueAtTime(0.0001,now+i*0.55);env.gain.linearRampToValueAtTime(0.14,now+i*0.55+0.04);
+    env.gain.exponentialRampToValueAtTime(0.0001,now+i*0.55+0.42);
+    osc.connect(env);env.connect(master);osc.start(now+i*0.55);osc.stop(now+i*0.55+0.5);
+  });
+  if (onComplete) setTimeout(onComplete, (freqs.length*0.55+0.5)*1000);
+}
+function playOutroSequence(ctx, master) {
+  if (!ctx) return;
+  const freqs=[639,528,396], now=ctx.currentTime+0.1;
+  freqs.forEach((freq,i)=>{
+    const osc=ctx.createOscillator(),env=ctx.createGain();osc.type='sine';osc.frequency.value=freq;
+    env.gain.setValueAtTime(0.0001,now+i*0.6);env.gain.linearRampToValueAtTime(0.12,now+i*0.6+0.04);
+    env.gain.exponentialRampToValueAtTime(0.0001,now+i*0.6+0.5);
+    osc.connect(env);env.connect(master);osc.start(now+i*0.6);osc.stop(now+i*0.6+0.6);
+  });
+}
 
 /* ══════════════════════════════════════════════
    SESSION
@@ -976,9 +1161,9 @@ function fmt(s){s=Math.max(0,Math.floor(s));return`${String(Math.floor(s/60)).pa
 
 function startSession(){
   if(state.mode==='intermediate'&&state.queue.length){const item=state.queue[state.queueIndex];if(item)applyPreset(item.name);}
-  state.sessionMinutes=currentSessionMinutes(); state.playing=true; state.paused=false;
-  state.elapsedSeconds=0; state.phaseElapsed=0; state.currentPhase=0;
-  state.cycleElapsed=0; state.transitioning=false; state.transitionProgress=0;
+  state.sessionMinutes=currentSessionMinutes();state.playing=true;state.paused=false;
+  state.elapsedSeconds=0;state.phaseElapsed=0;state.currentPhase=0;
+  state.cycleElapsed=0;state.transitioning=false;state.transitionProgress=0;
   state.lastTick=Date.now();
   startAudio();
   if(audio){playIntroSequence(audio.ctx,audio.master,()=>{if(audio&&state.playing)startHeartbeat();});updateAudioParams(false);}
@@ -986,7 +1171,7 @@ function startSession(){
   if(state.timerHandle)clearInterval(state.timerHandle);
   state.timerHandle=setInterval(tickSession,250);
   renderPhaseRail();updateTimeDisplays();syncBadges();
-  log('Session started. Intro sequence playing…');
+  log('Session started.');
 }
 function startOrResume(){if(!state.playing){startSession();return;}syncBadges();}
 function pauseSession(){
@@ -1030,7 +1215,7 @@ function updateTimeDisplays(){
 }
 
 /* ══════════════════════════════════════════════
-   PRESET & VISUAL MODE
+   PRESET & VISUAL
 ══════════════════════════════════════════════ */
 function applyPreset(name){
   state.currentPreset=name;const p=presets[name];if(!p)return;
@@ -1041,20 +1226,15 @@ function applyPreset(name){
   setVisMode(p.visual);updateLabels();syncBadges();updateAudioParams(false);
   if(state.playing&&!state.paused)startHeartbeat();
   renderBasicPresets();
+  if('mediaSession' in navigator&&state.playing)setupMediaSession();
   log(`Preset: ${name} | Focus: ${p.focus} | HB: ${state.heartbeatBpm} BPM`);
 }
-function setVisMode(mode){
-  state.visualMode=mode;els.visMode.value=mode;els.intVisMode.value=mode;
-}
+function setVisMode(mode){state.visualMode=mode;els.visMode.value=mode;els.intVisMode.value=mode;}
 function getNextMode(cur){return VISUAL_MODES[(VISUAL_MODES.indexOf(cur)+1)%VISUAL_MODES.length];}
 function cycleVisual(dir=1){const idx=VISUAL_MODES.indexOf(state.visualMode);setVisMode(VISUAL_MODES[(idx+dir+VISUAL_MODES.length)%VISUAL_MODES.length]);updateLabels();syncBadges();log(`Visual: ${labelMode(state.visualMode)}`);}
-
-/* ── Labels ── */
 function labelMode(v){return{orbit:'Orbit Field',flower:'Flower of Life',metatron:'Metatron Grid',fractal:'Fractal Spiral',mandala:'Mandala Bloom',starfield:'Starfield Drift',tunnel:'Quantum Tunnel',plasma:'Neon Plasma'}[v]||v;}
 function labelSeq(v){return{manual:'Manual',full:'Full Focus path',gateway:'Gateway path'}[v]||v;}
 function orbitLabel(v){const n=Number(v);if(n<0.2)return'Glacial';if(n<0.5)return'Very slow';if(n<0.9)return'Slow';if(n<1.5)return'Medium';if(n<2.2)return'Fast';return'Rapid';}
-
-/* ── Orbit speed (FIX #2: update in-graph LFO) ── */
 function setOrbitSpeed(v){
   state.noiseOrbitSpeed=Number(v);
   els.noiseOrbitSpd.value=v;els.noiseOrbitSpdAdv.value=v;
@@ -1065,116 +1245,38 @@ function setOrbitSpeed(v){
 /* ══════════════════════════════════════════════
    AUTO-CYCLE
 ══════════════════════════════════════════════ */
-function toggleCycle(){
-  state.autoCycle=!state.autoCycle;
-  if(state.autoCycle){state.cycleElapsed=0;state.transitioning=false;state.transitionProgress=0;}
-  updateCycleUI();syncBadges();
-  log(`Auto-cycle: ${state.autoCycle?'ON — '+state.cycleMinutes+' min':'OFF'}`);
-}
-function setCycleDuration(mins){
-  state.cycleMinutes=mins;state.cycleElapsed=0;state.transitioning=false;
-  document.querySelectorAll('.cycle-dur-btn').forEach(b=>b.classList.toggle('active',Number(b.dataset.dur)===mins));
-  updateCycleUI();
-}
+function toggleCycle(){state.autoCycle=!state.autoCycle;if(state.autoCycle){state.cycleElapsed=0;state.transitioning=false;state.transitionProgress=0;}updateCycleUI();syncBadges();log(`Auto-cycle: ${state.autoCycle?'ON — '+state.cycleMinutes+' min':'OFF'}`);}
+function setCycleDuration(mins){state.cycleMinutes=mins;state.cycleElapsed=0;state.transitioning=false;document.querySelectorAll('.cycle-dur-btn').forEach(b=>b.classList.toggle('active',Number(b.dataset.dur)===mins));updateCycleUI();}
 function updateCycleUI(){
   const on=state.autoCycle;
   const label=on?(state.transitioning?'⟳ Transitioning':'⟳ Auto-cycle: ON'):'⟳ Auto-cycle: OFF';
   els.cycleToggleBtn.textContent=label;els.cycleToggleBtnAdv.textContent=label;
-  els.cycleToggleBtn.className=`cycle-btn${on?' active':''}`;
-  els.cycleToggleBtnAdv.className=els.cycleToggleBtn.className;
-  if(on&&!state.transitioning){
-    const rem=state.cycleMinutes*60-state.cycleElapsed;
-    if(els.cycleStatusText)els.cycleStatusText.textContent=`Next: ${labelMode(getNextMode(state.visualMode))} in ${fmt(rem)}`;
-    if(els.cycleTimeLeft)els.cycleTimeLeft.textContent=fmt(rem);
-    if(els.cycleMeter)els.cycleMeter.style.width=Math.min(100,(state.cycleElapsed/(state.cycleMinutes*60))*100)+'%';
-  }else if(!on){
-    if(els.cycleStatusText)els.cycleStatusText.textContent='Stopped — select a duration and toggle on';
-    if(els.cycleTimeLeft)els.cycleTimeLeft.textContent='—';
-    if(els.cycleMeter)els.cycleMeter.style.width='0%';
-  }
+  els.cycleToggleBtn.className=`cycle-btn${on?' active':''}`;els.cycleToggleBtnAdv.className=els.cycleToggleBtn.className;
+  if(on&&!state.transitioning){const rem=state.cycleMinutes*60-state.cycleElapsed;if(els.cycleStatusText)els.cycleStatusText.textContent=`Next: ${labelMode(getNextMode(state.visualMode))} in ${fmt(rem)}`;if(els.cycleTimeLeft)els.cycleTimeLeft.textContent=fmt(rem);if(els.cycleMeter)els.cycleMeter.style.width=Math.min(100,(state.cycleElapsed/(state.cycleMinutes*60))*100)+'%';}else if(!on){if(els.cycleStatusText)els.cycleStatusText.textContent='Stopped — select a duration and toggle on';if(els.cycleTimeLeft)els.cycleTimeLeft.textContent='—';if(els.cycleMeter)els.cycleMeter.style.width='0%';}
 }
 function updateCycle(dt){
   if(!state.autoCycle||!state.playing||state.paused)return;
-  if(!state.transitioning){
-    state.cycleElapsed+=dt;
-    if(state.cycleElapsed>=state.cycleMinutes*60){
-      state.transitioning=true;state.transitionProgress=0;
-      state.transitionFrom=state.visualMode;state.transitionTo=getNextMode(state.visualMode);
-      state.cycleElapsed=0;log(`Visual: ${labelMode(state.transitionFrom)} → ${labelMode(state.transitionTo)}`);
-    }
-  }else{
-    state.transitionProgress+=dt/state.transitionDuration;
-    if(state.transitionProgress>=1){setVisMode(state.transitionTo);syncBadges();updateLabels();state.transitioning=false;state.transitionProgress=0;state.transitionFrom=null;state.transitionTo=null;}
-  }
+  if(!state.transitioning){state.cycleElapsed+=dt;if(state.cycleElapsed>=state.cycleMinutes*60){state.transitioning=true;state.transitionProgress=0;state.transitionFrom=state.visualMode;state.transitionTo=getNextMode(state.visualMode);state.cycleElapsed=0;log(`Visual: ${labelMode(state.transitionFrom)} → ${labelMode(state.transitionTo)}`);}}
+  else{state.transitionProgress+=dt/state.transitionDuration;if(state.transitionProgress>=1){setVisMode(state.transitionTo);syncBadges();updateLabels();state.transitioning=false;state.transitionProgress=0;state.transitionFrom=null;state.transitionTo=null;}}
   updateCycleUI();
 }
 function easeInOutCubic(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
 
 /* ══════════════════════════════════════════════
-   FIX #4: RESET FUNCTIONS
+   RESET FUNCTIONS
 ══════════════════════════════════════════════ */
-function resetBasic(){
-  els.basicDuration.value=DEFAULTS.basicDuration;
-  els.basicIntensity.value=DEFAULTS.basicIntensity;
-  els.basicVisToggle.value=DEFAULTS.basicVisToggle;
-  state.visualToggle=DEFAULTS.basicVisToggle;
-  state.visualIntensity=DEFAULTS.basicIntensity;
-  updateLabels();syncBadges();log('Basic settings reset to defaults.');
-}
-function resetIntermediate(){
-  els.transitionSecs.value=DEFAULTS.transitionSecs;
-  els.masterVol.value=DEFAULTS.masterVol;
-  els.animSpeed.value=DEFAULTS.animSpeed;
-  els.intDuration.value=DEFAULTS.intDuration;
-  state.intDefaultMinutes=DEFAULTS.intDuration;
-  setOrbitSpeed(DEFAULTS.noiseOrbitSpeed);
-  updateLabels();updateAudioParams(false);log('Intermediate settings reset to defaults.');
-}
-function resetAdvanced(){
-  els.baseFreq.value=DEFAULTS.baseFreq;
-  els.beatFreq.value=DEFAULTS.beatFreq;
-  els.toneGain.value=DEFAULTS.toneGain;
-  els.noiseGain.value=DEFAULTS.noiseGain;
-  els.noiseCutoff.value=DEFAULTS.noiseCutoff;
-  els.cueGain.value=DEFAULTS.cueGain;
-  updateLabels();updateAudioParams(false);log('Audio engine reset to defaults.');
-}
-function resetMonroe(){
-  state.heartbeatBpm=DEFAULTS.heartbeatBpm;els.heartbeatBpm.value=DEFAULTS.heartbeatBpm;
-  state.heartbeatGain=DEFAULTS.heartbeatGain;els.heartbeatGain.value=DEFAULTS.heartbeatGain;
-  state.hplusGain=DEFAULTS.hplusGain;els.hplusGain.value=DEFAULTS.hplusGain;
-  setOrbitSpeed(DEFAULTS.noiseOrbitSpeed);
-  if(audio){audio.hpMaster.gain.setValueAtTime(state.hplusGain,audio.ctx.currentTime);audio.hpMix.gain.setValueAtTime(state.hplusGain*0.4,audio.ctx.currentTime);}
-  updateLabels();syncBadges();
-  if(state.playing&&!state.paused)startHeartbeat();
-  log('Monroe parameters reset to defaults.');
-}
+function resetBasic(){els.basicDuration.value=DEFAULTS.basicDuration;els.basicIntensity.value=DEFAULTS.basicIntensity;els.basicVisToggle.value=DEFAULTS.basicVisToggle;state.visualToggle=DEFAULTS.basicVisToggle;state.visualIntensity=DEFAULTS.basicIntensity;updateLabels();syncBadges();log('Basic reset.');}
+function resetIntermediate(){els.transitionSecs.value=DEFAULTS.transitionSecs;els.masterVol.value=DEFAULTS.masterVol;els.animSpeed.value=DEFAULTS.animSpeed;els.intDuration.value=DEFAULTS.intDuration;state.intDefaultMinutes=DEFAULTS.intDuration;setOrbitSpeed(DEFAULTS.noiseOrbitSpeed);updateLabels();updateAudioParams(false);log('Intermediate reset.');}
+function resetAdvanced(){els.baseFreq.value=DEFAULTS.baseFreq;els.beatFreq.value=DEFAULTS.beatFreq;els.toneGain.value=DEFAULTS.toneGain;els.noiseGain.value=DEFAULTS.noiseGain;els.noiseCutoff.value=DEFAULTS.noiseCutoff;els.cueGain.value=DEFAULTS.cueGain;updateLabels();updateAudioParams(false);log('Audio engine reset.');}
+function resetMonroe(){state.heartbeatBpm=DEFAULTS.heartbeatBpm;els.heartbeatBpm.value=DEFAULTS.heartbeatBpm;state.heartbeatGain=DEFAULTS.heartbeatGain;els.heartbeatGain.value=DEFAULTS.heartbeatGain;state.hplusGain=DEFAULTS.hplusGain;els.hplusGain.value=DEFAULTS.hplusGain;setOrbitSpeed(DEFAULTS.noiseOrbitSpeed);if(audio){audio.hpMaster.gain.setValueAtTime(state.hplusGain,audio.ctx.currentTime);audio.hpMix.gain.setValueAtTime(state.hplusGain*0.4,audio.ctx.currentTime);}updateLabels();syncBadges();if(state.playing&&!state.paused)startHeartbeat();log('Monroe params reset.');}
 
 /* ══════════════════════════════════════════════
-   FIX #7: MANTRA CARD
+   MANTRA CARD
 ══════════════════════════════════════════════ */
-function loadMantra(){
-  return localStorage.getItem('uss-mantra-v5')||DEFAULT_MANTRA;
-}
-function saveMantra(){
-  const text=(els.mantraEditArea.value||'').trim()||DEFAULT_MANTRA;
-  localStorage.setItem('uss-mantra-v5',text);
-  els.mantraDisplay.textContent=text;
-  els.mantraEditWrapper.style.display='none';
-  els.mantraEditBtn.textContent='Edit';
-  log('Affirmation saved.');
-}
-function toggleMantraEdit(){
-  const editing=els.mantraEditWrapper.style.display!=='none';
-  if(editing){els.mantraEditWrapper.style.display='none';els.mantraEditBtn.textContent='Edit';}
-  else{els.mantraEditArea.value=loadMantra();els.mantraEditWrapper.style.display='block';els.mantraEditBtn.textContent='Cancel';}
-}
-function resetMantra(){
-  localStorage.removeItem('uss-mantra-v5');
-  els.mantraDisplay.textContent=DEFAULT_MANTRA;
-  els.mantraEditArea.value=DEFAULT_MANTRA;
-  log('Affirmation reset to default.');
-}
+function loadMantra(){return localStorage.getItem('uss-mantra-v5')||DEFAULT_MANTRA;}
+function saveMantra(){const text=(els.mantraEditArea.value||'').trim()||DEFAULT_MANTRA;localStorage.setItem('uss-mantra-v5',text);els.mantraDisplay.textContent=text;els.mantraEditWrapper.style.display='none';els.mantraEditBtn.textContent='Edit';log('Affirmation saved.');}
+function toggleMantraEdit(){const editing=els.mantraEditWrapper.style.display!=='none';if(editing){els.mantraEditWrapper.style.display='none';els.mantraEditBtn.textContent='Edit';}else{els.mantraEditArea.value=loadMantra();els.mantraEditWrapper.style.display='block';els.mantraEditBtn.textContent='Cancel';}}
+function resetMantra(){localStorage.removeItem('uss-mantra-v5');els.mantraDisplay.textContent=DEFAULT_MANTRA;els.mantraEditArea.value=DEFAULT_MANTRA;log('Affirmation reset.');}
 
 /* ══════════════════════════════════════════════
    SYNC / RENDER
@@ -1232,53 +1334,16 @@ function updateLabels(){
   const durSec=Number(els.exportDuration.value);
   els.exportDurVal.textContent=durSec<60?`${durSec} s`:`${durSec/60} min`;
 }
-function renderTabs(){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===state.mode));
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  $(`section-${state.mode}`).classList.add('active');
-  syncBadges();
-}
-function renderPhaseRail(){
-  els.phaseList.innerHTML='';
-  phases.forEach((phase,i)=>{
-    const div=document.createElement('div');div.className='phase-item'+(i===state.currentPhase?' active':'');
-    div.innerHTML=`<div class="p-num">${i+1}</div><div><div class="p-name">${phase.name}</div><div class="p-prompt">${phase.prompt}</div></div><div class="p-dot"></div>`;
-    els.phaseList.appendChild(div);
-  });
-  els.phaseIdxLabel.textContent=`${state.currentPhase+1} / ${phases.length}`;
-  els.currentPhaseLabel.textContent=phases[state.currentPhase].name;
-  syncBadges();
-}
-function renderBasicPresets(){
-  els.basicPresetBtns.innerHTML='';
-  BASIC_PRESETS.forEach(name=>{
-    const btn=document.createElement('button');
-    btn.className='preset-btn'+(name===state.currentPreset?' preset-active':'');
-    btn.innerHTML=`<div class="pb-name">${name}</div><div class="pb-desc">${presets[name].desc}</div>`;
-    btn.addEventListener('click',()=>applyPreset(name));
-    els.basicPresetBtns.appendChild(btn);
-  });
-}
-function renderCatalogue(){
-  els.catalogue.innerHTML='';
-  const dur=Number(els.intDuration.value);
-  ALL_PRESETS.forEach(name=>{
-    const item=document.createElement('div');item.className='cat-item';
-    item.innerHTML=`<div><div class="cat-name">${name}</div><div class="cat-desc">${presets[name].desc}</div><div class="dur-row">${[10,20,30,45].map(m=>`<button class="secondary dur-btn" data-add="${name}" data-mins="${m}">${m}m</button>`).join('')}</div></div><button class="primary" data-add="${name}" data-mins="${dur}" style="align-self:center;padding:6px 10px;font-size:0.72rem;">+ Add</button>`;
-    els.catalogue.appendChild(item);
-  });
-}
+function renderTabs(){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===state.mode));document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(`section-${state.mode}`).classList.add('active');syncBadges();}
+function renderPhaseRail(){els.phaseList.innerHTML='';phases.forEach((phase,i)=>{const div=document.createElement('div');div.className='phase-item'+(i===state.currentPhase?' active':'');div.innerHTML=`<div class="p-num">${i+1}</div><div><div class="p-name">${phase.name}</div><div class="p-prompt">${phase.prompt}</div></div><div class="p-dot"></div>`;els.phaseList.appendChild(div);});els.phaseIdxLabel.textContent=`${state.currentPhase+1} / ${phases.length}`;els.currentPhaseLabel.textContent=phases[state.currentPhase].name;syncBadges();}
+function renderBasicPresets(){els.basicPresetBtns.innerHTML='';BASIC_PRESETS.forEach(name=>{const btn=document.createElement('button');btn.className='preset-btn'+(name===state.currentPreset?' preset-active':'');btn.innerHTML=`<div class="pb-name">${name}</div><div class="pb-desc">${presets[name].desc}</div>`;btn.addEventListener('click',()=>applyPreset(name));els.basicPresetBtns.appendChild(btn);});}
+function renderCatalogue(){els.catalogue.innerHTML='';const dur=Number(els.intDuration.value);ALL_PRESETS.forEach(name=>{const item=document.createElement('div');item.className='cat-item';item.innerHTML=`<div><div class="cat-name">${name}</div><div class="cat-desc">${presets[name].desc}</div><div class="dur-row">${[10,20,30,45].map(m=>`<button class="secondary dur-btn" data-add="${name}" data-mins="${m}">${m}m</button>`).join('')}</div></div><button class="primary" data-add="${name}" data-mins="${dur}" style="align-self:center;padding:6px 10px;font-size:0.72rem;">+ Add</button>`;els.catalogue.appendChild(item);});}
 function renderQueue(){
   if(!state.queue.length){els.queueList.innerHTML='<div class="queue-item"><div class="tiny">No sessions queued.</div></div>';els.queueMeta.textContent='0 sessions';els.queueStatusLabel.textContent='—';return;}
   els.queueMeta.textContent=`${state.queue.length} session${state.queue.length>1?'s':''} · ${state.queue.reduce((a,q)=>a+q.durationMinutes,0)} min`;
   els.queueStatusLabel.textContent=state.playing?`${state.queueIndex+1} / ${state.queue.length}`:`0 / ${state.queue.length}`;
   els.queueList.innerHTML='';
-  state.queue.forEach((item,i)=>{
-    const isNow=state.playing&&i===state.queueIndex;
-    const div=document.createElement('div');div.className='queue-item'+(isNow?' now':'');
-    div.innerHTML=`<div class="qi-row"><div><span class="qi-name">${item.name}</span>${isNow?'<span class="qi-now">▶ NOW</span>':''}<div class="qi-dur">${item.durationMinutes} min</div></div><div class="qi-acts"><button class="secondary" data-action="up" data-id="${item.id}">↑</button><button class="secondary" data-action="down" data-id="${item.id}">↓</button><button class="danger-btn" data-action="remove" data-id="${item.id}">✕</button></div></div>`;
-    els.queueList.appendChild(div);
-  });
+  state.queue.forEach((item,i)=>{const isNow=state.playing&&i===state.queueIndex;const div=document.createElement('div');div.className='queue-item'+(isNow?' now':'');div.innerHTML=`<div class="qi-row"><div><span class="qi-name">${item.name}</span>${isNow?'<span class="qi-now">▶ NOW</span>':''}<div class="qi-dur">${item.durationMinutes} min</div></div><div class="qi-acts"><button class="secondary" data-action="up" data-id="${item.id}">↑</button><button class="secondary" data-action="down" data-id="${item.id}">↓</button><button class="danger-btn" data-action="remove" data-id="${item.id}">✕</button></div></div>`;els.queueList.appendChild(div);});
 }
 function addToQueue(name,mins){state.queue.push({id:Date.now()+Math.random(),name,durationMinutes:mins});persistQueue();renderQueue();log(`Queued: ${name} × ${mins} min`);}
 function moveQueue(id,dir){const idx=state.queue.findIndex(x=>String(x.id)===String(id));if(idx<0)return;const sw=dir==='up'?idx-1:idx+1;if(sw<0||sw>=state.queue.length)return;[state.queue[idx],state.queue[sw]]=[state.queue[sw],state.queue[idx]];persistQueue();renderQueue();}
@@ -1295,25 +1360,20 @@ function resizeCanvases(){const dpr=Math.max(1,window.devicePixelRatio||1);[els.
 
 /* ══════════════════════════════════════════════
    ANIMATION LOOP
-   FIX #2: no pan animation here — it's in audio graph
 ══════════════════════════════════════════════ */
 function animateLoop(timestamp){
-  const dt=lastFrameTime?(timestamp-lastFrameTime)/1000:0.016;
-  lastFrameTime=timestamp;
+  const dt=lastFrameTime?(timestamp-lastFrameTime)/1000:0.016;lastFrameTime=timestamp;
   visualT+=0.012*(state.playing&&!state.paused?1:0.3);
-  // NOTE: noisePan is driven by panLFO in audio graph — no RAF pan update needed
+  // Pan driven by audio-graph LFO — no update needed here
   updateCycle(dt);
   if(state.mode==='advanced')renderFrame(els.visualCanvas.getContext('2d'),els.visualCanvas,state.visualIntensity,false);
   if(state.visualOverlay)renderFrame(els.overlayCanvas.getContext('2d'),els.overlayCanvas,state.visualIntensity*1.05,true);
   requestAnimationFrame(animateLoop);
 }
-
 function renderFrame(ctx,canvas,intensity,overlay){
-  const dpr=Math.max(1,window.devicePixelRatio||1);
-  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);
+  const dpr=Math.max(1,window.devicePixelRatio||1);ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);
   if(state.transitioning){
-    const ease=easeInOutCubic(Math.min(1,state.transitionProgress));
-    const bloom=Math.sin(state.transitionProgress*Math.PI);
+    const ease=easeInOutCubic(Math.min(1,state.transitionProgress));const bloom=Math.sin(state.transitionProgress*Math.PI);
     ctx.globalAlpha=Math.max(0,1-ease);drawVisual(ctx,canvas,state.transitionFrom,intensity,overlay);
     ctx.globalAlpha=Math.max(0,ease);drawVisual(ctx,canvas,state.transitionTo,intensity,overlay);
     if(bloom>0.05){ctx.globalAlpha=1;ctx.save();ctx.scale(dpr,dpr);const w=canvas.width/dpr,h=canvas.height/dpr;const rg=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,Math.max(w,h)*0.65);rg.addColorStop(0,`rgba(200,230,255,${bloom*0.2})`);rg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=rg;ctx.fillRect(0,0,w,h);ctx.restore();}
@@ -1322,7 +1382,7 @@ function renderFrame(ctx,canvas,intensity,overlay){
 }
 
 /* ══════════════════════════════════════════════
-   SPECTRAL VISUALISER (full spectrum, hue-rotating)
+   SPECTRAL VISUALISER (full-spectrum, hue-rotating)
 ══════════════════════════════════════════════ */
 function drawVisual(ctx,canvas,mode,intensity,overlay){
   const dpr=Math.max(1,window.devicePixelRatio||1);
@@ -1344,25 +1404,21 @@ function drawVisual(ctx,canvas,mode,intensity,overlay){
   ctx.save();ctx.translate(cx,cy);ctx.globalCompositeOperation='lighter';
   const glowDot=(x,y,r,hBase,alpha)=>{const g=ctx.createRadialGradient(x,y,0,x,y,r*4.8);g.addColorStop(0,hs(H(hBase),100,92,alpha));g.addColorStop(0.25,hs(H(hBase+15),100,78,alpha*0.7));g.addColorStop(0.6,hs(H(hBase+30),100,60,alpha*0.35));g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*4.8,0,Math.PI*2);ctx.fill();ctx.fillStyle=hs(H(hBase),100,95,alpha*0.95);ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();};
   const ring=(r,hBase,alpha,wobble=0,width=lw)=>{ctx.beginPath();for(let i=0;i<=220;i++){const a=i/220*Math.PI*2,rr=r+Math.sin(a*6+t*1.2)*wobble+Math.cos(a*3-t*0.8)*wobble*0.4;ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);}ctx.closePath();ctx.strokeStyle=c(hBase,alpha);ctx.lineWidth=width;ctx.stroke();};
-  ctx.save();ctx.rotate(t*0.04*motion);for(let i=0;i<3;i++){ctx.strokeStyle=c(i*60,0.04+i*0.015);ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(-w*0.44,0);ctx.lineTo(w*0.44,0);ctx.stroke();ctx.rotate(Math.PI/3);}ctx.restore();
+  ctx.save();ctx.rotate(t*0.04*motion);for(let i=0;i<3;i++){ctx.strokeStyle=c(i*60,0.04);ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(-w*0.44,0);ctx.lineTo(w*0.44,0);ctx.stroke();ctx.rotate(Math.PI/3);}ctx.restore();
 
   if(mode==='orbit'){
     const maxR=Math.min(w,h)*0.38*scale;
     for(let i=0;i<12;i++)ring(28+i*(maxR/12),i*30,0.06+i*0.022,1.4+i*0.28*beatWave,lw*0.85);
     for(let arm=0;arm<24;arm++){const armHue=arm*15,a=t*(0.38+state.panSpeed*18)+arm*(Math.PI*2/24),r=44+(arm%6)*18+Math.sin(t*1.3+arm)*16+beatWave*38*scale,x=Math.cos(a)*r,y=Math.sin(a)*(r*0.76);glowDot(x,y,2.4+energy*1.5,armHue,0.26+(arm%4)*0.06);ctx.strokeStyle=c(armHue+30,0.09);ctx.lineWidth=0.9;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(x*0.52,y*0.52);ctx.stroke();}
     ring(maxR*1.08,180,0.07,3+beatWave*5,lw*0.7);
-    const coreR=18+beatWave*6+energy*13,cg=ctx.createRadialGradient(0,0,0,0,0,coreR*5);
-    cg.addColorStop(0,'rgba(255,255,255,0.4)');cg.addColorStop(0.15,hs(H(50),100,90,0.32));cg.addColorStop(0.45,hs(H(190),100,70,0.18));cg.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,coreR*5,0,Math.PI*2);ctx.fill();glowDot(0,0,coreR,50,0.36);
+    const coreR=18+beatWave*6+energy*13,cg=ctx.createRadialGradient(0,0,0,0,0,coreR*5);cg.addColorStop(0,'rgba(255,255,255,0.4)');cg.addColorStop(0.15,hs(H(50),100,90,0.32));cg.addColorStop(0.45,hs(H(190),100,70,0.18));cg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,coreR*5,0,Math.PI*2);ctx.fill();glowDot(0,0,coreR,50,0.36);
   }else if(mode==='flower'){
     const petalR=Math.min(w,h)*0.115*scale;
-    [[0,90,180,270]].flat().forEach((bh,layer)=>{const rr=36+layer*36*scale;ctx.save();ctx.rotate(t*0.12*(layer+1)*motion);for(let i=0;i<6;i++){const ph=bh+i*60,a=i*Math.PI/3,x=Math.cos(a)*rr,y=Math.sin(a)*rr;ctx.strokeStyle=c(ph,0.22+layer*0.04);ctx.lineWidth=lw*(1+layer*0.08);ctx.beginPath();ctx.arc(x,y,petalR+layer*9+beatWave*3.5,0,Math.PI*2);ctx.stroke();glowDot(x,y,2.0+layer*0.35,ph,0.2+layer*0.04);}ctx.restore();});
+    [0,90,180,270].forEach((bh,layer)=>{const rr=36+layer*36*scale;ctx.save();ctx.rotate(t*0.12*(layer+1)*motion);for(let i=0;i<6;i++){const ph=bh+i*60,a=i*Math.PI/3,x=Math.cos(a)*rr,y=Math.sin(a)*rr;ctx.strokeStyle=c(ph,0.22+layer*0.04);ctx.lineWidth=lw*(1+layer*0.08);ctx.beginPath();ctx.arc(x,y,petalR+layer*9+beatWave*3.5,0,Math.PI*2);ctx.stroke();glowDot(x,y,2.0+layer*0.35,ph,0.2+layer*0.04);}ctx.restore();});
     for(let i=0;i<12;i++){const a=i*Math.PI/6+t*0.08;ctx.strokeStyle=c(i*30,0.1);ctx.lineWidth=0.9;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*155*scale,Math.sin(a)*155*scale);ctx.stroke();}
     glowDot(0,0,16+energy*5,50,0.28);
   }else if(mode==='metatron'){
-    const pts=[];
-    for(let ri=1;ri<=3;ri++){const rr=ri*50*scale;for(let i=0;i<6;i++){const a=i*Math.PI/3+t*0.05*ri;pts.push([Math.cos(a)*rr,Math.sin(a)*rr]);}}
-    pts.push([0,0]);
+    const pts=[];for(let ri=1;ri<=3;ri++){const rr=ri*50*scale;for(let i=0;i<6;i++){const a=i*Math.PI/3+t*0.05*ri;pts.push([Math.cos(a)*rr,Math.sin(a)*rr]);}}pts.push([0,0]);
     for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const d=Math.hypot(pts[i][0]-pts[j][0],pts[i][1]-pts[j][1]);if(d<240*scale){ctx.strokeStyle=c(i*17+j*11,0.07+Math.max(0,0.12-d/2200));ctx.lineWidth=0.82;ctx.beginPath();ctx.moveTo(pts[i][0],pts[i][1]);ctx.lineTo(pts[j][0],pts[j][1]);ctx.stroke();}}
     pts.forEach((p,i)=>{ring(Math.hypot(p[0],p[1])*0.12+7,i*25+180,0.07,0.8,0.72);glowDot(p[0],p[1],2.5+(i%3)*0.7,i*25,0.28);});
     for(let ri=0;ri<4;ri++)ring(40+ri*38*scale,ri*90,0.08,1.2,lw*0.8);
@@ -1371,123 +1427,34 @@ function drawVisual(ctx,canvas,mode,intensity,overlay){
     for(let i=0;i<55;i++){const a=i*0.41+t*0.3,r=44+i*4.1*scale;glowDot(Math.cos(a)*r,Math.sin(a*1.07)*r*0.7,1.4+(i%5)*0.2,i*6.5,0.14);}
   }else if(mode==='mandala'){
     [[0,180],[90,270],[45,225],[135,315]].forEach(([hw,hc],layer)=>{ctx.save();ctx.rotate(t*0.14*(layer%2===0?1:-1)*motion);for(let i=0;i<12;i++){ctx.save();ctx.rotate(i*Math.PI/6);const ph=i%2===0?hw+layer*10:hc+layer*8;ctx.strokeStyle=c(ph,0.12+layer*0.035);ctx.lineWidth=lw;ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(26*scale,-38*scale,90*scale,17*scale,0,(115+layer*28)*scale);ctx.stroke();const pg=ctx.createLinearGradient(0,0,0,(115+layer*28)*scale);pg.addColorStop(0,hs(H(ph),90,70,0.06));pg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=pg;ctx.fill();ctx.restore();}ctx.restore();});
-    for(let i=0;i<6;i++)ring(24+i*26*scale,i%2===0?0:180,0.1+i*0.025,0.9+i*0.2);
-    glowDot(0,0,12+beatWave*5,50,0.32);
+    for(let i=0;i<6;i++)ring(24+i*26*scale,i%2===0?0:180,0.1+i*0.025,0.9+i*0.2);glowDot(0,0,12+beatWave*5,50,0.32);
   }else if(mode==='starfield'){
     const depth=overlay?960:830;
     [[300,180,60]].flat().forEach((nh,ni)=>{const nx=Math.sin(ni*2.1+t*0.06)*w*0.3,ny=Math.cos(ni*1.7+t*0.04)*h*0.25;const ng2=ctx.createRadialGradient(nx,ny,0,nx,ny,Math.min(w,h)*0.35);ng2.addColorStop(0,hs(H(nh),90,55,0.06));ng2.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=ng2;ctx.beginPath();ctx.arc(nx,ny,Math.min(w,h)*0.35,0,Math.PI*2);ctx.fill();});
     for(let i=0;i<300;i++){const seed=i*17.713,z=(i*29+(t*265*(0.35+state.panSpeed*12)))%depth,x=Math.sin(seed*1.37)*790,y=Math.cos(seed*1.11)*480,k=470/(z+70),px=x*k,py=y*k;const df=1-z/depth,size=Math.max(0.4,df*4.0*scale);const sh=df>0.5?(seed*7)%360:200+df*60;ctx.strokeStyle=hs(H(sh),100,80,0.05+df*0.3);ctx.lineWidth=size*0.7;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px*(1+size*0.07),py*(1+size*0.07));ctx.stroke();ctx.fillStyle=hs(H(sh),100,88,0.12+df*0.65);ctx.beginPath();ctx.arc(px,py,size,0,Math.PI*2);ctx.fill();}
     glowDot(0,0,14+energy*9,0,0.18);
   }else if(mode==='tunnel'){
-    ctx.save();ctx.scale(1,0.72);
-    for(let i=0;i<20;i++){const dp=((i/20)+(t*0.09*motion))%1,rr=22+Math.pow(dp,1.45)*Math.min(w,h)*0.56*scale,th=dp*340,alpha=0.05+(1-dp)*0.28;ring(rr,th,alpha,1.6+beatWave*3.5,0.9+(1-dp)*1.2);}
-    ctx.restore();
-    for(let i=0;i<16;i++){const a=i*Math.PI/8+t*0.18;ctx.strokeStyle=c(i*22.5,0.1);ctx.lineWidth=0.85;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*248*scale,Math.sin(a)*178*scale);ctx.stroke();}
-    glowDot(0,0,16+beatWave*9,0,0.3);
+    ctx.save();ctx.scale(1,0.72);for(let i=0;i<20;i++){const dp=((i/20)+(t*0.09*motion))%1,rr=22+Math.pow(dp,1.45)*Math.min(w,h)*0.56*scale,th=dp*340,alpha=0.05+(1-dp)*0.28;ring(rr,th,alpha,1.6+beatWave*3.5,0.9+(1-dp)*1.2);}ctx.restore();
+    for(let i=0;i<16;i++){const a=i*Math.PI/8+t*0.18;ctx.strokeStyle=c(i*22.5,0.1);ctx.lineWidth=0.85;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*248*scale,Math.sin(a)*178*scale);ctx.stroke();}glowDot(0,0,16+beatWave*9,0,0.3);
   }else if(mode==='plasma'){
     [0,180,270,55,215].forEach((ph,layer)=>{ctx.beginPath();for(let x=-w*0.5;x<=w*0.5;x+=5){const y=Math.sin(x*0.014+t*(0.9+layer*0.17))*(22+layer*9)+Math.cos(x*0.009-t*0.62+layer)*(18+beatWave*13)+Math.sin(x*0.026-t*1.45)*9;x===-w*0.5?ctx.moveTo(x,y+(layer-2)*50*scale):ctx.lineTo(x,y+(layer-2)*50*scale);}ctx.strokeStyle=c(ph,0.14+layer*0.035,78);ctx.lineWidth=lw*(1.05+layer*0.18);ctx.stroke();});
-    for(let i=0;i<45;i++){const a=i*Math.PI/22.5+t*0.22,r=42+Math.sin(t*0.88+i)*30+(i%6)*11;glowDot(Math.cos(a)*r*scale,Math.sin(a*1.3)*r*0.56*scale,1.8+(i%4)*0.5,i*8,0.16);}
-    glowDot(0,0,18+beatWave*8+energy*10,0,0.24);
+    for(let i=0;i<45;i++){const a=i*Math.PI/22.5+t*0.22,r=42+Math.sin(t*0.88+i)*30+(i%6)*11;glowDot(Math.cos(a)*r*scale,Math.sin(a*1.3)*r*0.56*scale,1.8+(i%4)*0.5,i*8,0.16);}glowDot(0,0,18+beatWave*8+energy*10,0,0.24);
   }
   ctx.restore();ctx.restore();
 }
 
 /* ══════════════════════════════════════════════
-   UTILS — ground, headphone test, save/load
+   UTILS
 ══════════════════════════════════════════════ */
 function groundNow(){applyPreset('Return');state.currentPhase=phases.findIndex(p=>p.key==='return');renderPhaseRail();updateAudioParams(true);log('Grounding applied.');}
-function headphoneTest(){
-  state.headphonesTested=true;syncBadges();
-  const ctx=new(window.AudioContext||window.webkitAudioContext)();
-  const merger=ctx.createChannelMerger(2),lo=ctx.createOscillator(),ro=ctx.createOscillator(),lg=ctx.createGain(),rg=ctx.createGain();
-  lo.frequency.value=330;ro.frequency.value=440;lg.gain.value=0.2;rg.gain.value=0.2;
-  lo.connect(lg);ro.connect(rg);lg.connect(merger,0,0);rg.connect(merger,0,1);merger.connect(ctx.destination);
-  lo.start();ro.start();setTimeout(()=>{try{lo.stop();ro.stop();ctx.close();}catch(e){}},1200);
-  log('Headphone test: L=330Hz R=440Hz — verify distinct tones per ear.');
-}
+function headphoneTest(){state.headphonesTested=true;syncBadges();const ctx=new(window.AudioContext||window.webkitAudioContext)();const merger=ctx.createChannelMerger(2),lo=ctx.createOscillator(),ro=ctx.createOscillator(),lg=ctx.createGain(),rg=ctx.createGain();lo.frequency.value=330;ro.frequency.value=440;lg.gain.value=0.2;rg.gain.value=0.2;lo.connect(lg);ro.connect(rg);lg.connect(merger,0,0);rg.connect(merger,0,1);merger.connect(ctx.destination);lo.start();ro.start();setTimeout(()=>{try{lo.stop();ro.stop();ctx.close();}catch(e){}},1200);log('Headphone test: L=330Hz R=440Hz');}
 function saveJournal(){const text=els.journalInput.value.trim();if(!text)return;state.journal.unshift({ts:new Date().toLocaleString(),text});state.journal=state.journal.slice(0,24);localStorage.setItem('uss-journal-v5',JSON.stringify(state.journal));els.journalInput.value='';renderJournal();log('Journal entry saved.');}
 function clearJournal(){if(!confirm('Clear all journal entries?'))return;state.journal=[];localStorage.removeItem('uss-journal-v5');renderJournal();log('Journal cleared.');}
-function savePresetJson(){
-  const payload={name:els.presetName.value||'My State Variant',preset:state.currentPreset,settings:currentSettings(),visualToggle:state.visualToggle,sessionMinutes:currentSessionMinutes(),transitionSeconds:Number(els.transitionSecs.value),noiseOrbitSpeed:state.noiseOrbitSpeed,heartbeatBpm:state.heartbeatBpm,heartbeatGain:state.heartbeatGain,hplusGain:state.hplusGain};
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`${payload.name.replace(/\s+/g,'_').toLowerCase()}.json`;a.click();URL.revokeObjectURL(url);log('Preset JSON saved.');
-}
-function loadPresetFile(file){
-  const reader=new FileReader();
-  reader.onload=()=>{try{
-    const pl=JSON.parse(reader.result);if(pl.preset&&presets[pl.preset])state.currentPreset=pl.preset;
-    const s=pl.settings||{};
-    if(s.carrier!=null)els.baseFreq.value=s.carrier;if(s.beat!=null)els.beatFreq.value=s.beat;
-    if(s.toneGain!=null)els.toneGain.value=s.toneGain;if(s.noiseGain!=null)els.noiseGain.value=s.noiseGain;
-    if(s.noiseCutoff!=null)els.noiseCutoff.value=s.noiseCutoff;if(s.cueGain!=null)els.cueGain.value=s.cueGain;
-    if(s.masterVolume!=null)els.masterVol.value=Math.round(s.masterVolume*100);
-    if(s.panSpeed!=null){state.panSpeed=s.panSpeed;els.animSpeed.value=s.panSpeed;}
-    if(s.visualMode)setVisMode(s.visualMode);
-    if(s.visualIntensity!=null){state.visualIntensity=Number(s.visualIntensity);els.visIntensity.value=s.visualIntensity;}
-    if(pl.visualToggle){state.visualToggle=pl.visualToggle;els.basicVisToggle.value=pl.visualToggle;}
-    if(pl.transitionSeconds!=null)els.transitionSecs.value=pl.transitionSeconds;
-    if(pl.sessionMinutes!=null)els.basicDuration.value=pl.sessionMinutes;
-    if(pl.noiseOrbitSpeed!=null)setOrbitSpeed(pl.noiseOrbitSpeed);
-    if(pl.heartbeatBpm!=null){state.heartbeatBpm=pl.heartbeatBpm;els.heartbeatBpm.value=pl.heartbeatBpm;}
-    if(pl.heartbeatGain!=null){state.heartbeatGain=pl.heartbeatGain;els.heartbeatGain.value=pl.heartbeatGain;}
-    if(pl.hplusGain!=null){state.hplusGain=pl.hplusGain;els.hplusGain.value=pl.hplusGain;}
-    updateLabels();syncBadges();renderBasicPresets();updateAudioParams(false);log('Preset JSON loaded.');
-  }catch{alert('Invalid preset file.');}};
-  reader.readAsText(file);
-}
-
-/* FIX #6: WAV export with duration cap — prevents tablet timeout */
-async function exportWav(){
-  const btn=$('exportWavBtn');
-  btn.textContent='Rendering…';btn.disabled=true;
-  try{
-    const durS=Number(els.exportDuration.value);
-    const sr=44100;
-    const off=new OfflineAudioContext(2,durS*sr,sr);
-    const s=currentSettings();
-    const lo=off.createOscillator(),ro=off.createOscillator();
-    lo.type='sine';ro.type='sine';lo.frequency.value=s.carrier;ro.frequency.value=s.carrier+s.beat;
-    const merger=off.createChannelMerger(2),lg=off.createGain(),rg=off.createGain();
-    lg.gain.value=0.4;rg.gain.value=0.4;lo.connect(lg);ro.connect(rg);lg.connect(merger,0,0);rg.connect(merger,0,1);
-    // Use short looped pink noise buffer
-    const nb=createPinkNoiseBuffer(off,4);
-    const ns=off.createBufferSource();ns.buffer=nb;ns.loop=true;
-    const nf=off.createBiquadFilter();nf.type='lowpass';nf.frequency.value=s.noiseCutoff;
-    const ng2=off.createGain();ng2.gain.value=s.noiseGain;
-    const np=off.createStereoPanner();
-    for(let st=0;st<durS;st+=0.5)np.pan.setValueAtTime(Math.sin(st*Math.PI*2*state.noiseOrbitSpeed*0.115),st);
-    ns.connect(nf);nf.connect(np);np.connect(ng2);
-    const master=off.createGain();master.gain.value=s.masterVolume;
-    merger.connect(master);ng2.connect(master);master.connect(off.destination);
-    // Heartbeat
-    const hbI=60/state.heartbeatBpm;
-    for(let st=0;st<durS;st+=hbI){
-      const pk=(when,freq,dur,gain)=>{const o=off.createOscillator(),e=off.createGain();o.type='sine';o.frequency.setValueAtTime(freq,when);o.frequency.exponentialRampToValueAtTime(freq*0.22,when+dur);e.gain.setValueAtTime(0.0001,when);e.gain.linearRampToValueAtTime(Math.max(0.001,gain),when+0.004);e.gain.exponentialRampToValueAtTime(0.0001,when+dur);o.connect(e);e.connect(master);o.start(when);o.stop(Math.min(durS,when+dur+0.06));};
-      if(st<durS)pk(st,65,0.15,state.heartbeatGain);if(st+0.29<durS)pk(st+0.29,52,0.12,state.heartbeatGain*0.64);
-    }
-    lo.start(0);ro.start(0);ns.start(0);
-    const rendered=await off.startRendering();
-    const wav=audioBufferToWav(rendered);
-    const blob=new Blob([wav],{type:'audio/wav'});
-    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='uss_export.wav';a.click();URL.revokeObjectURL(url);
-    log(`WAV export complete (${durS}s).`);
-  }catch(e){log(`WAV export failed: ${e.message}`);}
-  btn.textContent='Export WAV';btn.disabled=false;
-}
-function audioBufferToWav(buffer){
-  const ch=buffer.numberOfChannels,sr=buffer.sampleRate,bd=16,samples=buffer.length,ba=ch*bd/8,br=sr*ba,ds=samples*ba;
-  const buf=new ArrayBuffer(44+ds),view=new DataView(buf);let o=0;
-  const ws=s=>{for(let i=0;i<s.length;i++)view.setUint8(o++,s.charCodeAt(i));};
-  const wu32=v=>{view.setUint32(o,v,true);o+=4;};const wu16=v=>{view.setUint16(o,v,true);o+=2;};
-  ws('RIFF');wu32(36+ds);ws('WAVE');ws('fmt ');wu32(16);wu16(1);wu16(ch);wu32(sr);wu32(br);wu16(ba);wu16(bd);ws('data');wu32(ds);
-  const cd=[];for(let c=0;c<ch;c++)cd.push(buffer.getChannelData(c));
-  for(let i=0;i<samples;i++)for(let c=0;c<ch;c++){const sv=Math.max(-1,Math.min(1,cd[c][i]));view.setInt16(o,sv<0?sv*0x8000:sv*0x7FFF,true);o+=2;}
-  return buf;
-}
-async function copySummary(){
-  const txt=`USS v5.3\nPreset: ${state.currentPreset}\nFocus: ${presets[state.currentPreset]?.focus||'—'}\nPhase: ${phases[state.currentPhase].name}\nCarrier: ${els.baseFreq.value} Hz\nBeat: ${parseFloat(els.beatFreq.value).toFixed(1)} Hz\nHeartbeat: ${state.heartbeatBpm} BPM\nH+: ${state.hplusGain.toFixed(3)}\nOrbit: ${orbitLabel(state.noiseOrbitSpeed)}\nVisual: ${labelMode(state.visualMode)}\nDuration: ${currentSessionMinutes()} min`;
-  try{await navigator.clipboard.writeText(txt);log('Summary copied.');}catch{log('Clipboard copy failed.');}
-}
+function savePresetJson(){const payload={name:els.presetName.value||'My State Variant',preset:state.currentPreset,settings:currentSettings(),visualToggle:state.visualToggle,sessionMinutes:currentSessionMinutes(),transitionSeconds:Number(els.transitionSecs.value),noiseOrbitSpeed:state.noiseOrbitSpeed,heartbeatBpm:state.heartbeatBpm,heartbeatGain:state.heartbeatGain,hplusGain:state.hplusGain};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`${payload.name.replace(/\s+/g,'_').toLowerCase()}.json`;a.click();URL.revokeObjectURL(url);log('Preset JSON saved.');}
+function loadPresetFile(file){const reader=new FileReader();reader.onload=()=>{try{const pl=JSON.parse(reader.result);if(pl.preset&&presets[pl.preset])state.currentPreset=pl.preset;const s=pl.settings||{};if(s.carrier!=null)els.baseFreq.value=s.carrier;if(s.beat!=null)els.beatFreq.value=s.beat;if(s.toneGain!=null)els.toneGain.value=s.toneGain;if(s.noiseGain!=null)els.noiseGain.value=s.noiseGain;if(s.noiseCutoff!=null)els.noiseCutoff.value=s.noiseCutoff;if(s.cueGain!=null)els.cueGain.value=s.cueGain;if(s.masterVolume!=null)els.masterVol.value=Math.round(s.masterVolume*100);if(s.panSpeed!=null){state.panSpeed=s.panSpeed;els.animSpeed.value=s.panSpeed;}if(s.visualMode)setVisMode(s.visualMode);if(s.visualIntensity!=null){state.visualIntensity=Number(s.visualIntensity);els.visIntensity.value=s.visualIntensity;}if(pl.visualToggle){state.visualToggle=pl.visualToggle;els.basicVisToggle.value=pl.visualToggle;}if(pl.transitionSeconds!=null)els.transitionSecs.value=pl.transitionSeconds;if(pl.sessionMinutes!=null)els.basicDuration.value=pl.sessionMinutes;if(pl.noiseOrbitSpeed!=null)setOrbitSpeed(pl.noiseOrbitSpeed);if(pl.heartbeatBpm!=null){state.heartbeatBpm=pl.heartbeatBpm;els.heartbeatBpm.value=pl.heartbeatBpm;}if(pl.heartbeatGain!=null){state.heartbeatGain=pl.heartbeatGain;els.heartbeatGain.value=pl.heartbeatGain;}if(pl.hplusGain!=null){state.hplusGain=pl.hplusGain;els.hplusGain.value=pl.hplusGain;}updateLabels();syncBadges();renderBasicPresets();updateAudioParams(false);log('Preset JSON loaded.');}catch{alert('Invalid preset file.');}};reader.readAsText(file);}
+async function exportWav(){const btn=$('exportWavBtn');btn.textContent='Rendering…';btn.disabled=true;try{const durS=Number(els.exportDuration.value),sr=44100;const off=new OfflineAudioContext(2,durS*sr,sr);const s=currentSettings();const lo=off.createOscillator(),ro=off.createOscillator();lo.type='sine';ro.type='sine';lo.frequency.value=s.carrier;ro.frequency.value=s.carrier+s.beat;const merger=off.createChannelMerger(2),lg=off.createGain(),rg=off.createGain();lg.gain.value=0.4;rg.gain.value=0.4;lo.connect(lg);ro.connect(rg);lg.connect(merger,0,0);rg.connect(merger,0,1);const nb=createPinkNoiseBuffer(off,Math.min(4,durS));const ns=off.createBufferSource();ns.buffer=nb;ns.loop=true;const nf=off.createBiquadFilter();nf.type='lowpass';nf.frequency.value=s.noiseCutoff;const ng2=off.createGain();ng2.gain.value=s.noiseGain;const np=off.createStereoPanner();for(let st=0;st<durS;st+=0.5)np.pan.setValueAtTime(Math.sin(st*Math.PI*2*state.noiseOrbitSpeed*0.115),st);ns.connect(nf);nf.connect(np);np.connect(ng2);const master=off.createGain();master.gain.value=s.masterVolume;merger.connect(master);ng2.connect(master);master.connect(off.destination);const hbI=60/state.heartbeatBpm;for(let st=0;st<durS;st+=hbI){const pk=(when,freq,dur,gain)=>{const o=off.createOscillator(),e=off.createGain();o.type='sine';o.frequency.setValueAtTime(freq,when);o.frequency.exponentialRampToValueAtTime(freq*0.22,when+dur);e.gain.setValueAtTime(0.0001,when);e.gain.linearRampToValueAtTime(Math.max(0.001,gain),when+0.004);e.gain.exponentialRampToValueAtTime(0.0001,when+dur);o.connect(e);e.connect(master);o.start(when);o.stop(Math.min(durS,when+dur+0.06));};if(st<durS)pk(st,65,0.15,state.heartbeatGain);if(st+0.29<durS)pk(st+0.29,52,0.12,state.heartbeatGain*0.64);}lo.start(0);ro.start(0);ns.start(0);const rendered=await off.startRendering();const wav=audioBufferToWav(rendered);const blob=new Blob([wav],{type:'audio/wav'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='uss_export.wav';a.click();URL.revokeObjectURL(url);log(`WAV export complete (${durS}s).`);}catch(e){log(`WAV export failed: ${e.message}`);}btn.textContent='Export WAV';btn.disabled=false;}
+function audioBufferToWav(buffer){const ch=buffer.numberOfChannels,sr=buffer.sampleRate,bd=16,samples=buffer.length,ba=ch*bd/8,br=sr*ba,ds=samples*ba;const buf=new ArrayBuffer(44+ds),view=new DataView(buf);let o=0;const ws=s=>{for(let i=0;i<s.length;i++)view.setUint8(o++,s.charCodeAt(i));};const wu32=v=>{view.setUint32(o,v,true);o+=4;};const wu16=v=>{view.setUint16(o,v,true);o+=2;};ws('RIFF');wu32(36+ds);ws('WAVE');ws('fmt ');wu32(16);wu16(1);wu16(ch);wu32(sr);wu32(br);wu16(ba);wu16(bd);ws('data');wu32(ds);const cd=[];for(let c=0;c<ch;c++)cd.push(buffer.getChannelData(c));for(let i=0;i<samples;i++)for(let c=0;c<ch;c++){const sv=Math.max(-1,Math.min(1,cd[c][i]));view.setInt16(o,sv<0?sv*0x8000:sv*0x7FFF,true);o+=2;}return buf;}
+async function copySummary(){const txt=`USS v5.4\nPreset: ${state.currentPreset}\nFocus: ${presets[state.currentPreset]?.focus||'—'}\nPhase: ${phases[state.currentPhase].name}\nCarrier: ${els.baseFreq.value} Hz\nBeat: ${parseFloat(els.beatFreq.value).toFixed(1)} Hz\nHeartbeat: ${state.heartbeatBpm} BPM\nH+: ${state.hplusGain.toFixed(3)}\nOrbit: ${orbitLabel(state.noiseOrbitSpeed)}\nVisual: ${labelMode(state.visualMode)}\nDuration: ${currentSessionMinutes()} min`;try{await navigator.clipboard.writeText(txt);log('Summary copied.');}catch{log('Clipboard copy failed.');}}
 
 /* ══════════════════════════════════════════════
    EVENT HANDLERS
@@ -1510,30 +1477,23 @@ $('openOvBtn').addEventListener('click',openOverlay);
 $('hideOvBtn').addEventListener('click',closeOverlay);$('closeOvBtn').addEventListener('click',closeOverlay);
 $('prevVisBtn').addEventListener('click',()=>cycleVisual(-1));$('nextVisBtn').addEventListener('click',()=>cycleVisual(1));
 $('cycleToggleBtn').addEventListener('click',toggleCycle);$('cycleToggleBtnAdv').addEventListener('click',toggleCycle);
-// FIX #3: Queue pause and stop buttons
 $('playQueueBtn').addEventListener('click',()=>{state.mode='intermediate';renderTabs();if(!state.queue.length){alert('Add at least one session first.');return;}state.queueIndex=0;startSession();renderQueue();});
 $('pauseQueueBtn').addEventListener('click',pauseSession);
 $('stopQueueBtn').addEventListener('click',stopSession);
 $('skipQueueBtn').addEventListener('click',()=>{if(!state.playing||!state.queue.length)return;if(state.queueIndex<state.queue.length-1){state.queueIndex++;applyPreset(state.queue[state.queueIndex].name);state.elapsedSeconds=0;state.phaseElapsed=0;state.currentPhase=0;renderQueue();renderPhaseRail();updateAudioParams(true);log('Skipped.');}else stopSession();});
 $('clearQueueBtn').addEventListener('click',()=>{state.queue=[];state.queueIndex=0;persistQueue();renderQueue();log('Queue cleared.');});
-// FIX #4: Reset buttons
 $('resetBasicBtn').addEventListener('click',resetBasic);
 $('resetIntBtn').addEventListener('click',resetIntermediate);
 $('resetAdvBtn').addEventListener('click',resetAdvanced);
 $('resetMonroeBtn').addEventListener('click',resetMonroe);
-// FIX #7: Mantra
 $('mantraEditBtn').addEventListener('click',toggleMantraEdit);
 $('mantraSaveBtn').addEventListener('click',saveMantra);
 $('mantraCancelBtn').addEventListener('click',()=>{$('mantraEditWrapper').style.display='none';$('mantraEditBtn').textContent='Edit';});
 $('mantraResetBtn').addEventListener('click',resetMantra);
-// Journal
 $('saveJournalBtn').addEventListener('click',saveJournal);$('clearJournalBtn').addEventListener('click',clearJournal);
-// Save/load/export
 $('savePresetBtn').addEventListener('click',savePresetJson);$('loadPresetBtn').addEventListener('click',()=>$('presetFile').click());$('presetFile').addEventListener('change',e=>{if(e.target.files[0])loadPresetFile(e.target.files[0]);});
 $('exportWavBtn').addEventListener('click',exportWav);$('copySummaryBtn').addEventListener('click',copySummary);
-// FIX #8: Copy Spotify link
-$('copySpotifyBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(SPOTIFY_URL);log('Spotify playlist link copied.');}catch{log('Clipboard copy failed.');}});
-
+$('copySpotifyBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(SPOTIFY_URL);log('Spotify link copied.');}catch{log('Clipboard copy failed.');}});
 // Sliders
 els.basicDuration.addEventListener('input',()=>{updateLabels();state.sessionMinutes=Number(els.basicDuration.value);});
 els.basicIntensity.addEventListener('input',()=>{state.visualIntensity=Number(els.basicIntensity.value);els.visIntensity.value=state.visualIntensity;updateLabels();});
@@ -1554,8 +1514,6 @@ els.hplusGain.addEventListener('input',()=>{state.hplusGain=Number(els.hplusGain
 els.exportDuration.addEventListener('change',updateLabels);
 ['baseFreq','beatFreq','toneGain','noiseGain','noiseCutoff','cueGain'].forEach(id=>{$(id).addEventListener('input',()=>{updateLabels();updateAudioParams(false);});});
 window.addEventListener('resize',resizeCanvases);
-
-// Keyboard shortcuts
 document.addEventListener('keydown',e=>{
   if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
   if(e.key===' '){e.preventDefault();state.playing?pauseSession():startOrResume();}
@@ -1570,16 +1528,14 @@ document.addEventListener('keydown',e=>{
    INIT
 ══════════════════════════════════════════════ */
 function init(){
-  // Load mantra
   els.mantraDisplay.textContent=loadMantra();
-  // Render UI
   updateLabels();renderTabs();renderPhaseRail();
   renderBasicPresets();renderCatalogue();renderQueue();
   renderJournal();resizeCanvases();
   applyPreset(state.currentPreset);
   syncBadges();updateTimeDisplays();updateCycleUI();
   requestAnimationFrame(animateLoop);
-  log('Unified State Studio v5.3 ready. Pink noise · Graph-pan · Visibility handler · Mantra · External tab.');
+  log('USS v5.4 ready. Crossfade noise · Lookahead beats · MediaSession · Screen-off persistence.');
 }
 init();
 </script>
