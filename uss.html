@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unified State Studio v5.4</title>
+  <title>Unified State Studio v5.5</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Jura:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -282,7 +282,19 @@
     ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:rgba(0,0,0,0.18);}::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.16);border-radius:4px;}
 
     /* ─── RESPONSIVE ─── */
-    @media(max-width:1220px){.main-layout{grid-template-columns:1fr;}.hero-grid,.two-col,.ext-grid,.ext-grid-wide{grid-template-columns:1fr;}}
+    /* ── 3-column desktop ── */
+    @media(max-width:1220px) and (min-width:820px){
+      .main-layout{grid-template-columns:272px minmax(0,1fr);} /* left + main, right aside wraps below main */
+      .hero-grid{grid-template-columns:1.1fr 0.9fr;}
+      .main-layout > aside:last-child{grid-column:2;} /* right aside sits in col 2, below main */
+    }
+    @media(max-width:1220px){.two-col,.ext-grid,.ext-grid-wide{grid-template-columns:1fr;}}
+    /* ── Single column ≤820px ── */
+    @media(max-width:820px){
+      .main-layout{grid-template-columns:1fr;}
+      .hero-grid{grid-template-columns:1fr;}
+      .main-layout > aside:last-child{grid-column:1;}
+    }
     @media(max-width:768px){.wrap{padding:8px;}.topbar{padding:10px 12px;}canvas#visualCanvas{height:240px;}.three-col{grid-template-columns:1fr 1fr;}}
   </style>
 </head>
@@ -323,9 +335,9 @@
         <div>
           <div style="display:flex;align-items:baseline;">
             <span class="brand-name">UNIFIED STATE STUDIO</span>
-            <span class="brand-ver">v5.4</span>
+            <span class="brand-ver">v5.5</span>
           </div>
-          <div class="brand-sub">Binaural · Crossfade noise orbit · Heartbeat lookahead · Screen-off persistence</div>
+          <div class="brand-sub">Binaural · Ocean wave orbit · Lookahead beats · Screen-off persistence</div>
         </div>
       </div>
       <div class="badge-row">
@@ -446,9 +458,10 @@
             <div class="stack">
               <div class="control"><div class="ctrl-row"><label for="masterVol">Master volume</label><span class="val" id="masterVolVal">70%</span></div><input id="masterVol" type="range" min="0" max="100" value="70" step="1" /></div>
               <div class="control">
-                <div class="ctrl-row"><div class="orbit-label"><div class="orbit-ring"><div class="orbit-dot" id="orbitDot"></div></div><label for="noiseOrbitSpd">Noise orbit speed</label></div><span class="val" id="noiseOrbitSpdVal">Slow</span></div>
-                <input id="noiseOrbitSpd" type="range" min="0.05" max="3.0" value="0.5" step="0.05" />
+                <div class="ctrl-row"><div class="orbit-label"><div class="orbit-ring"><div class="orbit-dot" id="orbitDot"></div></div><label for="noiseOrbitSpd">Ocean wave speed</label></div><span class="val" id="noiseOrbitSpdVal">Slow</span></div>
+                <input id="noiseOrbitSpd" type="range" min="0.05" max="3.0" value="0.7" step="0.05" />
               </div>
+              <div class="control"><div class="ctrl-row"><label for="orbitVol">Ocean volume</label><span class="val" id="orbitVolVal">0.22</span></div><input id="orbitVol" type="range" min="0" max="0.55" value="0.22" step="0.01" /></div>
               <div class="control"><div class="ctrl-row"><label for="animSpeed">Animation speed</label><span class="val" id="animSpeedVal">0.0060</span></div><input id="animSpeed" type="range" min="0.0001" max="0.08" value="0.006" step="0.0001" /></div>
               <div class="control"><div class="ctrl-row"><label for="intDuration">Default queue duration</label><span class="val" id="intDurVal">20 min</span></div><input id="intDuration" type="range" min="5" max="90" value="20" step="1" /></div>
             </div>
@@ -512,7 +525,7 @@
               <div class="control"><div class="ctrl-row"><label for="beatFreq">Beat frequency</label><span class="val" id="beatFreqVal">7.0 Hz</span></div><input id="beatFreq" type="range" min="0.5" max="20" value="7" step="0.1" /></div>
               <div class="control"><div class="ctrl-row"><label for="toneGain">Tone gain</label><span class="val" id="toneGainVal">0.28</span></div><input id="toneGain" type="range" min="0" max="0.8" value="0.28" step="0.01" /></div>
               <div class="control"><div class="ctrl-row"><label for="noiseGain">Noise gain</label><span class="val" id="noiseGainVal">0.12</span></div><input id="noiseGain" type="range" min="0" max="0.6" value="0.12" step="0.01" /></div>
-              <div class="control"><div class="ctrl-row"><label for="noiseCutoff">Noise filter</label><span class="val" id="noiseCutoffVal">1800 Hz</span></div><input id="noiseCutoff" type="range" min="200" max="8000" value="1800" step="10" /></div>
+              <div class="control"><div class="ctrl-row"><label for="noiseCutoff">Noise filter</label><span class="val" id="noiseCutoffVal">1800 Hz</span></div><input id="noiseCutoff" type="range" min="200" max="8000" value="1600" step="10" /></div>
               <div class="control"><div class="ctrl-row"><label for="cueGain">Cue gain</label><span class="val" id="cueGainVal">0.18</span></div><input id="cueGain" type="range" min="0" max="0.5" value="0.18" step="0.01" /></div>
               <!-- Monroe -->
               <div class="monroe-section stack-sm" style="margin-top:4px;">
@@ -521,9 +534,10 @@
                   <button class="reset-btn" id="resetMonroeBtn">↺ Reset</button>
                 </div>
                 <div class="control">
-                  <div class="ctrl-row"><div class="orbit-label"><div class="orbit-ring" style="width:22px;height:22px;"><div class="orbit-dot" style="width:4px;height:4px;"></div></div><label for="noiseOrbitSpdAdv">Noise orbit speed</label></div><span class="val" id="noiseOrbitSpdAdvVal">Slow</span></div>
-                  <input id="noiseOrbitSpdAdv" type="range" min="0.05" max="3.0" value="0.5" step="0.05" />
+                  <div class="ctrl-row"><div class="orbit-label"><div class="orbit-ring" style="width:22px;height:22px;"><div class="orbit-dot" style="width:4px;height:4px;"></div></div><label for="noiseOrbitSpdAdv">Ocean wave speed</label></div><span class="val" id="noiseOrbitSpdAdvVal">Slow</span></div>
+                  <input id="noiseOrbitSpdAdv" type="range" min="0.05" max="3.0" value="0.7" step="0.05" />
                 </div>
+                <div class="control"><div class="ctrl-row"><label for="orbitVolAdv">Ocean volume</label><span class="val" id="orbitVolAdvVal">0.22</span></div><input id="orbitVolAdv" type="range" min="0" max="0.55" value="0.22" step="0.01" /></div>
                 <div class="control"><div class="ctrl-row"><label for="heartbeatBpm">Heartbeat BPM</label><span class="val" id="heartbeatBpmVal">60 BPM</span></div><input id="heartbeatBpm" type="range" min="40" max="80" value="60" step="1" /></div>
                 <div class="control"><div class="ctrl-row"><label for="heartbeatGain">Heartbeat gain</label><span class="val" id="heartbeatGainVal">0.14</span></div><input id="heartbeatGain" type="range" min="0" max="0.4" value="0.14" step="0.01" /></div>
                 <div class="control"><div class="ctrl-row"><label for="hplusGain">H+ tone gain</label><span class="val" id="hplusGainVal">0.080</span></div><input id="hplusGain" type="range" min="0" max="0.25" value="0.08" step="0.005" /></div>
@@ -675,9 +689,9 @@
 ══════════════════════════════════════════════ */
 const DEFAULTS = {
   basicDuration:20, basicIntensity:1.0, basicVisToggle:'optional',
-  transitionSecs:18, masterVol:70, noiseOrbitSpeed:0.5, animSpeed:0.006, intDuration:20,
-  baseFreq:180, beatFreq:7.0, toneGain:0.28, noiseGain:0.12, noiseCutoff:1800, cueGain:0.18,
-  heartbeatBpm:60, heartbeatGain:0.14, hplusGain:0.08, visIntensity:1.0,
+  transitionSecs:18, masterVol:70, noiseOrbitSpeed:0.7, animSpeed:0.006, intDuration:20,
+  baseFreq:180, beatFreq:7.0, toneGain:0.28, noiseGain:0.12, noiseCutoff:1600, cueGain:0.18,
+  heartbeatBpm:60, heartbeatGain:0.14, hplusGain:0.08, visIntensity:1.0, orbitVol:0.22,
   cycleMinutes:2, exportDuration:60
 };
 const DEFAULT_MANTRA = 'I am more than my body. I perceive beyond the physical. I seek to expand, understand, and use higher energies for good. I welcome wise guidance, protection, and only that which aligns with my highest purpose.';
@@ -723,7 +737,7 @@ const state = {
   elapsedSeconds:0,phaseElapsed:0,timerHandle:null,lastTick:null,
   visualMode:'orbit',visualIntensity:1,panSpeed:0.006,
   visualToggle:'optional',intDefaultMinutes:20,
-  noiseOrbitSpeed:0.5,heartbeatBpm:60,heartbeatGain:0.14,hplusGain:0.08,
+  noiseOrbitSpeed:0.7,heartbeatBpm:60,heartbeatGain:0.14,hplusGain:0.08,orbitVol:0.22,
   autoCycle:false,cycleMinutes:2,cycleElapsed:0,
   transitioning:false,transitionProgress:0,transitionDuration:3.5,
   transitionFrom:null,transitionTo:null,
@@ -754,6 +768,7 @@ const els={
   masterVol:$('masterVol'),masterVolVal:$('masterVolVal'),
   noiseOrbitSpd:$('noiseOrbitSpd'),noiseOrbitSpdVal:$('noiseOrbitSpdVal'),
   noiseOrbitSpdAdv:$('noiseOrbitSpdAdv'),noiseOrbitSpdAdvVal:$('noiseOrbitSpdAdvVal'),
+  orbitVol:$('orbitVol'),orbitVolVal:$('orbitVolVal'),orbitVolAdv:$('orbitVolAdv'),orbitVolAdvVal:$('orbitVolAdvVal'),
   animSpeed:$('animSpeed'),animSpeedVal:$('animSpeedVal'),
   intDuration:$('intDuration'),intDurVal:$('intDurVal'),
   catalogue:$('catalogue'),queueList:$('queueList'),queueMeta:$('queueMeta'),
@@ -781,7 +796,7 @@ const els={
 };
 
 /* ══════════════════════════════════════════════
-   AUDIO ENGINE v5.4
+   AUDIO ENGINE v5.5
    FIX #1/#2: Crossfade chunk scheduler — no loop seam, no static
    FIX #3: Never suspend; MediaSession + NoSleep + lookahead beats
 ══════════════════════════════════════════════ */
@@ -889,19 +904,45 @@ function createAudioEngine() {
 
   // Noise chain — sources managed externally by crossfade scheduler
   const noiseFilter   = ctx.createBiquadFilter(); noiseFilter.type = 'lowpass';
+  // Lowpass at ~1600 Hz default: soft, diffuse Monroe pink-noise character
   const noiseGainNode = ctx.createGain();
   const noisePan      = ctx.createStereoPanner();
   noiseFilter.connect(noiseGainNode);
   noiseGainNode.connect(noisePan);
   noisePan.connect(master);
 
-  // Pan LFO in audio graph — unaffected by page visibility
-  // panDepth 0.78 (was 0.95): spacious but less extreme; reduces seam perception
-  const panLFO   = ctx.createOscillator(); panLFO.type = 'sine';
-  panLFO.frequency.value = state.noiseOrbitSpeed * 0.115;
-  const panDepth = ctx.createGain(); panDepth.gain.value = 0.78;
-  panLFO.connect(panDepth); panDepth.connect(noisePan.pan);
-  panLFO.start();
+  // ── OCEAN WAVE SYSTEM (replaces single panLFO) ──
+  // Three independent LFOs at slightly different periods → organic, never mechanical.
+  // At orbitSpeed=0.7 (default): pan sweeps 8.3s L→R→L (spatial flutter).
+  // AM breathes every ~40s (barely audible — noise stays continuous).
+  // PAN is the primary effect. AM is secondary. Filter sweep is decorative.
+  //
+  // 1. AMPLITUDE SWELL — the primary "ocean" effect.
+  //    noiseGainNode.gain base = orbitVol. waveAMDepth adds ±(orbitVol×0.45).
+  //    Result: gain breathes between 0.55× and 1.45× of orbitVol — wave crests & troughs.
+  const waveAM = ctx.createOscillator(); waveAM.type = 'sine';
+  waveAM.frequency.value = state.noiseOrbitSpeed * 0.035;  // ~40s period @ default speed — subtle background breath
+  const waveAMDepth = ctx.createGain();
+  waveAMDepth.gain.value = state.orbitVol * 0.22;  // gentle breathing — noise stays continuous, never silent
+  waveAM.connect(waveAMDepth); waveAMDepth.connect(noiseGainNode.gain);
+  noiseGainNode.gain.value = state.orbitVol;  // DC base — modulated by waveAM above
+  waveAM.start();
+
+  // 2. GENTLE STEREO DRIFT — very subtle, pan ±0.24 max, much less than before.
+  //    The ocean moves across you slowly, not hard L/R switching.
+  const wavePan = ctx.createOscillator(); wavePan.type = 'sine';
+  wavePan.frequency.value = state.noiseOrbitSpeed * 0.172;  // 8.3s sweep @ default — the main spatial flutter
+  const panDepth = ctx.createGain(); panDepth.gain.value = 0.76;  // strong spatial sweep — this IS the flutter
+  wavePan.connect(panDepth); panDepth.connect(noisePan.pan);
+  wavePan.start();
+
+  // 3. FILTER FREQUENCY SWEEP — the "woosh" of each wave crest.
+  //    Sweeps noiseFilter.frequency ±650Hz around its base → ~500–1850Hz arc per wave.
+  const filterSweep = ctx.createOscillator(); filterSweep.type = 'sine';
+  filterSweep.frequency.value = state.noiseOrbitSpeed * 0.028;  // ~50s — barely perceptible drift
+  const filterSweepDepth = ctx.createGain(); filterSweepDepth.gain.value = 130;  // ±130 Hz — subtle spectral colour only
+  filterSweep.connect(filterSweepDepth); filterSweepDepth.connect(noiseFilter.frequency);
+  filterSweep.start();
 
   // H+ tone stack (108/324/540 Hz, 40Hz gamma AM)
   const hp1=ctx.createOscillator(); hp1.type='sine'; hp1.frequency.value=108;
@@ -937,7 +978,8 @@ function createAudioEngine() {
   };
 
   return { ctx, master, leftOsc, rightOsc, noiseFilter, noiseGainNode, noisePan,
-           panLFO, panDepth, hp1, hp2, hp3, hpLFO, hpLFODepth, hpMix, hpMaster,
+           waveAM, waveAMDepth, wavePan, panDepth, filterSweep, filterSweepDepth,
+           hp1, hp2, hp3, hpLFO, hpLFODepth, hpMix, hpMaster,
            noiseBufA, noiseBufB };
 }
 
@@ -981,8 +1023,12 @@ function updateAudioParams(withCue) {
   audio.rightOsc.frequency.cancelScheduledValues(now);
   audio.leftOsc.frequency.linearRampToValueAtTime(s.carrier, end);
   audio.rightOsc.frequency.linearRampToValueAtTime(s.carrier + s.beat, end);
-  audio.noiseFilter.frequency.linearRampToValueAtTime(s.noiseCutoff, end);
-  audio.noiseGainNode.gain.linearRampToValueAtTime(s.noiseGain, end);
+  // filterSweep LFO audio-rate modulates around this base — just set center, no cancel
+  audio.noiseFilter.frequency.setValueAtTime(s.noiseCutoff, now);
+  // noiseGainNode.gain base is set by orbitVol (waveAM modulates around it)
+  // We set it directly; waveAM audio-rate modulation adds on top
+  audio.noiseGainNode.gain.setValueAtTime(state.orbitVol, now);
+  audio.waveAMDepth.gain.setValueAtTime(state.orbitVol * 0.22, now);
   if (!state.paused) audio.master.gain.linearRampToValueAtTime(s.masterVolume, end);
   audio.hpMaster.gain.setValueAtTime(state.hplusGain, now);
   audio.hpMix.gain.setValueAtTime(state.hplusGain * 0.4, now);
@@ -1100,7 +1146,7 @@ function stopKeepAlive() {
   _keepAliveAudio = null;
 }
 
-/* ── VISIBILITY HANDLER v5.4: NO SUSPEND — audio continues when page hidden ──
+/* ── VISIBILITY HANDLER v5.5: NO SUSPEND — audio continues when page hidden ──
    We removed ctx.suspend(). Audio plays through background/screen-off.
    On return: ensure context is running, top up lookahead.              ── */
 document.addEventListener('visibilitychange', () => {
@@ -1221,6 +1267,8 @@ function applyPreset(name){
   state.currentPreset=name;const p=presets[name];if(!p)return;
   els.baseFreq.value=p.carrier;els.beatFreq.value=p.beat;
   els.toneGain.value=p.toneGain;els.noiseGain.value=p.noiseGain;
+  // Map legacy noiseGain to orbitVol (multiply by 1.7 to match new control range)
+  if(p.noiseGain!=null)setOrbitVol(Math.min(0.55,parseFloat(p.noiseGain)*1.7));
   state.heartbeatBpm=p.heartbeatBpm||60;els.heartbeatBpm.value=state.heartbeatBpm;
   state.hplusGain=p.hplusGain||0.08;els.hplusGain.value=state.hplusGain;
   setVisMode(p.visual);updateLabels();syncBadges();updateAudioParams(false);
@@ -1238,8 +1286,24 @@ function orbitLabel(v){const n=Number(v);if(n<0.2)return'Glacial';if(n<0.5)retur
 function setOrbitSpeed(v){
   state.noiseOrbitSpeed=Number(v);
   els.noiseOrbitSpd.value=v;els.noiseOrbitSpdAdv.value=v;
-  if(audio&&audio.panLFO)audio.panLFO.frequency.setValueAtTime(Number(v)*0.115,audio.ctx.currentTime);
+  if(audio){
+    const now=audio.ctx.currentTime;
+    // All 3 ocean LFOs scale with orbit speed; slightly different ratios = organic drift
+    audio.waveAM.frequency.setValueAtTime(Number(v)*0.035,now);
+    audio.wavePan.frequency.setValueAtTime(Number(v)*0.172,now);
+    audio.filterSweep.frequency.setValueAtTime(Number(v)*0.028,now);
+  }
   updateLabels();syncBadges();
+}
+function setOrbitVol(v){
+  state.orbitVol=Number(v);
+  els.orbitVol.value=v;els.orbitVolAdv.value=v;
+  if(audio){
+    const now=audio.ctx.currentTime;
+    audio.noiseGainNode.gain.setValueAtTime(state.orbitVol,now);
+    audio.waveAMDepth.gain.setValueAtTime(state.orbitVol*0.22,now);
+  }
+  updateLabels();
 }
 
 /* ══════════════════════════════════════════════
@@ -1268,7 +1332,7 @@ function easeInOutCubic(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
 function resetBasic(){els.basicDuration.value=DEFAULTS.basicDuration;els.basicIntensity.value=DEFAULTS.basicIntensity;els.basicVisToggle.value=DEFAULTS.basicVisToggle;state.visualToggle=DEFAULTS.basicVisToggle;state.visualIntensity=DEFAULTS.basicIntensity;updateLabels();syncBadges();log('Basic reset.');}
 function resetIntermediate(){els.transitionSecs.value=DEFAULTS.transitionSecs;els.masterVol.value=DEFAULTS.masterVol;els.animSpeed.value=DEFAULTS.animSpeed;els.intDuration.value=DEFAULTS.intDuration;state.intDefaultMinutes=DEFAULTS.intDuration;setOrbitSpeed(DEFAULTS.noiseOrbitSpeed);updateLabels();updateAudioParams(false);log('Intermediate reset.');}
 function resetAdvanced(){els.baseFreq.value=DEFAULTS.baseFreq;els.beatFreq.value=DEFAULTS.beatFreq;els.toneGain.value=DEFAULTS.toneGain;els.noiseGain.value=DEFAULTS.noiseGain;els.noiseCutoff.value=DEFAULTS.noiseCutoff;els.cueGain.value=DEFAULTS.cueGain;updateLabels();updateAudioParams(false);log('Audio engine reset.');}
-function resetMonroe(){state.heartbeatBpm=DEFAULTS.heartbeatBpm;els.heartbeatBpm.value=DEFAULTS.heartbeatBpm;state.heartbeatGain=DEFAULTS.heartbeatGain;els.heartbeatGain.value=DEFAULTS.heartbeatGain;state.hplusGain=DEFAULTS.hplusGain;els.hplusGain.value=DEFAULTS.hplusGain;setOrbitSpeed(DEFAULTS.noiseOrbitSpeed);if(audio){audio.hpMaster.gain.setValueAtTime(state.hplusGain,audio.ctx.currentTime);audio.hpMix.gain.setValueAtTime(state.hplusGain*0.4,audio.ctx.currentTime);}updateLabels();syncBadges();if(state.playing&&!state.paused)startHeartbeat();log('Monroe params reset.');}
+function resetMonroe(){state.heartbeatBpm=DEFAULTS.heartbeatBpm;els.heartbeatBpm.value=DEFAULTS.heartbeatBpm;state.heartbeatGain=DEFAULTS.heartbeatGain;els.heartbeatGain.value=DEFAULTS.heartbeatGain;state.hplusGain=DEFAULTS.hplusGain;els.hplusGain.value=DEFAULTS.hplusGain;setOrbitSpeed(DEFAULTS.noiseOrbitSpeed);setOrbitVol(DEFAULTS.orbitVol);if(audio){audio.hpMaster.gain.setValueAtTime(state.hplusGain,audio.ctx.currentTime);audio.hpMix.gain.setValueAtTime(state.hplusGain*0.4,audio.ctx.currentTime);}updateLabels();syncBadges();if(state.playing&&!state.paused)startHeartbeat();log('Monroe params reset.');}
 
 /* ══════════════════════════════════════════════
    MANTRA CARD
@@ -1306,7 +1370,7 @@ function syncBadges(){
   els.hbStatusLabel.textContent=hbA?`${state.heartbeatBpm} BPM`:'off';
   els.hpStatusLabel.textContent=state.hplusGain>0.01?'on':'off';
   els.orbitStatusLabel.textContent=orb?'orbiting':'off';
-  const op=(2*Math.PI/(0.115*state.noiseOrbitSpeed)).toFixed(1)+'s';
+  const op=(1/(0.026*state.noiseOrbitSpeed)).toFixed(1)+'s';
   document.querySelectorAll('.orbit-dot').forEach(d=>d.parentElement.style.setProperty('--orbit-period',op));
 }
 function updateLabels(){
@@ -1316,6 +1380,8 @@ function updateLabels(){
   els.transSecsVal.textContent=`${els.transitionSecs.value} s`;
   els.masterVolVal.textContent=`${els.masterVol.value}%`;
   const os=orbitLabel(state.noiseOrbitSpeed);els.noiseOrbitSpdVal.textContent=os;els.noiseOrbitSpdAdvVal.textContent=os;
+  if(els.orbitVolVal)els.orbitVolVal.textContent=state.orbitVol.toFixed(2);
+  if(els.orbitVolAdvVal)els.orbitVolAdvVal.textContent=state.orbitVol.toFixed(2);
   els.animSpeedVal.textContent=Number(els.animSpeed.value).toFixed(4);
   els.intDurVal.textContent=`${els.intDuration.value} min`;
   els.seqModeVal.textContent=labelSeq(els.seqMode.value);
@@ -1334,7 +1400,14 @@ function updateLabels(){
   const durSec=Number(els.exportDuration.value);
   els.exportDurVal.textContent=durSec<60?`${durSec} s`:`${durSec/60} min`;
 }
-function renderTabs(){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===state.mode));document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(`section-${state.mode}`).classList.add('active');syncBadges();}
+function renderTabs(){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===state.mode));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  $(`section-${state.mode}`).classList.add('active');
+  // Double-rAF ensures DOM has laid out before measuring canvas dimensions
+  if(state.mode==='advanced'){requestAnimationFrame(()=>requestAnimationFrame(resizeCanvases));}
+  syncBadges();
+}
 function renderPhaseRail(){els.phaseList.innerHTML='';phases.forEach((phase,i)=>{const div=document.createElement('div');div.className='phase-item'+(i===state.currentPhase?' active':'');div.innerHTML=`<div class="p-num">${i+1}</div><div><div class="p-name">${phase.name}</div><div class="p-prompt">${phase.prompt}</div></div><div class="p-dot"></div>`;els.phaseList.appendChild(div);});els.phaseIdxLabel.textContent=`${state.currentPhase+1} / ${phases.length}`;els.currentPhaseLabel.textContent=phases[state.currentPhase].name;syncBadges();}
 function renderBasicPresets(){els.basicPresetBtns.innerHTML='';BASIC_PRESETS.forEach(name=>{const btn=document.createElement('button');btn.className='preset-btn'+(name===state.currentPreset?' preset-active':'');btn.innerHTML=`<div class="pb-name">${name}</div><div class="pb-desc">${presets[name].desc}</div>`;btn.addEventListener('click',()=>applyPreset(name));els.basicPresetBtns.appendChild(btn);});}
 function renderCatalogue(){els.catalogue.innerHTML='';const dur=Number(els.intDuration.value);ALL_PRESETS.forEach(name=>{const item=document.createElement('div');item.className='cat-item';item.innerHTML=`<div><div class="cat-name">${name}</div><div class="cat-desc">${presets[name].desc}</div><div class="dur-row">${[10,20,30,45].map(m=>`<button class="secondary dur-btn" data-add="${name}" data-mins="${m}">${m}m</button>`).join('')}</div></div><button class="primary" data-add="${name}" data-mins="${dur}" style="align-self:center;padding:6px 10px;font-size:0.72rem;">+ Add</button>`;els.catalogue.appendChild(item);});}
@@ -1356,7 +1429,24 @@ function log(msg){const stamp=new Date().toLocaleTimeString();const prev=els.act
 ══════════════════════════════════════════════ */
 function openOverlay(){state.visualOverlay=true;els.visualOverlay.classList.add('open');resizeCanvases();syncBadges();}
 function closeOverlay(){state.visualOverlay=false;els.visualOverlay.classList.remove('open');syncBadges();}
-function resizeCanvases(){const dpr=Math.max(1,window.devicePixelRatio||1);[els.visualCanvas,els.overlayCanvas].forEach(canvas=>{const rect=canvas.getBoundingClientRect();const fallback=canvas===els.overlayCanvas?Math.max(window.innerHeight,600):310;const w=Math.max(320,Math.floor(rect.width||window.innerWidth));const h=Math.max(220,Math.floor(rect.height||fallback));canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);canvas.getContext('2d').setTransform(1,0,0,1,0,0);});}
+function resizeCanvases(){
+  const dpr=Math.max(1,window.devicePixelRatio||1);
+  // Small canvas — may be in a hidden tab; walk parent chain for layout width
+  const vc=els.visualCanvas;
+  let vcW=vc.getBoundingClientRect().width;
+  if(!vcW){let el=vc.parentElement;while(el&&!vcW){vcW=el.getBoundingClientRect().width;el=el.parentElement;}}
+  vcW=Math.max(320,Math.floor(vcW||840));
+  const vcH=Math.max(220,Math.floor(vc.getBoundingClientRect().height||310));
+  vc.width=Math.floor(vcW*dpr);vc.height=Math.floor(vcH*dpr);
+  vc.getContext('2d').setTransform(1,0,0,1,0,0);
+  // Overlay canvas — always fullscreen
+  const oc=els.overlayCanvas;
+  const ocR=oc.getBoundingClientRect();
+  const ocW=Math.max(320,Math.floor(ocR.width||window.innerWidth));
+  const ocH=Math.max(220,Math.floor(ocR.height||Math.max(window.innerHeight,600)));
+  oc.width=Math.floor(ocW*dpr);oc.height=Math.floor(ocH*dpr);
+  oc.getContext('2d').setTransform(1,0,0,1,0,0);
+}
 
 /* ══════════════════════════════════════════════
    ANIMATION LOOP
@@ -1454,7 +1544,7 @@ function savePresetJson(){const payload={name:els.presetName.value||'My State Va
 function loadPresetFile(file){const reader=new FileReader();reader.onload=()=>{try{const pl=JSON.parse(reader.result);if(pl.preset&&presets[pl.preset])state.currentPreset=pl.preset;const s=pl.settings||{};if(s.carrier!=null)els.baseFreq.value=s.carrier;if(s.beat!=null)els.beatFreq.value=s.beat;if(s.toneGain!=null)els.toneGain.value=s.toneGain;if(s.noiseGain!=null)els.noiseGain.value=s.noiseGain;if(s.noiseCutoff!=null)els.noiseCutoff.value=s.noiseCutoff;if(s.cueGain!=null)els.cueGain.value=s.cueGain;if(s.masterVolume!=null)els.masterVol.value=Math.round(s.masterVolume*100);if(s.panSpeed!=null){state.panSpeed=s.panSpeed;els.animSpeed.value=s.panSpeed;}if(s.visualMode)setVisMode(s.visualMode);if(s.visualIntensity!=null){state.visualIntensity=Number(s.visualIntensity);els.visIntensity.value=s.visualIntensity;}if(pl.visualToggle){state.visualToggle=pl.visualToggle;els.basicVisToggle.value=pl.visualToggle;}if(pl.transitionSeconds!=null)els.transitionSecs.value=pl.transitionSeconds;if(pl.sessionMinutes!=null)els.basicDuration.value=pl.sessionMinutes;if(pl.noiseOrbitSpeed!=null)setOrbitSpeed(pl.noiseOrbitSpeed);if(pl.heartbeatBpm!=null){state.heartbeatBpm=pl.heartbeatBpm;els.heartbeatBpm.value=pl.heartbeatBpm;}if(pl.heartbeatGain!=null){state.heartbeatGain=pl.heartbeatGain;els.heartbeatGain.value=pl.heartbeatGain;}if(pl.hplusGain!=null){state.hplusGain=pl.hplusGain;els.hplusGain.value=pl.hplusGain;}updateLabels();syncBadges();renderBasicPresets();updateAudioParams(false);log('Preset JSON loaded.');}catch{alert('Invalid preset file.');}};reader.readAsText(file);}
 async function exportWav(){const btn=$('exportWavBtn');btn.textContent='Rendering…';btn.disabled=true;try{const durS=Number(els.exportDuration.value),sr=44100;const off=new OfflineAudioContext(2,durS*sr,sr);const s=currentSettings();const lo=off.createOscillator(),ro=off.createOscillator();lo.type='sine';ro.type='sine';lo.frequency.value=s.carrier;ro.frequency.value=s.carrier+s.beat;const merger=off.createChannelMerger(2),lg=off.createGain(),rg=off.createGain();lg.gain.value=0.4;rg.gain.value=0.4;lo.connect(lg);ro.connect(rg);lg.connect(merger,0,0);rg.connect(merger,0,1);const nb=createPinkNoiseBuffer(off,Math.min(4,durS));const ns=off.createBufferSource();ns.buffer=nb;ns.loop=true;const nf=off.createBiquadFilter();nf.type='lowpass';nf.frequency.value=s.noiseCutoff;const ng2=off.createGain();ng2.gain.value=s.noiseGain;const np=off.createStereoPanner();for(let st=0;st<durS;st+=0.5)np.pan.setValueAtTime(Math.sin(st*Math.PI*2*state.noiseOrbitSpeed*0.115),st);ns.connect(nf);nf.connect(np);np.connect(ng2);const master=off.createGain();master.gain.value=s.masterVolume;merger.connect(master);ng2.connect(master);master.connect(off.destination);const hbI=60/state.heartbeatBpm;for(let st=0;st<durS;st+=hbI){const pk=(when,freq,dur,gain)=>{const o=off.createOscillator(),e=off.createGain();o.type='sine';o.frequency.setValueAtTime(freq,when);o.frequency.exponentialRampToValueAtTime(freq*0.22,when+dur);e.gain.setValueAtTime(0.0001,when);e.gain.linearRampToValueAtTime(Math.max(0.001,gain),when+0.004);e.gain.exponentialRampToValueAtTime(0.0001,when+dur);o.connect(e);e.connect(master);o.start(when);o.stop(Math.min(durS,when+dur+0.06));};if(st<durS)pk(st,65,0.15,state.heartbeatGain);if(st+0.29<durS)pk(st+0.29,52,0.12,state.heartbeatGain*0.64);}lo.start(0);ro.start(0);ns.start(0);const rendered=await off.startRendering();const wav=audioBufferToWav(rendered);const blob=new Blob([wav],{type:'audio/wav'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='uss_export.wav';a.click();URL.revokeObjectURL(url);log(`WAV export complete (${durS}s).`);}catch(e){log(`WAV export failed: ${e.message}`);}btn.textContent='Export WAV';btn.disabled=false;}
 function audioBufferToWav(buffer){const ch=buffer.numberOfChannels,sr=buffer.sampleRate,bd=16,samples=buffer.length,ba=ch*bd/8,br=sr*ba,ds=samples*ba;const buf=new ArrayBuffer(44+ds),view=new DataView(buf);let o=0;const ws=s=>{for(let i=0;i<s.length;i++)view.setUint8(o++,s.charCodeAt(i));};const wu32=v=>{view.setUint32(o,v,true);o+=4;};const wu16=v=>{view.setUint16(o,v,true);o+=2;};ws('RIFF');wu32(36+ds);ws('WAVE');ws('fmt ');wu32(16);wu16(1);wu16(ch);wu32(sr);wu32(br);wu16(ba);wu16(bd);ws('data');wu32(ds);const cd=[];for(let c=0;c<ch;c++)cd.push(buffer.getChannelData(c));for(let i=0;i<samples;i++)for(let c=0;c<ch;c++){const sv=Math.max(-1,Math.min(1,cd[c][i]));view.setInt16(o,sv<0?sv*0x8000:sv*0x7FFF,true);o+=2;}return buf;}
-async function copySummary(){const txt=`USS v5.4\nPreset: ${state.currentPreset}\nFocus: ${presets[state.currentPreset]?.focus||'—'}\nPhase: ${phases[state.currentPhase].name}\nCarrier: ${els.baseFreq.value} Hz\nBeat: ${parseFloat(els.beatFreq.value).toFixed(1)} Hz\nHeartbeat: ${state.heartbeatBpm} BPM\nH+: ${state.hplusGain.toFixed(3)}\nOrbit: ${orbitLabel(state.noiseOrbitSpeed)}\nVisual: ${labelMode(state.visualMode)}\nDuration: ${currentSessionMinutes()} min`;try{await navigator.clipboard.writeText(txt);log('Summary copied.');}catch{log('Clipboard copy failed.');}}
+async function copySummary(){const txt=`USS v5.5\nPreset: ${state.currentPreset}\nFocus: ${presets[state.currentPreset]?.focus||'—'}\nPhase: ${phases[state.currentPhase].name}\nCarrier: ${els.baseFreq.value} Hz\nBeat: ${parseFloat(els.beatFreq.value).toFixed(1)} Hz\nHeartbeat: ${state.heartbeatBpm} BPM\nH+: ${state.hplusGain.toFixed(3)}\nOrbit: ${orbitLabel(state.noiseOrbitSpeed)}\nVisual: ${labelMode(state.visualMode)}\nDuration: ${currentSessionMinutes()} min`;try{await navigator.clipboard.writeText(txt);log('Summary copied.');}catch{log('Clipboard copy failed.');}}
 
 /* ══════════════════════════════════════════════
    EVENT HANDLERS
@@ -1503,6 +1593,8 @@ els.transitionSecs.addEventListener('input',updateLabels);
 els.masterVol.addEventListener('input',()=>{updateLabels();updateAudioParams(false);});
 els.noiseOrbitSpd.addEventListener('input',e=>setOrbitSpeed(e.target.value));
 els.noiseOrbitSpdAdv.addEventListener('input',e=>setOrbitSpeed(e.target.value));
+if(els.orbitVol){els.orbitVol.addEventListener('input',e=>setOrbitVol(e.target.value));}
+if(els.orbitVolAdv){els.orbitVolAdv.addEventListener('input',e=>setOrbitVol(e.target.value));}
 els.animSpeed.addEventListener('input',()=>{state.panSpeed=Number(els.animSpeed.value);updateLabels();});
 els.intDuration.addEventListener('input',()=>{state.intDefaultMinutes=Number(els.intDuration.value);updateLabels();renderCatalogue();});
 els.intVisMode.addEventListener('change',()=>{setVisMode(els.intVisMode.value);updateLabels();syncBadges();});
@@ -1514,6 +1606,7 @@ els.hplusGain.addEventListener('input',()=>{state.hplusGain=Number(els.hplusGain
 els.exportDuration.addEventListener('change',updateLabels);
 ['baseFreq','beatFreq','toneGain','noiseGain','noiseCutoff','cueGain'].forEach(id=>{$(id).addEventListener('input',()=>{updateLabels();updateAudioParams(false);});});
 window.addEventListener('resize',resizeCanvases);
+if(typeof ResizeObserver!=='undefined'){new ResizeObserver(()=>{if(state.mode==='advanced')resizeCanvases();}).observe(els.visualCanvas);}
 document.addEventListener('keydown',e=>{
   if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
   if(e.key===' '){e.preventDefault();state.playing?pauseSession():startOrResume();}
@@ -1535,7 +1628,7 @@ function init(){
   applyPreset(state.currentPreset);
   syncBadges();updateTimeDisplays();updateCycleUI();
   requestAnimationFrame(animateLoop);
-  log('USS v5.4 ready. Crossfade noise · Lookahead beats · MediaSession · Screen-off persistence.');
+  log('USS v5.5 ready. Flutter orbit · pan-primary 8.3s sweep · subtle AM · soft lowpass.');
 }
 init();
 </script>
