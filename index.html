@@ -1236,9 +1236,316 @@
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
       #bg-canvas, #hero-cv, #const-cv { display: none; }
     }
+
+    /* Teamstar startup intro */
+    body.intro-active { overflow: hidden; }
+
+    .site-intro {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: white;
+      isolation: isolate;
+      user-select: none;
+      background: transparent;
+      --intro-dock-x: calc(-50vw + 45.5px);
+      --intro-dock-y: calc(-50vh + 39px);
+      transition: visibility 1200ms var(--ease);
+    }
+
+    .site-intro::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -10;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(66, 176, 255, .18) 0%, rgba(42, 106, 210, .10) 18%, rgba(0,0,0,0) 42%),
+        linear-gradient(180deg, #000208 0%, #061327 46%, #00040d 100%);
+      transition: opacity 1200ms var(--ease), filter 1200ms var(--ease), transform 1200ms var(--ease);
+    }
+
+    .site-intro.is-exiting {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .site-intro.is-exiting::before {
+      opacity: 0;
+      filter: blur(12px) saturate(1.18);
+      transform: scale(1.024);
+    }
+
+    .site-intro.is-exiting .intro-grid,
+    .site-intro.is-exiting .intro-flash,
+    .site-intro.is-exiting .intro-bars::before,
+    .site-intro.is-exiting .intro-bars::after {
+      opacity: 0;
+      transition: opacity 760ms var(--ease);
+    }
+
+    .intro-grid {
+      position: absolute;
+      inset: 0;
+      z-index: -8;
+      opacity: .08;
+      background-image:
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 100% 5px, 5px 100%;
+      mask-image: radial-gradient(circle at 50% 48%, #000 0 32%, transparent 72%);
+    }
+
+    .intro-bars::before,
+    .intro-bars::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: clamp(34px, 8vh, 88px);
+      z-index: 4;
+      pointer-events: none;
+      background: linear-gradient(to bottom, rgba(0,0,0,.95), rgba(0,0,0,.78));
+    }
+
+    .intro-bars::before { top: 0; }
+    .intro-bars::after { bottom: 0; transform: rotate(180deg); }
+
+    .intro-logo-wrap {
+      position: relative;
+      width: min(62vmin, 620px);
+      aspect-ratio: 1536 / 1509;
+      backface-visibility: hidden;
+      animation: introLogoLift 900ms cubic-bezier(.16,1,.3,1) 5600ms forwards;
+    }
+
+    .site-intro.is-exiting .intro-logo-wrap {
+      animation: introLogoDock 1180ms cubic-bezier(.16,1,.3,1) forwards;
+      transform-origin: center;
+    }
+
+    .intro-logo-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 20.1%;
+      box-shadow: 0 42px 68px rgba(0,0,0,.56), 0 0 0 1px rgba(255,255,255,.05);
+    }
+
+    .intro-logo-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: visible;
+      backface-visibility: hidden;
+    }
+
+    .intro-tile { opacity: 0; animation: introTileIn 650ms cubic-bezier(.25,.1,.25,1) 40ms forwards; }
+    .intro-rim { fill: none; stroke: rgba(255,255,255,.22); stroke-width: 8; opacity: 0; animation: introRimIn 760ms cubic-bezier(.33,1,.68,1) 860ms forwards; }
+    .intro-sheen { opacity: 0; animation: introSheenIn 820ms cubic-bezier(.33,1,.68,1) 520ms forwards; }
+    .intro-shadow { opacity: 0; animation: introTrailIn 760ms cubic-bezier(.33,1,.68,1) 620ms forwards; }
+    .intro-mark { fill: #fffdf8; transform-origin: 50% 50%; transform-box: fill-box; opacity: 0; animation: introMarkIn 620ms cubic-bezier(.25,.1,.25,1) 640ms forwards; }
+    .intro-edge { fill: none; stroke: rgba(255,255,255,.10); stroke-width: 4.2; stroke-linejoin: round; opacity: 0; animation: introEdgeIn 520ms ease-out 1220ms forwards; }
+    .intro-charged { fill: none; stroke: rgba(81, 240, 255, .38); stroke-width: 6.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0; animation: introChargedIn 1100ms ease-out 5000ms forwards; }
+
+    .intro-tracer-plasma,
+    .intro-tracer-core,
+    .intro-tracer-sparkle,
+    .intro-tracer-glitter {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0;
+      animation: introTracerRun 3100ms cubic-bezier(.22,.61,.36,1) 1900ms forwards;
+    }
+
+    .intro-tracer-plasma { stroke: rgba(81, 240, 255, .46); stroke-width: 18; stroke-dasharray: 320 4660; stroke-dashoffset: 5000; filter: drop-shadow(0 0 10px rgba(81, 240, 255, .38)) drop-shadow(0 0 18px rgba(81, 240, 255, .18)); }
+    .intro-tracer-core { stroke: rgba(255,255,255,1); stroke-width: 7.8; stroke-dasharray: 230 4790; stroke-dashoffset: 5000; filter: drop-shadow(0 0 6px rgba(255,255,255,.40)); }
+    .intro-tracer-sparkle { stroke: rgba(255,255,255,.96); stroke-width: 2.8; stroke-dasharray: 14 28 8 54 6 90 10 4790; stroke-dashoffset: 5000; filter: drop-shadow(0 0 6px rgba(255,255,255,.62)) drop-shadow(0 0 14px rgba(127, 239, 255, .34)); }
+    .intro-tracer-glitter { stroke: rgba(214, 248, 255, .94); stroke-width: 1.65; stroke-dasharray: 4 18 3 34 2 58 4 4877; stroke-dashoffset: 5000; filter: drop-shadow(0 0 5px rgba(255,255,255,.78)) drop-shadow(0 0 12px rgba(81, 240, 255, .26)); }
+
+    .intro-orb { opacity: 0; animation: introOrbLife 3100ms linear 1900ms forwards; }
+    .intro-orb .outer { fill: rgba(81, 240, 255, .78); }
+    .intro-orb .mid { fill: rgba(255,255,255,.95); }
+    .intro-orb .core { fill: rgba(255,255,255,1); }
+
+    .intro-flash {
+      position: absolute;
+      left: 50%;
+      top: 49%;
+      width: min(52vmin, 520px);
+      aspect-ratio: 1;
+      z-index: -2;
+      border-radius: 50%;
+      opacity: 0;
+      transform: translate3d(-50%, -50%, 0) scale(.6);
+      background: radial-gradient(circle, rgba(255,255,255,.28) 0%, rgba(85, 241, 255, .16) 18%, rgba(43,111,255,.08) 36%, rgba(0,0,0,0) 62%);
+      animation: introFlash 760ms ease-out 5220ms forwards;
+    }
+
+    .intro-caption {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(38px, 8vh, 86px);
+      width: min(94vw, 1180px);
+      z-index: 5;
+      text-align: center;
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+      animation: introCaptionIn 960ms cubic-bezier(.16,1,.3,1) 5420ms forwards;
+    }
+
+    .site-intro.is-exiting .intro-caption {
+      animation: none;
+      opacity: 0;
+      transform: translateX(-50%) translateY(-14px);
+      transition: opacity 260ms ease, transform 360ms ease;
+    }
+
+    .intro-brand {
+      margin: 0;
+      color: rgba(240, 250, 255, .93);
+      font: 700 clamp(34px, 4.7vw, 61px)/1 Inter, ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: .42em;
+      text-transform: uppercase;
+      text-shadow: 0 0 18px rgba(64,243,255,.16);
+    }
+
+    .intro-tagline {
+      margin: 18px 0 0;
+      color: rgba(212, 239, 255, .74);
+      font: 550 clamp(19px, 2.1vw, 26px)/1.25 Inter, ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+
+    .intro-signal {
+      width: min(620px, 72vw);
+      height: 1px;
+      margin: 24px auto 0;
+      opacity: 0;
+      transform: scaleX(.2);
+      background: linear-gradient(90deg, transparent, rgba(92,235,255,.72), rgba(255,255,255,.84), rgba(92,235,255,.72), transparent);
+      animation: introSignalIn 760ms ease-out 5720ms forwards;
+    }
+
+    @keyframes introTileIn { 0% { opacity: 0; } 40% { opacity: .52; } 100% { opacity: 1; } }
+    @keyframes introRimIn { to { opacity: .56; } }
+    @keyframes introSheenIn { to { opacity: .52; } }
+    @keyframes introTrailIn { to { opacity: .68; } }
+    @keyframes introMarkIn { 0% { opacity: 0; } 42% { opacity: .58; } 100% { opacity: 1; } }
+    @keyframes introEdgeIn { to { opacity: .24; } }
+    @keyframes introTracerRun { 0% { opacity: 0; stroke-dashoffset: 5000; } 5%, 84% { opacity: 1; } 100% { opacity: 0; stroke-dashoffset: 0; } }
+    @keyframes introOrbLife { 0% { opacity: 0; } 5%, 84% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes introChargedIn { 0% { opacity: 0; stroke-width: 10.8; } 42% { opacity: .54; stroke-width: 7.2; } 100% { opacity: .32; stroke-width: 6.6; } }
+    @keyframes introFlash { 0% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(.6); } 24% { opacity: .75; } 100% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(1.08); } }
+    @keyframes introCaptionIn { to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    @keyframes introSignalIn { to { opacity: .82; transform: scaleX(1); } }
+    @keyframes introLogoLift { to { transform: translateY(-2.5vh) scale(.94); } }
+    @keyframes introLogoDock {
+      from { transform: translateY(-2.5vh) scale(.94); opacity: 1; }
+      72% { opacity: 1; }
+      to {
+        transform: translate(var(--intro-dock-x), var(--intro-dock-y)) scale(.07);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .intro-logo-wrap { width: min(76vmin, 560px); }
+      .intro-caption { bottom: clamp(34px, 7vh, 62px); }
+      .intro-brand { letter-spacing: .24em; font-size: clamp(26px, 6.8vw, 44px); }
+      .intro-tagline { letter-spacing: .14em; font-size: clamp(13px, 3.1vw, 19px); }
+    }
+
+    @media (max-height: 680px) {
+      .intro-logo-wrap { width: min(56vmin, 520px); }
+      .intro-caption { bottom: 34px; }
+      .intro-tagline { margin-top: 10px; }
+      .intro-signal { margin-top: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .site-intro { display: none; }
+      body.intro-active { overflow: auto; }
+    }
   </style>
 </head>
-<body class="compat-static-labels">
+<body class="compat-static-labels intro-active">
+
+<div class="site-intro" id="siteIntro" aria-label="Teamstar cinematic intro">
+  <div class="intro-grid" aria-hidden="true"></div>
+  <div class="intro-flash" aria-hidden="true"></div>
+
+  <section class="intro-logo-wrap" aria-label="Animated Teamstar logo">
+    <div class="intro-logo-card">
+      <svg class="intro-logo-svg" viewBox="0 0 1536 1509" role="img" aria-label="Teamstar white star and T logo on blue rounded square">
+        <defs>
+          <path id="introMarkShape" d="M777 150 L644 566 L207 570 L554 838 L415 1279 L711 1059 L713 753 L711 723 L591 723 L561 770 L400 622 L1163 624 L981 769 L963 723 L840 725 L840 1059 L1137 1276 L999 839 L1348 569 L909 565 Z" />
+          <rect id="introTileShape" x="0" y="0" width="1536" height="1509" rx="304" ry="304" />
+          <linearGradient id="introIconBg" x1="70" y1="44" x2="1426" y2="1458" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#54fff1" />
+            <stop offset=".18" stop-color="#28d8dc" />
+            <stop offset=".45" stop-color="#168edf" />
+            <stop offset=".70" stop-color="#164cd1" />
+            <stop offset="1" stop-color="#06119a" />
+          </linearGradient>
+          <radialGradient id="introTopGlow" cx="30%" cy="17%" r="82%">
+            <stop offset="0" stop-color="#ffffff" stop-opacity=".24" />
+            <stop offset=".23" stop-color="#6efff2" stop-opacity=".22" />
+            <stop offset=".58" stop-color="#2fc3ff" stop-opacity=".08" />
+            <stop offset="1" stop-color="#000000" stop-opacity="0" />
+          </radialGradient>
+          <radialGradient id="introDeepGlass" cx="77%" cy="87%" r="80%">
+            <stop offset="0" stop-color="#010568" stop-opacity=".46" />
+            <stop offset=".42" stop-color="#061988" stop-opacity=".14" />
+            <stop offset="1" stop-color="#000000" stop-opacity="0" />
+          </radialGradient>
+          <linearGradient id="introRimGradient" x1="0" y1="0" x2="1536" y2="1509" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#ffffff" stop-opacity=".34" />
+            <stop offset=".38" stop-color="#7df9ff" stop-opacity=".14" />
+            <stop offset=".73" stop-color="#1e50ff" stop-opacity=".10" />
+            <stop offset="1" stop-color="#ffffff" stop-opacity=".16" />
+          </linearGradient>
+        </defs>
+
+        <g>
+          <use href="#introTileShape" class="intro-tile" fill="url(#introIconBg)" />
+          <use href="#introTileShape" class="intro-tile" fill="url(#introTopGlow)" opacity=".95" />
+          <use href="#introTileShape" class="intro-tile" fill="url(#introDeepGlass)" />
+          <ellipse class="intro-sheen" cx="397" cy="234" rx="548" ry="306" fill="rgba(255,255,255,.16)" />
+          <use href="#introTileShape" class="intro-rim" stroke="url(#introRimGradient)" />
+          <g id="introShadowTrail" class="intro-shadow" aria-hidden="true"></g>
+          <use href="#introMarkShape" class="intro-charged" />
+          <use href="#introMarkShape" class="intro-edge" />
+          <use href="#introMarkShape" class="intro-mark" />
+          <use href="#introMarkShape" class="intro-tracer-plasma" />
+          <use href="#introMarkShape" class="intro-tracer-core" />
+          <use href="#introMarkShape" class="intro-tracer-sparkle" />
+          <use href="#introMarkShape" class="intro-tracer-glitter" />
+          <g class="intro-orb" aria-hidden="true">
+            <circle class="outer" r="18"></circle>
+            <circle class="mid" r="8.2"></circle>
+            <circle class="core" r="3.8"></circle>
+            <animateMotion dur="3.1s" begin="1.9s" fill="freeze" rotate="auto">
+              <mpath href="#introMarkShape"></mpath>
+            </animateMotion>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <section class="intro-caption" aria-label="Teamstar brand lockup">
+    <h1 class="intro-brand">Teamstar</h1>
+    <p class="intro-tagline">Think · Create · Collaborate</p>
+    <div class="intro-signal" aria-hidden="true"></div>
+  </section>
+  <div class="intro-bars" aria-hidden="true"></div>
+</div>
 
 <!-- Background -->
 <div class="bg-wrap" aria-hidden="true">
@@ -1961,6 +2268,51 @@
 
 <script>
 'use strict';
+
+/* ── Startup intro handoff ── */
+(function() {
+  const intro = document.getElementById('siteIntro');
+  if (!intro) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const trail = document.getElementById('introShadowTrail');
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  if (trail) {
+    for (let i = 28; i >= 1; i--) {
+      const u = document.createElementNS(svgNS, 'use');
+      const t = i * 4.2;
+      const fade = Math.max(0.006, 0.10 * (1 - i / 30));
+      u.setAttribute('href', '#introMarkShape');
+      u.setAttribute('transform', `translate(${t} ${t})`);
+      u.setAttribute('fill', i < 12 ? '#092a7c' : '#07145d');
+      u.setAttribute('opacity', String(fade));
+      trail.appendChild(u);
+    }
+  }
+
+  function releaseIntro() {
+    const brandMark = document.querySelector('.topbar .brand-mark');
+    if (brandMark) {
+      const rect = brandMark.getBoundingClientRect();
+      const dockX = rect.left + rect.width / 2 - window.innerWidth / 2;
+      const dockY = rect.top + rect.height / 2 - window.innerHeight / 2;
+      intro.style.setProperty('--intro-dock-x', `${dockX}px`);
+      intro.style.setProperty('--intro-dock-y', `${dockY}px`);
+    }
+
+    document.body.classList.remove('intro-active');
+    intro.classList.add('is-exiting');
+    window.setTimeout(() => intro.remove(), 1250);
+  }
+
+  if (reduceMotion) {
+    releaseIntro();
+    return;
+  }
+
+  window.setTimeout(releaseIntro, 6600);
+})();
 
 /* ── Reveal on scroll ── */
 const ro = new IntersectionObserver((entries) => {
