@@ -1259,11 +1259,34 @@
     .site-intro::before {
       content: "";
       position: absolute;
-      inset: 0;
+      inset: -18%;
       z-index: -10;
       background:
-        radial-gradient(circle at 50% 42%, rgba(66, 176, 255, .18) 0%, rgba(42, 106, 210, .10) 18%, rgba(0,0,0,0) 42%),
-        linear-gradient(180deg, #000208 0%, #061327 46%, #00040d 100%);
+        radial-gradient(circle at 15% 18%, rgba(0,194,255,0.14), transparent 22%),
+        radial-gradient(circle at 85% 14%, rgba(109,92,255,0.10), transparent 18%),
+        radial-gradient(circle at 50% 80%, rgba(23,156,255,0.08), transparent 30%),
+        linear-gradient(180deg, #02060c 0%, #07111b 40%, #03070d 100%);
+      background-size: 150% 150%, 145% 145%, 140% 140%, 100% 200%;
+      background-position: 16% 16%, 84% 12%, 50% 80%, 50% 50%;
+      filter: saturate(1.06) brightness(1.05);
+      transform: scale(1.08);
+      transition: opacity 1200ms var(--ease), filter 1200ms var(--ease), transform 1200ms var(--ease);
+    }
+
+    .site-intro::after {
+      content: "";
+      position: absolute;
+      inset: -10%;
+      z-index: -9;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 22%, rgba(82,214,255,.09), transparent 24%),
+        radial-gradient(circle at 50% 82%, rgba(23,156,255,.06), transparent 30%),
+        radial-gradient(ellipse at center, transparent 34%, rgba(2,8,20,.42) 100%);
+      background-size: 135% 135%, 140% 140%, 120% 120%;
+      background-position: 50% 22%, 50% 82%, 50% 50%;
+      opacity: .82;
+      transform: scale(1.04);
       transition: opacity 1200ms var(--ease), filter 1200ms var(--ease), transform 1200ms var(--ease);
     }
 
@@ -1278,10 +1301,14 @@
       transform: scale(1.024);
     }
 
+    .site-intro.is-exiting::after {
+      opacity: 0;
+      filter: blur(10px);
+      transform: scale(1.08);
+    }
+
     .site-intro.is-exiting .intro-grid,
-    .site-intro.is-exiting .intro-flash,
-    .site-intro.is-exiting .intro-bars::before,
-    .site-intro.is-exiting .intro-bars::after {
+    .site-intro.is-exiting .intro-flash {
       opacity: 0;
       transition: opacity 760ms var(--ease);
     }
@@ -1290,28 +1317,31 @@
       position: absolute;
       inset: 0;
       z-index: -8;
-      opacity: .08;
+      opacity: .22;
       background-image:
-        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
-      background-size: 100% 5px, 5px 100%;
-      mask-image: radial-gradient(circle at 50% 48%, #000 0 32%, transparent 72%);
+        linear-gradient(rgba(82,214,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(82,214,255,0.03) 1px, transparent 1px);
+      background-size: 70px 70px;
+      background-position: 0 0, 0 0;
+      mask-image: radial-gradient(circle at center, black 45%, transparent 95%);
     }
 
-    .intro-bars::before,
-    .intro-bars::after {
-      content: "";
+    .intro-scan {
       position: absolute;
-      left: 0;
-      right: 0;
-      height: clamp(34px, 8vh, 88px);
-      z-index: 4;
+      inset: -4%;
+      z-index: -7;
       pointer-events: none;
-      background: linear-gradient(to bottom, rgba(0,0,0,.95), rgba(0,0,0,.78));
+      opacity: .36;
+      mix-blend-mode: screen;
+      background:
+        linear-gradient(90deg, transparent 0%, rgba(82,214,255,0.022) 50%, transparent 100%),
+        linear-gradient(transparent 0%, rgba(255,255,255,0.012) 50%, transparent 100%);
+      background-size: 100% 100%, 100% 6px;
+      background-position: 0 0, 0 0;
+      transition: opacity 760ms var(--ease);
     }
 
-    .intro-bars::before { top: 0; }
-    .intro-bars::after { bottom: 0; transform: rotate(180deg); }
+    .site-intro.is-exiting .intro-scan { opacity: 0; }
 
     .intro-logo-wrap {
       position: relative;
@@ -1478,6 +1508,7 @@
 
 <div class="site-intro" id="siteIntro" aria-label="Teamstar cinematic intro">
   <div class="intro-grid" aria-hidden="true"></div>
+  <div class="intro-scan" aria-hidden="true"></div>
   <div class="intro-flash" aria-hidden="true"></div>
 
   <section class="intro-logo-wrap" aria-label="Animated Teamstar logo">
@@ -1544,7 +1575,6 @@
     <p class="intro-tagline">Think · Create · Collaborate</p>
     <div class="intro-signal" aria-hidden="true"></div>
   </section>
-  <div class="intro-bars" aria-hidden="true"></div>
 </div>
 
 <!-- Background -->
