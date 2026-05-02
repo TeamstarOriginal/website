@@ -180,7 +180,7 @@
       letter-spacing: .14em; line-height: 1; color: var(--text);
     }
     .brand-sub {
-      font-family: var(--fm); font-size: 10.8px; letter-spacing: .08em;
+      font-family: var(--fm); font-size: 9.8px; letter-spacing: .08em;
       color: var(--text-2); text-transform: uppercase;
     }
 
@@ -431,8 +431,15 @@
       height: 75px;
       display: grid;
       place-items: center;
+      padding: 3px;
+      border: 1px solid rgba(136,221,255,.52);
+      border-radius: 24%;
       overflow: hidden;
-      filter: drop-shadow(0 0 18px rgba(57,180,255,.28));
+      background: linear-gradient(135deg, rgba(57,180,255,.13), rgba(3,9,22,.18));
+      box-shadow:
+        0 0 24px rgba(57,180,255,.18),
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 0 18px rgba(57,180,255,.06);
       transform: translateZ(0);
     }
     .geometry-logo-mark img {
@@ -1188,6 +1195,8 @@
       .hero-vis { min-height: 340px; }
       .hero-net { transform: translateY(0); }
       .hero-h1 { font-size: clamp(3rem, 11vw, 6rem); }
+      .geometry-logo-mark { width: 64px; height: 64px; }
+      .geometry-pulse { width: 76px !important; height: 76px !important; }
 
       .feat-grid {
         grid-template-columns: 1fr;
@@ -1807,9 +1816,9 @@
                 <div class="nn-dot"><span class="nd"></span>Content Sharing</div>
               </div>
               <div class="net-node nn-ai">
-                <div class="pulse-r" style="width:90px;height:90px;"></div>
-                <div class="pulse-r pr2" style="width:90px;height:90px;"></div>
-                <div class="pulse-r pr3" style="width:90px;height:90px;"></div>
+                <div class="pulse-r geometry-pulse" style="width:90px;height:90px;"></div>
+                <div class="pulse-r pr2 geometry-pulse" style="width:90px;height:90px;"></div>
+                <div class="pulse-r pr3 geometry-pulse" style="width:90px;height:90px;"></div>
                 <div class="geometry-logo-mark"><img src="teamstarlogo.png" alt="Teamstar"></div>
               </div>
             </div>
@@ -2046,9 +2055,9 @@
             <canvas id="const-cv" aria-hidden="true"></canvas>
             <div class="const-nodes">
               <div class="c-center">
-                <div class="pulse-r" style="width:90px;height:90px;"></div>
-                <div class="pulse-r pr2" style="width:90px;height:90px;"></div>
-                <div class="pulse-r pr3" style="width:90px;height:90px;"></div>
+                <div class="pulse-r geometry-pulse" style="width:90px;height:90px;"></div>
+                <div class="pulse-r pr2 geometry-pulse" style="width:90px;height:90px;"></div>
+                <div class="pulse-r pr3 geometry-pulse" style="width:90px;height:90px;"></div>
                 <div class="geometry-logo-mark"><img src="teamstarlogo.png" alt="Teamstar"></div>
               </div>
               <div class="c-nd active" data-node="0" style="top:16%;left:50%;">
