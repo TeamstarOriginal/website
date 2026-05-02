@@ -2703,7 +2703,7 @@ sections.forEach(s => navObs.observe(s));
       ctx.beginPath();
       ctx.arc(p.x, p.y, ringR, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(57,180,255,${i === 0 ? .24 : .16})`;
-      ctx.lineWidth = i === 0 ? 2.5 : 2.15;
+      ctx.lineWidth = i === 0 ? 3.5 : 3.15;
       ctx.shadowColor = 'rgba(57,180,255,.18)';
       ctx.shadowBlur = 12;
       ctx.stroke();
@@ -2713,7 +2713,7 @@ sections.forEach(s => navObs.observe(s));
     ctx.beginPath();
     ctx.arc(cx, cy, ringR * 1.92, 0, Math.PI * 2);
     ctx.strokeStyle = 'rgba(57,180,255,.10)';
-    ctx.lineWidth = 1.85;
+    ctx.lineWidth = 2.85;
     ctx.stroke();
 
     for (let i = 0; i < 6; i++) {
@@ -2748,7 +2748,7 @@ sections.forEach(s => navObs.observe(s));
       g.addColorStop(0, `rgba(57,180,255,${.55 + pulse * .25})`);
       g.addColorStop(1, `rgba(57,180,255,.12)`);
       ctx.beginPath(); ctx.moveTo(C.x, C.y); ctx.lineTo(p.x, p.y);
-      ctx.strokeStyle = g; ctx.lineWidth = 2; ctx.stroke();
+      ctx.strokeStyle = g; ctx.lineWidth = 3; ctx.stroke();
 
       const prog = ((t * .48 + i * .16) % 1);
       const tx = C.x + (p.x - C.x) * prog;
@@ -2761,7 +2761,7 @@ sections.forEach(s => navObs.observe(s));
     EDGES.forEach(([a,b], idx) => {
       ctx.beginPath(); ctx.moveTo(pos[a].x, pos[a].y); ctx.lineTo(pos[b].x, pos[b].y);
       ctx.strokeStyle = `rgba(57,180,255,${0.10 + (((Math.sin(t * 1.2 + idx * .55) + 1) / 2) * 0.08)})`;
-      ctx.lineWidth = 2.0; ctx.stroke();
+      ctx.lineWidth = 3.0; ctx.stroke();
     });
 
     pos.forEach((p, i) => {
@@ -2850,7 +2850,7 @@ sections.forEach(s => navObs.observe(s));
         ctx.moveTo(pts[i].x, pts[i].y);
         ctx.lineTo(pts[j].x, pts[j].y);
         ctx.strokeStyle = `rgba(57,180,255,${alpha})`;
-        ctx.lineWidth = 2.0;
+        ctx.lineWidth = 3.0;
         ctx.stroke();
       }
     }
@@ -2859,7 +2859,7 @@ sections.forEach(s => navObs.observe(s));
       ctx.beginPath();
       ctx.arc(p.x, p.y, unit, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(57,180,255,${i === 0 ? .16 : .10})`;
-      ctx.lineWidth = 2.05;
+      ctx.lineWidth = 3.05;
       ctx.stroke();
     });
 
@@ -2870,7 +2870,7 @@ sections.forEach(s => navObs.observe(s));
     ctx.moveTo(pts[a].x, pts[a].y);
     ctx.lineTo(pts[b].x, pts[b].y);
     ctx.strokeStyle = 'rgba(136,221,255,.22)';
-    ctx.lineWidth = 2.15;
+    ctx.lineWidth = 3.15;
     ctx.stroke();
   }
 
@@ -2897,7 +2897,7 @@ sections.forEach(s => navObs.observe(s));
       ctx.moveTo(pos[a].x, pos[a].y);
       ctx.lineTo(pos[b].x, pos[b].y);
       ctx.strokeStyle = g;
-      ctx.lineWidth = 2.15;
+      ctx.lineWidth = 3.15;
       ctx.stroke();
     });
 
@@ -2912,7 +2912,7 @@ sections.forEach(s => navObs.observe(s));
       ctx.moveTo(C.x, C.y);
       ctx.lineTo(p.x, p.y);
       ctx.strokeStyle = g;
-      ctx.lineWidth = isActive ? 2.7 : 2.05;
+      ctx.lineWidth = isActive ? 3.7 : 3.05;
       ctx.stroke();
 
       const prog = ((t * .46 + i * .14) % 1);
