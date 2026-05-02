@@ -474,7 +474,7 @@
     .fc-ai { grid-area: ai; }
     .fc-trust { grid-area: trust; }
     .fc-featured { padding: 34px 30px; }
-    .fc-featured .fc-h { font-size: 1.48rem; }
+    .fc-featured .fc-h { font-size: 1.3rem; }
     .fc-featured .fc-p { max-width: 78ch; }
     .fc::before {
       content: ''; position: absolute; inset: 0;
@@ -1164,6 +1164,7 @@
         min-height: 40px;
         font-size: 1.16rem;
       }
+      .fc-featured .fc-h { font-size: 1.16rem; }
       .nav, .nav-end .btn-ghost { display: none; }
       .menu-btn { display: flex; }
       .nav-end .btn-primary {
@@ -1217,6 +1218,14 @@
       .sys-grid { grid-template-columns: 1fr; }
       .const-area { aspect-ratio: 4/3; }
 
+      @media (orientation: portrait) {
+        .const-area {
+          width: min(100%, 620px);
+          margin: 0 auto;
+          aspect-ratio: 1;
+        }
+      }
+
       .future-box { padding: 36px 24px; }
       .foot-inner { flex-direction: column; text-align: center; }
       .foot-brand-wrap { justify-content: center; }
@@ -1232,6 +1241,14 @@
       .wait-form { padding: 24px; }
       .dev-stack { height: 320px; }
       }
+    @media (orientation: portrait) and (min-width: 700px) and (max-width: 1180px) {
+      .sys-grid { grid-template-columns: 1fr; }
+      .const-area {
+        width: min(100%, 620px);
+        margin: 0 auto;
+        aspect-ratio: 1;
+      }
+    }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
       #bg-canvas, #hero-cv, #const-cv { display: none; }
@@ -1479,6 +1496,16 @@
       animation: introSignalIn 760ms ease-out 5720ms forwards;
     }
 
+    .intro-copyright {
+      margin: 18px 0 0;
+      color: rgba(170, 202, 228, .58);
+      font: 400 11px/1.2 var(--fm);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: introCopyrightIn 760ms ease-out 6020ms forwards;
+    }
+
     @keyframes introTileIn { 0% { opacity: 0; } 40% { opacity: .52; } 100% { opacity: 1; } }
     @keyframes introRimIn { to { opacity: .56; } }
     @keyframes introSheenIn { to { opacity: .52; } }
@@ -1491,6 +1518,7 @@
     @keyframes introFlash { 0% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(.6); } 24% { opacity: .75; } 100% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(1.08); } }
     @keyframes introCaptionIn { to { opacity: 1; transform: translateX(-50%) translateY(-15vh); } }
     @keyframes introSignalIn { to { opacity: .82; transform: scaleX(1); } }
+    @keyframes introCopyrightIn { to { opacity: .78; } }
     @keyframes introLogoLift { to { transform: translateY(-17.5vh) scale(.94); } }
     @keyframes introLogoDock {
       from { transform: translateY(-17.5vh) scale(.94); opacity: 1; }
@@ -1542,6 +1570,7 @@
       }
 
       .intro-signal { margin-top: 14px; }
+      .intro-copyright { margin-top: 12px; font-size: 10px; }
 
       @keyframes introCaptionIn { to { opacity: 1; transform: translateX(-50%) translateY(-8vh); } }
       @keyframes introLogoLift { to { transform: translateY(-10vh) scale(.94); } }
@@ -1637,6 +1666,7 @@
     <h1 class="intro-brand">Teamstar</h1>
     <p class="intro-tagline">Think · Create · Collaborate</p>
     <div class="intro-signal" aria-hidden="true"></div>
+    <p class="intro-copyright">Copyright 2026</p>
   </section>
 </div>
 
