@@ -1279,6 +1279,14 @@
       filter: blur(14px) saturate(1.18);
     }
 
+    body.intro-docking:not(.intro-dock-settled) .brand-mark {
+      opacity: 0;
+    }
+
+    body.intro-docking .brand-mark {
+      transition: opacity 220ms ease;
+    }
+
     .bg-wrap,
     #bg-canvas,
     .shell {
@@ -1298,6 +1306,7 @@
       background: transparent;
       --intro-dock-x: calc(-50vw + 45.5px);
       --intro-dock-y: calc(-50vh + 39px);
+      --intro-dock-scale: .09;
       transition: visibility 1200ms var(--ease);
     }
 
@@ -1336,7 +1345,6 @@
     }
 
     .site-intro.is-exiting {
-      visibility: hidden;
       pointer-events: none;
     }
 
@@ -1536,8 +1544,8 @@
       from { transform: translateY(-17.5vh) scale(.94); opacity: 1; }
       72% { opacity: 1; }
       to {
-        transform: translate(var(--intro-dock-x), var(--intro-dock-y)) scale(.07);
-        opacity: 0;
+        transform: translate(var(--intro-dock-x), var(--intro-dock-y)) scale(var(--intro-dock-scale));
+        opacity: 1;
       }
     }
 
@@ -1590,8 +1598,8 @@
         from { transform: translateY(-10vh) scale(.94); opacity: 1; }
         72% { opacity: 1; }
         to {
-          transform: translate(var(--intro-dock-x), var(--intro-dock-y)) scale(.09);
-          opacity: 0;
+          transform: translate(var(--intro-dock-x), var(--intro-dock-y)) scale(var(--intro-dock-scale));
+          opacity: 1;
         }
       }
     }
@@ -2428,17 +2436,29 @@
 
   function releaseIntro() {
     const brandMark = document.querySelector('.topbar .brand-mark');
+    const introLogo = document.querySelector('.intro-logo-wrap');
     if (brandMark) {
       const rect = brandMark.getBoundingClientRect();
       const dockX = rect.left + rect.width / 2 - window.innerWidth / 2;
       const dockY = rect.top + rect.height / 2 - window.innerHeight / 2;
       intro.style.setProperty('--intro-dock-x', `${dockX}px`);
       intro.style.setProperty('--intro-dock-y', `${dockY}px`);
+
+      if (introLogo) {
+        const introLogoWidth = introLogo.offsetWidth || introLogo.getBoundingClientRect().width;
+        if (introLogoWidth) intro.style.setProperty('--intro-dock-scale', String(rect.width / introLogoWidth));
+      }
     }
 
+    document.body.classList.add('intro-docking');
     intro.classList.add('is-exiting');
     document.body.classList.remove('intro-active');
-    window.setTimeout(() => intro.remove(), 1450);
+    window.setTimeout(() => document.body.classList.add('intro-dock-settled'), 880);
+    window.setTimeout(() => {
+      intro.remove();
+      document.body.classList.remove('intro-docking');
+      document.body.classList.remove('intro-dock-settled');
+    }, 1450);
   }
 
   if (reduceMotion) {
