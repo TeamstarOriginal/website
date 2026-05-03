@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unified State Studio v5.5</title>
+  <title>Unified State Studio v5.6</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Jura:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -335,9 +335,9 @@
         <div>
           <div style="display:flex;align-items:baseline;">
             <span class="brand-name">UNIFIED STATE STUDIO</span>
-            <span class="brand-ver">v5.5</span>
+            <span class="brand-ver">v5.6</span>
           </div>
-          <div class="brand-sub">Binaural · Ocean wave orbit · Lookahead beats · Screen-off persistence</div>
+          <div class="brand-sub">Binaural · Stereo spectral ocean · Audio-graph heartbeat · Screen-off persistence</div>
         </div>
       </div>
       <div class="badge-row">
@@ -451,7 +451,7 @@
             <div class="stack">
               <div class="control"><div class="ctrl-row"><label for="seqMode">Sequence mode</label><span class="val" id="seqModeVal">Manual</span></div>
                 <select id="seqMode"><option value="manual">Manual</option><option value="full">Focus 10 → 12 → 15 → 21 → Return</option><option value="gateway">Arrival → Sync → Threshold → Expansion → Return</option></select></div>
-              <div class="control"><div class="ctrl-row"><label for="transitionSecs">Transition time</label><span class="val" id="transSecsVal">18 s</span></div><input id="transitionSecs" type="range" min="3" max="60" value="18" step="1" /></div>
+              <div class="control"><div class="ctrl-row"><label for="transitionSecs">Transition time</label><span class="val" id="transSecsVal">24 s</span></div><input id="transitionSecs" type="range" min="3" max="60" value="24" step="1" /></div>
               <div class="control"><div class="ctrl-row"><label for="intVisMode">Visual mode</label><span class="val" id="intVisModeVal">Orbit Field</span></div>
                 <select id="intVisMode"><option value="orbit">Orbit Field</option><option value="flower">Flower of Life</option><option value="metatron">Metatron Grid</option><option value="fractal">Fractal Spiral</option><option value="mandala">Mandala Bloom</option><option value="starfield">Starfield Drift</option><option value="tunnel">Quantum Tunnel</option><option value="plasma">Neon Plasma</option></select></div>
             </div>
@@ -459,10 +459,10 @@
               <div class="control"><div class="ctrl-row"><label for="masterVol">Master volume</label><span class="val" id="masterVolVal">70%</span></div><input id="masterVol" type="range" min="0" max="100" value="70" step="1" /></div>
               <div class="control">
                 <div class="ctrl-row"><div class="orbit-label"><div class="orbit-ring"><div class="orbit-dot" id="orbitDot"></div></div><label for="noiseOrbitSpd">Ocean wave speed</label></div><span class="val" id="noiseOrbitSpdVal">Slow</span></div>
-                <input id="noiseOrbitSpd" type="range" min="0.05" max="3.0" value="0.7" step="0.05" />
+                <input id="noiseOrbitSpd" type="range" min="0.05" max="3.0" value="0.28" step="0.01" />
               </div>
-              <div class="control"><div class="ctrl-row"><label for="orbitVol">Ocean volume</label><span class="val" id="orbitVolVal">0.22</span></div><input id="orbitVol" type="range" min="0" max="0.55" value="0.22" step="0.01" /></div>
-              <div class="control"><div class="ctrl-row"><label for="animSpeed">Animation speed</label><span class="val" id="animSpeedVal">0.0060</span></div><input id="animSpeed" type="range" min="0.0001" max="0.08" value="0.006" step="0.0001" /></div>
+              <div class="control"><div class="ctrl-row"><label for="orbitVol">Ocean volume</label><span class="val" id="orbitVolVal">0.18</span></div><input id="orbitVol" type="range" min="0" max="0.55" value="0.18" step="0.01" /></div>
+              <div class="control"><div class="ctrl-row"><label for="animSpeed">Animation speed</label><span class="val" id="animSpeedVal">0.0040</span></div><input id="animSpeed" type="range" min="0.0001" max="0.08" value="0.004" step="0.0001" /></div>
               <div class="control"><div class="ctrl-row"><label for="intDuration">Default queue duration</label><span class="val" id="intDurVal">20 min</span></div><input id="intDuration" type="range" min="5" max="90" value="20" step="1" /></div>
             </div>
           </div>
@@ -521,12 +521,12 @@
             <!-- Left: Audio -->
             <div class="stack">
               <h3>Audio Engine</h3>
-              <div class="control"><div class="ctrl-row"><label for="baseFreq">Carrier frequency</label><span class="val" id="baseFreqVal">180 Hz</span></div><input id="baseFreq" type="range" min="80" max="400" value="180" step="1" /></div>
+              <div class="control"><div class="ctrl-row"><label for="baseFreq">Carrier frequency</label><span class="val" id="baseFreqVal">136 Hz</span></div><input id="baseFreq" type="range" min="80" max="400" value="136" step="1" /></div>
               <div class="control"><div class="ctrl-row"><label for="beatFreq">Beat frequency</label><span class="val" id="beatFreqVal">7.0 Hz</span></div><input id="beatFreq" type="range" min="0.5" max="20" value="7" step="0.1" /></div>
-              <div class="control"><div class="ctrl-row"><label for="toneGain">Tone gain</label><span class="val" id="toneGainVal">0.28</span></div><input id="toneGain" type="range" min="0" max="0.8" value="0.28" step="0.01" /></div>
-              <div class="control"><div class="ctrl-row"><label for="noiseGain">Noise gain</label><span class="val" id="noiseGainVal">0.12</span></div><input id="noiseGain" type="range" min="0" max="0.6" value="0.12" step="0.01" /></div>
-              <div class="control"><div class="ctrl-row"><label for="noiseCutoff">Noise filter</label><span class="val" id="noiseCutoffVal">1800 Hz</span></div><input id="noiseCutoff" type="range" min="200" max="8000" value="1600" step="10" /></div>
-              <div class="control"><div class="ctrl-row"><label for="cueGain">Cue gain</label><span class="val" id="cueGainVal">0.18</span></div><input id="cueGain" type="range" min="0" max="0.5" value="0.18" step="0.01" /></div>
+              <div class="control"><div class="ctrl-row"><label for="toneGain">Tone gain</label><span class="val" id="toneGainVal">0.18</span></div><input id="toneGain" type="range" min="0" max="0.8" value="0.18" step="0.01" /></div>
+              <div class="control"><div class="ctrl-row"><label for="noiseGain">Noise gain</label><span class="val" id="noiseGainVal">0.10</span></div><input id="noiseGain" type="range" min="0" max="0.6" value="0.10" step="0.01" /></div>
+              <div class="control"><div class="ctrl-row"><label for="noiseCutoff">Noise filter</label><span class="val" id="noiseCutoffVal">2200 Hz</span></div><input id="noiseCutoff" type="range" min="200" max="8000" value="2200" step="10" /></div>
+              <div class="control"><div class="ctrl-row"><label for="cueGain">Cue gain</label><span class="val" id="cueGainVal">0.10</span></div><input id="cueGain" type="range" min="0" max="0.5" value="0.10" step="0.01" /></div>
               <!-- Monroe -->
               <div class="monroe-section stack-sm" style="margin-top:4px;">
                 <div class="ctrl-row">
@@ -535,12 +535,12 @@
                 </div>
                 <div class="control">
                   <div class="ctrl-row"><div class="orbit-label"><div class="orbit-ring" style="width:22px;height:22px;"><div class="orbit-dot" style="width:4px;height:4px;"></div></div><label for="noiseOrbitSpdAdv">Ocean wave speed</label></div><span class="val" id="noiseOrbitSpdAdvVal">Slow</span></div>
-                  <input id="noiseOrbitSpdAdv" type="range" min="0.05" max="3.0" value="0.7" step="0.05" />
+                  <input id="noiseOrbitSpdAdv" type="range" min="0.05" max="3.0" value="0.28" step="0.01" />
                 </div>
-                <div class="control"><div class="ctrl-row"><label for="orbitVolAdv">Ocean volume</label><span class="val" id="orbitVolAdvVal">0.22</span></div><input id="orbitVolAdv" type="range" min="0" max="0.55" value="0.22" step="0.01" /></div>
-                <div class="control"><div class="ctrl-row"><label for="heartbeatBpm">Heartbeat BPM</label><span class="val" id="heartbeatBpmVal">60 BPM</span></div><input id="heartbeatBpm" type="range" min="40" max="80" value="60" step="1" /></div>
-                <div class="control"><div class="ctrl-row"><label for="heartbeatGain">Heartbeat gain</label><span class="val" id="heartbeatGainVal">0.14</span></div><input id="heartbeatGain" type="range" min="0" max="0.4" value="0.14" step="0.01" /></div>
-                <div class="control"><div class="ctrl-row"><label for="hplusGain">H+ tone gain</label><span class="val" id="hplusGainVal">0.080</span></div><input id="hplusGain" type="range" min="0" max="0.25" value="0.08" step="0.005" /></div>
+                <div class="control"><div class="ctrl-row"><label for="orbitVolAdv">Ocean volume</label><span class="val" id="orbitVolAdvVal">0.18</span></div><input id="orbitVolAdv" type="range" min="0" max="0.55" value="0.18" step="0.01" /></div>
+                <div class="control"><div class="ctrl-row"><label for="heartbeatBpm">Heartbeat BPM</label><span class="val" id="heartbeatBpmVal">56 BPM</span></div><input id="heartbeatBpm" type="range" min="40" max="80" value="56" step="1" /></div>
+                <div class="control"><div class="ctrl-row"><label for="heartbeatGain">Heartbeat gain</label><span class="val" id="heartbeatGainVal">0.04</span></div><input id="heartbeatGain" type="range" min="0" max="0.4" value="0.035" step="0.005" /></div>
+                <div class="control"><div class="ctrl-row"><label for="hplusGain">H+ tone gain</label><span class="val" id="hplusGainVal">0.015</span></div><input id="hplusGain" type="range" min="0" max="0.25" value="0.015" step="0.005" /></div>
                 <div class="three-col" style="margin-top:4px;">
                   <div class="mini-card"><div class="m-label">Heartbeat</div><div class="m-val glow" id="hbStatusLabel">off</div></div>
                   <div class="mini-card"><div class="m-label">H+ Tone</div><div class="m-val glow" id="hpStatusLabel">off</div></div>
@@ -689,9 +689,9 @@
 ══════════════════════════════════════════════ */
 const DEFAULTS = {
   basicDuration:20, basicIntensity:1.0, basicVisToggle:'optional',
-  transitionSecs:18, masterVol:70, noiseOrbitSpeed:0.7, animSpeed:0.006, intDuration:20,
-  baseFreq:180, beatFreq:7.0, toneGain:0.28, noiseGain:0.12, noiseCutoff:1600, cueGain:0.18,
-  heartbeatBpm:60, heartbeatGain:0.14, hplusGain:0.08, visIntensity:1.0, orbitVol:0.22,
+  transitionSecs:24, masterVol:70, noiseOrbitSpeed:0.28, animSpeed:0.004, intDuration:20,
+  baseFreq:136, beatFreq:7.0, toneGain:0.18, noiseGain:0.10, noiseCutoff:2200, cueGain:0.10,
+  heartbeatBpm:56, heartbeatGain:0.035, hplusGain:0.015, visIntensity:1.0, orbitVol:0.18,
   cycleMinutes:2, exportDuration:60
 };
 const DEFAULT_MANTRA = 'I am more than my body. I perceive beyond the physical. I seek to expand, understand, and use higher energies for good. I welcome wise guidance, protection, and only that which aligns with my highest purpose.';
@@ -710,16 +710,16 @@ const phases = [
   {key:'reflection',name:'Reflection',      durationWeight:0.06,prompt:'Write what changed before memory blurs.'}
 ];
 const presets = {
-  'Focus 10':         {desc:'Body asleep, mind awake. Entry-level OBE preparation.',focus:'Focus 10',carrier:140,beat:7.0,toneGain:0.26,noiseGain:0.12,heartbeatBpm:58,hplusGain:0.06,visual:'orbit'},
-  'Focus 12':         {desc:'Expanded awareness. Broader attention and symbolic openness.',focus:'Focus 12',carrier:136,beat:6.4,toneGain:0.28,noiseGain:0.11,heartbeatBpm:55,hplusGain:0.07,visual:'flower'},
-  'Focus 15':         {desc:'No-time state. Deep inward immersion beyond temporal frame.',focus:'Focus 15',carrier:128,beat:5.2,toneGain:0.30,noiseGain:0.10,heartbeatBpm:52,hplusGain:0.08,visual:'fractal'},
-  'Focus 21':         {desc:'Other energy systems. Spacious, detached, expansion-oriented.',focus:'Focus 21',carrier:122,beat:4.6,toneGain:0.31,noiseGain:0.09,heartbeatBpm:50,hplusGain:0.09,visual:'metatron'},
-  'Return':           {desc:'Controlled reintegration and grounding back to C-1.',focus:'C-1',carrier:156,beat:10.2,toneGain:0.22,noiseGain:0.06,heartbeatBpm:66,hplusGain:0.04,visual:'mandala'},
-  'Gateway Threshold':{desc:'Body relaxation, stable awareness, threshold drift, and exploration-oriented pacing.',focus:'Gateway',carrier:140,beat:7.0,toneGain:0.28,noiseGain:0.12,heartbeatBpm:60,hplusGain:0.07,visual:'orbit'},
-  'Calm Descent':     {desc:'Stress reduction and downshift toward sleep-adjacent calm.',focus:'Focus 10',carrier:132,beat:5.2,toneGain:0.24,noiseGain:0.14,heartbeatBpm:58,hplusGain:0.06,visual:'mandala'},
-  'Focus Lock':       {desc:'More attentive, less dreamy. Higher alpha/low beta.',focus:'Focus 10',carrier:155,beat:11.4,toneGain:0.26,noiseGain:0.08,heartbeatBpm:64,hplusGain:0.05,visual:'starfield'},
-  'Symbolic Vision':  {desc:'Imagery-friendly. Slower, visually receptive.',focus:'Focus 12',carrier:128,beat:6.0,toneGain:0.29,noiseGain:0.11,heartbeatBpm:54,hplusGain:0.07,visual:'flower'},
-  'Observer Drift':   {desc:'Detached floating perspective. Non-attachment practice.',focus:'Focus 15',carrier:122,beat:4.8,toneGain:0.30,noiseGain:0.10,heartbeatBpm:51,hplusGain:0.08,visual:'fractal'}
+  'Focus 10':         {desc:'Body asleep, mind awake. Quiet threshold entry with buried binaural tone and slow spectral ocean.',focus:'Focus 10',carrier:136,beat:7.0,toneGain:0.18,noiseGain:0.10,noiseCutoff:2200,orbitSpeed:0.28,orbitVol:0.18,heartbeatBpm:56,heartbeatGain:0.035,hplusGain:0.015,visual:'orbit'},
+  'Focus 12':         {desc:'Expanded awareness. Wider stereo field, slower sweep, low-theta entrainment.',focus:'Focus 12',carrier:132,beat:6.2,toneGain:0.16,noiseGain:0.09,noiseCutoff:2400,orbitSpeed:0.22,orbitVol:0.16,heartbeatBpm:54,heartbeatGain:0.030,hplusGain:0.010,visual:'flower'},
+  'Focus 15':         {desc:'No-time state. Deep inward drift with minimal pulse and very slow spectral motion.',focus:'Focus 15',carrier:124,beat:5.0,toneGain:0.14,noiseGain:0.08,noiseCutoff:2100,orbitSpeed:0.16,orbitVol:0.14,heartbeatBpm:50,heartbeatGain:0.025,hplusGain:0.005,visual:'fractal'},
+  'Focus 21':         {desc:'Other energy systems. Spacious detached field with subdominant tone and sparse movement.',focus:'Focus 21',carrier:116,beat:4.2,toneGain:0.12,noiseGain:0.07,noiseCutoff:1900,orbitSpeed:0.11,orbitVol:0.12,heartbeatBpm:48,heartbeatGain:0.020,hplusGain:0.000,visual:'metatron'},
+  'Return':           {desc:'Controlled reintegration and grounding back to C-1 with brighter alpha pacing.',focus:'C-1',carrier:156,beat:10.8,toneGain:0.14,noiseGain:0.05,noiseCutoff:1800,orbitSpeed:0.36,orbitVol:0.10,heartbeatBpm:64,heartbeatGain:0.030,hplusGain:0.000,visual:'mandala'},
+  'Gateway Threshold':{desc:'Gateway-style Focus 10 threshold: quiet spectral ocean, buried 7 Hz binaural, subtle body pulse.',focus:'Gateway / Focus 10',carrier:136,beat:7.0,toneGain:0.18,noiseGain:0.10,noiseCutoff:2200,orbitSpeed:0.28,orbitVol:0.18,heartbeatBpm:56,heartbeatGain:0.035,hplusGain:0.015,visual:'orbit'},
+  'Calm Descent':     {desc:'Stress reduction and downshift toward sleep-adjacent calm.',focus:'Focus 10',carrier:128,beat:5.6,toneGain:0.14,noiseGain:0.11,noiseCutoff:2300,orbitSpeed:0.20,orbitVol:0.18,heartbeatBpm:56,heartbeatGain:0.030,hplusGain:0.010,visual:'mandala'},
+  'Focus Lock':       {desc:'More attentive, less dreamy. Higher alpha with restrained ocean field.',focus:'Focus 10',carrier:148,beat:10.5,toneGain:0.16,noiseGain:0.07,noiseCutoff:2000,orbitSpeed:0.32,orbitVol:0.12,heartbeatBpm:62,heartbeatGain:0.025,hplusGain:0.000,visual:'starfield'},
+  'Symbolic Vision':  {desc:'Imagery-friendly Focus 12 variant with wide stereo spectral drift.',focus:'Focus 12',carrier:126,beat:6.0,toneGain:0.15,noiseGain:0.09,noiseCutoff:2500,orbitSpeed:0.20,orbitVol:0.16,heartbeatBpm:52,heartbeatGain:0.025,hplusGain:0.005,visual:'flower'},
+  'Observer Drift':   {desc:'Detached floating perspective. Slow Focus 15-like inward field.',focus:'Focus 15',carrier:120,beat:4.8,toneGain:0.13,noiseGain:0.08,noiseCutoff:2100,orbitSpeed:0.14,orbitVol:0.13,heartbeatBpm:50,heartbeatGain:0.020,hplusGain:0.000,visual:'fractal'}
 };
 const ALL_PRESETS   = Object.keys(presets);
 const BASIC_PRESETS = ['Gateway Threshold','Calm Descent','Focus Lock','Symbolic Vision','Observer Drift','Return'];
@@ -732,12 +732,12 @@ const state = {
   mode:'basic',playing:false,paused:false,
   headphonesTested:false,visualOverlay:false,
   currentPreset:'Gateway Threshold',currentPhase:0,
-  sessionMinutes:20,transitionSecs:18,seqMode:'manual',
+  sessionMinutes:20,transitionSecs:24,seqMode:'manual',
   queue:loadQueue(),queueIndex:0,
   elapsedSeconds:0,phaseElapsed:0,timerHandle:null,lastTick:null,
-  visualMode:'orbit',visualIntensity:1,panSpeed:0.006,
+  visualMode:'orbit',visualIntensity:1,panSpeed:0.004,
   visualToggle:'optional',intDefaultMinutes:20,
-  noiseOrbitSpeed:0.7,heartbeatBpm:60,heartbeatGain:0.14,hplusGain:0.08,orbitVol:0.22,
+  noiseOrbitSpeed:0.28,heartbeatBpm:56,heartbeatGain:0.035,hplusGain:0.015,orbitVol:0.18,
   autoCycle:false,cycleMinutes:2,cycleElapsed:0,
   transitioning:false,transitionProgress:0,transitionDuration:3.5,
   transitionFrom:null,transitionTo:null,
@@ -796,9 +796,9 @@ const els={
 };
 
 /* ══════════════════════════════════════════════
-   AUDIO ENGINE v5.5
+   AUDIO ENGINE v5.6
    FIX #1/#2: Crossfade chunk scheduler — no loop seam, no static
-   FIX #3: Never suspend; MediaSession + NoSleep + lookahead beats
+  FIX #3: Never suspend; MediaSession + NoSleep + media-element bridge
 ══════════════════════════════════════════════ */
 let audio = null, hbHandle = null, visualT = 0, lastFrameTime = null;
 
@@ -812,12 +812,11 @@ let _noiseNext    = 0;    // AudioContext time for next chunk start
 let _noiseHandle  = null; // setInterval for scheduling ahead
 let _chunkIdx     = 0;    // alternates 0/1 to select bufA or bufB
 
-// ── Heartbeat lookahead constants ──
-// Pre-schedule beats 15s into audio graph. Immune to setInterval throttling
-// when tab is hidden or screen is off. 3s replenishment interval.
-const HB_LOOKAHEAD = 15.0;
-const HB_SCHED_MS  = 3000;
-let _nextBeatTime  = 0;
+// ── Screen-off constants ──
+// Mobile browsers throttle JS timers hard when the screen blanks. Audio must be
+// driven by the audio graph/media pipeline, not by short setInterval windows.
+const SCREEN_OFF_MIN_AUDIO_AHEAD = 30 * 60;
+const SCREEN_OFF_PAD_SECONDS = 5 * 60;
 
 // ── NoSleep: silent audio element keeps Chrome Android from suspending context ──
 let _keepAliveAudio = null;
@@ -869,10 +868,12 @@ function startNoiseScheduler() {
   if (!audio) return;
   _noiseNext = audio.ctx.currentTime;
   _chunkIdx  = 0;
-  // Pre-schedule 2 chunks: chunk 1 starts now, chunk 2 starts at +12s (overlaps end of 1)
-  _schedulePinkChunk(audio.ctx, audio.noiseFilter, audio.noiseBufA, audio.noiseBufB);
-  _schedulePinkChunk(audio.ctx, audio.noiseFilter, audio.noiseBufA, audio.noiseBufB);
-  // Keep 2 chunks ahead of current time
+  // Pre-schedule a long bed so ocean audio survives screen-off timer throttling.
+  const target = audio.ctx.currentTime + screenOffScheduleSeconds();
+  while (_noiseNext < target) {
+    _schedulePinkChunk(audio.ctx, audio.noiseFilter, audio.noiseBufA, audio.noiseBufB);
+  }
+  // Timer remains only as a top-up while the page is visible/awake.
   _noiseHandle = setInterval(() => {
     if (!audio) return;
     while (_noiseNext < audio.ctx.currentTime + NOISE_CHUNK * 2) {
@@ -885,12 +886,29 @@ function stopNoiseScheduler() {
   if (_noiseHandle) { clearInterval(_noiseHandle); _noiseHandle = null; }
 }
 
+function screenOffScheduleSeconds() {
+  const sessionSeconds = Math.max(0, currentSessionMinutes() * 60);
+  return Math.max(SCREEN_OFF_MIN_AUDIO_AHEAD, sessionSeconds + SCREEN_OFF_PAD_SECONDS);
+}
+
 /* ── Audio engine: no noiseSource (scheduler manages it), panDepth 0.78 ── */
 function createAudioEngine() {
   const ctx = new(window.AudioContext||window.webkitAudioContext)();
   const master = ctx.createGain();
   master.gain.value = parseFloat(els.masterVol.value) / 100;
-  master.connect(ctx.destination);
+  let mediaDest = null, mediaEl = null;
+  if (ctx.createMediaStreamDestination) {
+    mediaDest = ctx.createMediaStreamDestination();
+    master.connect(mediaDest);
+    mediaEl = new Audio();
+    mediaEl.srcObject = mediaDest.stream;
+    mediaEl.loop = true;
+    mediaEl.playsInline = true;
+    mediaEl.preload = 'auto';
+    mediaEl.volume = 1;
+  } else {
+    master.connect(ctx.destination);
+  }
 
   // Binaural oscillators
   const leftOsc  = ctx.createOscillator(); leftOsc.type  = 'sine';
@@ -902,47 +920,49 @@ function createAudioEngine() {
   leftG.connect(merger,0,0); rightG.connect(merger,0,1);
   merger.connect(master);
 
-  // Noise chain — sources managed externally by crossfade scheduler
+  // Stereo spectral ocean — pink-noise bed split into independent left/right filters.
   const noiseFilter   = ctx.createBiquadFilter(); noiseFilter.type = 'lowpass';
-  // Lowpass at ~1600 Hz default: soft, diffuse Monroe pink-noise character
   const noiseGainNode = ctx.createGain();
-  const noisePan      = ctx.createStereoPanner();
+  const oceanMerger   = ctx.createChannelMerger(2);
+  const leftSpec      = ctx.createBiquadFilter(); leftSpec.type = 'bandpass'; leftSpec.Q.value = 0.58; leftSpec.frequency.value = 1200;
+  const rightSpec     = ctx.createBiquadFilter(); rightSpec.type = 'bandpass'; rightSpec.Q.value = 0.58; rightSpec.frequency.value = 1360;
+  const leftSpecGain  = ctx.createGain(); leftSpecGain.gain.value = 0.72;
+  const rightSpecGain = ctx.createGain(); rightSpecGain.gain.value = 0.72;
   noiseFilter.connect(noiseGainNode);
-  noiseGainNode.connect(noisePan);
-  noisePan.connect(master);
+  noiseGainNode.connect(leftSpec); noiseGainNode.connect(rightSpec);
+  leftSpec.connect(leftSpecGain); rightSpec.connect(rightSpecGain);
+  leftSpecGain.connect(oceanMerger,0,0); rightSpecGain.connect(oceanMerger,0,1);
+  oceanMerger.connect(master);
 
-  // ── OCEAN WAVE SYSTEM (replaces single panLFO) ──
-  // Three independent LFOs at slightly different periods → organic, never mechanical.
-  // At orbitSpeed=0.7 (default): pan sweeps 8.3s L→R→L (spatial flutter).
-  // AM breathes every ~40s (barely audible — noise stays continuous).
-  // PAN is the primary effect. AM is secondary. Filter sweep is decorative.
-  //
-  // 1. AMPLITUDE SWELL — the primary "ocean" effect.
-  //    noiseGainNode.gain base = orbitVol. waveAMDepth adds ±(orbitVol×0.45).
-  //    Result: gain breathes between 0.55× and 1.45× of orbitVol — wave crests & troughs.
+  // ── OCEAN WAVE SYSTEM ──
+  // Sample-matched direction: slow stereo spectral arcs, not obvious hard panning.
   const waveAM = ctx.createOscillator(); waveAM.type = 'sine';
-  waveAM.frequency.value = state.noiseOrbitSpeed * 0.035;  // ~40s period @ default speed — subtle background breath
+  waveAM.frequency.value = state.noiseOrbitSpeed * 0.026;
   const waveAMDepth = ctx.createGain();
-  waveAMDepth.gain.value = state.orbitVol * 0.22;  // gentle breathing — noise stays continuous, never silent
+  waveAMDepth.gain.value = state.orbitVol * 0.14;
   waveAM.connect(waveAMDepth); waveAMDepth.connect(noiseGainNode.gain);
-  noiseGainNode.gain.value = state.orbitVol;  // DC base — modulated by waveAM above
+  noiseGainNode.gain.value = state.orbitVol;
   waveAM.start();
 
-  // 2. GENTLE STEREO DRIFT — very subtle, pan ±0.24 max, much less than before.
-  //    The ocean moves across you slowly, not hard L/R switching.
   const wavePan = ctx.createOscillator(); wavePan.type = 'sine';
-  wavePan.frequency.value = state.noiseOrbitSpeed * 0.172;  // 8.3s sweep @ default — the main spatial flutter
-  const panDepth = ctx.createGain(); panDepth.gain.value = 0.76;  // strong spatial sweep — this IS the flutter
-  wavePan.connect(panDepth); panDepth.connect(noisePan.pan);
+  wavePan.frequency.value = state.noiseOrbitSpeed * 0.054;
+  const panDepth = ctx.createGain(); panDepth.gain.value = 0.14;
+  const panDepthInv = ctx.createGain(); panDepthInv.gain.value = -0.14;
+  wavePan.connect(panDepth); wavePan.connect(panDepthInv);
+  panDepth.connect(leftSpecGain.gain); panDepthInv.connect(rightSpecGain.gain);
   wavePan.start();
 
-  // 3. FILTER FREQUENCY SWEEP — the "woosh" of each wave crest.
-  //    Sweeps noiseFilter.frequency ±650Hz around its base → ~500–1850Hz arc per wave.
   const filterSweep = ctx.createOscillator(); filterSweep.type = 'sine';
-  filterSweep.frequency.value = state.noiseOrbitSpeed * 0.028;  // ~50s — barely perceptible drift
-  const filterSweepDepth = ctx.createGain(); filterSweepDepth.gain.value = 130;  // ±130 Hz — subtle spectral colour only
-  filterSweep.connect(filterSweepDepth); filterSweepDepth.connect(noiseFilter.frequency);
+  filterSweep.frequency.value = state.noiseOrbitSpeed * 0.045;
+  const filterSweepDepth = ctx.createGain(); filterSweepDepth.gain.value = 760;
+  filterSweep.connect(filterSweepDepth); filterSweepDepth.connect(leftSpec.frequency);
   filterSweep.start();
+
+  const filterSweepR = ctx.createOscillator(); filterSweepR.type = 'sine';
+  filterSweepR.frequency.value = state.noiseOrbitSpeed * 0.039;
+  const filterSweepDepthR = ctx.createGain(); filterSweepDepthR.gain.value = -620;
+  filterSweepR.connect(filterSweepDepthR); filterSweepDepthR.connect(rightSpec.frequency);
+  filterSweepR.start();
 
   // H+ tone stack (108/324/540 Hz, 40Hz gamma AM)
   const hp1=ctx.createOscillator(); hp1.type='sine'; hp1.frequency.value=108;
@@ -959,6 +979,9 @@ function createAudioEngine() {
   hpg1.connect(hpMix); hpg2.connect(hpMix); hpg3.connect(hpMix);
   hpLFO.connect(hpLFODepth); hpLFODepth.connect(hpMaster.gain);
   hpMix.connect(hpMaster); hpMaster.connect(master);
+
+  const hbGainNode = ctx.createGain(); hbGainNode.gain.value = state.heartbeatGain;
+  hbGainNode.connect(master);
 
   // Pre-generate TWO alternating noise buffers (CPU done once, zero runtime spikes)
   const noiseBufA = createPinkNoiseBuffer(ctx, NOISE_CHUNK + NOISE_FADE);
@@ -977,10 +1000,11 @@ function createAudioEngine() {
     }
   };
 
-  return { ctx, master, leftOsc, rightOsc, noiseFilter, noiseGainNode, noisePan,
-           waveAM, waveAMDepth, wavePan, panDepth, filterSweep, filterSweepDepth,
-           hp1, hp2, hp3, hpLFO, hpLFODepth, hpMix, hpMaster,
-           noiseBufA, noiseBufB };
+  return { ctx, master, mediaDest, mediaEl, leftOsc, rightOsc, leftG, rightG,
+            noiseFilter, noiseGainNode, oceanMerger, leftSpec, rightSpec, leftSpecGain, rightSpecGain,
+            waveAM, waveAMDepth, wavePan, panDepth, panDepthInv, filterSweep, filterSweepDepth, filterSweepR, filterSweepDepthR,
+            hp1, hp2, hp3, hpLFO, hpLFODepth, hpMix, hpMaster, hbGainNode, hbSource:null,
+            noiseBufA, noiseBufB };
 }
 
 function pauseAudio() {
@@ -993,12 +1017,14 @@ function resumeAudio() {
   if (!audio) return;
   const vol = Math.max(0.001, parseFloat(els.masterVol.value) / 100);
   const now = audio.ctx.currentTime;
+  if (audio.mediaEl) audio.mediaEl.play().catch(() => {});
   audio.master.gain.cancelScheduledValues(now);
   audio.master.gain.exponentialRampToValueAtTime(vol, now + 0.4);
 }
 function startAudio() {
   if (audio) { resumeAudio(); return; }
   audio = createAudioEngine();
+  if (audio.mediaEl) audio.mediaEl.play().catch(() => log('Media bridge pending user gesture.'));
   updateAudioParams(false);
   startNoiseScheduler();
   setupMediaSession();
@@ -1010,6 +1036,7 @@ function stopAudio() {
   stopHeartbeat(); stopNoiseScheduler();
   teardownMediaSession(); stopKeepAlive();
   const ctx = audio.ctx, now = ctx.currentTime;
+  if (audio.mediaEl) { try { audio.mediaEl.pause(); audio.mediaEl.srcObject = null; } catch(e) {} }
   audio.master.gain.cancelScheduledValues(now);
   audio.master.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
   setTimeout(() => { try { ctx.close(); } catch(e) {} audio = null; }, 1400);
@@ -1023,15 +1050,20 @@ function updateAudioParams(withCue) {
   audio.rightOsc.frequency.cancelScheduledValues(now);
   audio.leftOsc.frequency.linearRampToValueAtTime(s.carrier, end);
   audio.rightOsc.frequency.linearRampToValueAtTime(s.carrier + s.beat, end);
+  audio.leftG.gain.cancelScheduledValues(now);
+  audio.rightG.gain.cancelScheduledValues(now);
+  audio.leftG.gain.linearRampToValueAtTime(s.toneGain, end);
+  audio.rightG.gain.linearRampToValueAtTime(s.toneGain, end);
   // filterSweep LFO audio-rate modulates around this base — just set center, no cancel
   audio.noiseFilter.frequency.setValueAtTime(s.noiseCutoff, now);
   // noiseGainNode.gain base is set by orbitVol (waveAM modulates around it)
   // We set it directly; waveAM audio-rate modulation adds on top
   audio.noiseGainNode.gain.setValueAtTime(state.orbitVol, now);
-  audio.waveAMDepth.gain.setValueAtTime(state.orbitVol * 0.22, now);
+  audio.waveAMDepth.gain.setValueAtTime(state.orbitVol * 0.14, now);
   if (!state.paused) audio.master.gain.linearRampToValueAtTime(s.masterVolume, end);
   audio.hpMaster.gain.setValueAtTime(state.hplusGain, now);
   audio.hpMix.gain.setValueAtTime(state.hplusGain * 0.4, now);
+  if (audio.hbGainNode) audio.hbGainNode.gain.setValueAtTime(state.heartbeatGain, now);
   if (withCue) playCue(audio.ctx, audio.master, s.cueGain);
   syncBadges();
 }
@@ -1045,33 +1077,50 @@ function playCue(ctx, master, gainVal=0.16) {
   osc.connect(g); g.connect(master); osc.start(now); osc.stop(now+0.55);
 }
 
-/* ── HEARTBEAT — lookahead scheduler ──
-   Pre-schedules HB_LOOKAHEAD seconds of beats into the audio graph.
-   Beats fire from the audio engine even when setInterval is throttled.
-   Works with screen off, background tab, battery save mode.          ── */
+function createHeartbeatBuffer(ctx, bpm) {
+  const interval = Math.max(0.45, 60 / Math.max(30, bpm));
+  const len = Math.max(1, Math.floor(ctx.sampleRate * interval));
+  const buf = ctx.createBuffer(2, len, ctx.sampleRate);
+  const addPulse = (when, freq, dur, amp) => {
+    const start = Math.floor(when * ctx.sampleRate);
+    const count = Math.min(len - start, Math.floor(dur * ctx.sampleRate));
+    for (let ch = 0; ch < 2; ch++) {
+      const d = buf.getChannelData(ch);
+      for (let i = 0; i < count; i++) {
+        const t = i / ctx.sampleRate;
+        const fall = Math.exp(-t * 26);
+        const body = Math.sin(Math.PI * 2 * freq * t) * fall;
+        d[start + i] += body * amp;
+      }
+    }
+  };
+  addPulse(0, 65, 0.15, 0.9);
+  if (interval > 0.42) addPulse(Math.min(0.29, interval * 0.46), 52, 0.12, 0.55);
+  return buf;
+}
+
+/* ── HEARTBEAT — looping audio graph source ──
+   No setInterval is required after start. This keeps the subtle pulse running
+   when the tablet screen blanks and JS timers are frozen.              ── */
 function startHeartbeat() {
   stopHeartbeat();
   if (!audio || state.heartbeatGain <= 0) return;
-  _nextBeatTime = audio.ctx.currentTime + 0.1;
-  _scheduleBeats(audio.ctx.currentTime + HB_LOOKAHEAD);
-  hbHandle = setInterval(() => {
-    if (audio && state.playing && !state.paused) {
-      _scheduleBeats(audio.ctx.currentTime + HB_LOOKAHEAD);
-    }
-  }, HB_SCHED_MS);
-  log(`Heartbeat: ${state.heartbeatBpm} BPM — ${HB_LOOKAHEAD}s lookahead`);
-}
-function _scheduleBeats(until) {
-  if (!audio) return;
-  const g = state.heartbeatGain;
-  while (_nextBeatTime < until) {
-    playDrum(audio.ctx, audio.master, _nextBeatTime, 65, 0.15, g);
-    playDrum(audio.ctx, audio.master, _nextBeatTime + 0.29, 52, 0.12, g * 0.64);
-    _nextBeatTime += 60 / state.heartbeatBpm;
-  }
+  const src = audio.ctx.createBufferSource();
+  src.buffer = createHeartbeatBuffer(audio.ctx, state.heartbeatBpm);
+  src.loop = true;
+  audio.hbGainNode.gain.setValueAtTime(state.heartbeatGain, audio.ctx.currentTime);
+  src.connect(audio.hbGainNode);
+  src.start(audio.ctx.currentTime + 0.03);
+  audio.hbSource = src;
+  hbHandle = src;
+  log(`Heartbeat: ${state.heartbeatBpm} BPM — audio-graph loop`);
 }
 function stopHeartbeat() {
-  if (hbHandle) { clearInterval(hbHandle); hbHandle = null; }
+  if (audio && audio.hbSource) {
+    try { audio.hbSource.stop(); audio.hbSource.disconnect(); } catch(e) {}
+    audio.hbSource = null;
+  }
+  hbHandle = null;
 }
 function playDrum(ctx, output, when, freq, dur, gain) {
   if (!ctx || gain <= 0) return;
@@ -1088,7 +1137,6 @@ function playDrum(ctx, output, when, freq, dur, gain) {
 /* ── Reschedule lookahead on page return or auto-resume ── */
 function _rescheduleLookahead() {
   if (!audio || !state.playing || state.paused) return;
-  _scheduleBeats(audio.ctx.currentTime + HB_LOOKAHEAD);
   while (_noiseNext < audio.ctx.currentTime + NOISE_CHUNK * 2) {
     _schedulePinkChunk(audio.ctx, audio.noiseFilter, audio.noiseBufA, audio.noiseBufB);
   }
@@ -1146,7 +1194,7 @@ function stopKeepAlive() {
   _keepAliveAudio = null;
 }
 
-/* ── VISIBILITY HANDLER v5.5: NO SUSPEND — audio continues when page hidden ──
+/* ── VISIBILITY HANDLER v5.6: NO SUSPEND — audio continues when page hidden ──
    We removed ctx.suspend(). Audio plays through background/screen-off.
    On return: ensure context is running, top up lookahead.              ── */
 document.addEventListener('visibilitychange', () => {
@@ -1176,14 +1224,19 @@ setInterval(() => {
 /* ── Intro / Outro sequences ── */
 function playIntroSequence(ctx, master, onComplete) {
   if (!ctx) { if (onComplete) onComplete(); return; }
-  const freqs=[396,528,639], now=ctx.currentTime+0.15;
-  freqs.forEach((freq,i)=>{
-    const osc=ctx.createOscillator(),env=ctx.createGain();osc.type='sine';osc.frequency.value=freq;
-    env.gain.setValueAtTime(0.0001,now+i*0.55);env.gain.linearRampToValueAtTime(0.14,now+i*0.55+0.04);
-    env.gain.exponentialRampToValueAtTime(0.0001,now+i*0.55+0.42);
-    osc.connect(env);env.connect(master);osc.start(now+i*0.55);osc.stop(now+i*0.55+0.5);
-  });
-  if (onComplete) setTimeout(onComplete, (freqs.length*0.55+0.5)*1000);
+  const now=ctx.currentTime+0.12;
+  const ping=(t,freq,panVal,gain=0.075,dur=0.11)=>{
+    const osc=ctx.createOscillator(),env=ctx.createGain(),pan=ctx.createStereoPanner();
+    osc.type='square'; osc.frequency.setValueAtTime(freq,t); osc.frequency.exponentialRampToValueAtTime(freq*1.18,t+dur*0.55);
+    env.gain.setValueAtTime(0.0001,t); env.gain.linearRampToValueAtTime(gain,t+0.008); env.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    pan.pan.value=panVal; osc.connect(env); env.connect(pan); pan.connect(master); osc.start(t); osc.stop(t+dur+0.04);
+  };
+  for(let i=0;i<14;i++)ping(now+i*0.18,520+i*18,i%2===0?-0.82:0.82,0.055+i*0.002,0.085);
+  const sweep=ctx.createOscillator(),sweepEnv=ctx.createGain(),sweepPan=ctx.createStereoPanner();
+  sweep.type='sine'; sweep.frequency.setValueAtTime(840,now+2.8); sweep.frequency.exponentialRampToValueAtTime(136,now+7.6);
+  sweepEnv.gain.setValueAtTime(0.0001,now+2.8); sweepEnv.gain.linearRampToValueAtTime(0.06,now+3.2); sweepEnv.gain.exponentialRampToValueAtTime(0.0001,now+7.9);
+  sweepPan.pan.value=0; sweep.connect(sweepEnv); sweepEnv.connect(sweepPan); sweepPan.connect(master); sweep.start(now+2.8); sweep.stop(now+8.0);
+  if (onComplete) setTimeout(onComplete, 8200);
 }
 function playOutroSequence(ctx, master) {
   if (!ctx) return;
@@ -1267,10 +1320,12 @@ function applyPreset(name){
   state.currentPreset=name;const p=presets[name];if(!p)return;
   els.baseFreq.value=p.carrier;els.beatFreq.value=p.beat;
   els.toneGain.value=p.toneGain;els.noiseGain.value=p.noiseGain;
-  // Map legacy noiseGain to orbitVol (multiply by 1.7 to match new control range)
-  if(p.noiseGain!=null)setOrbitVol(Math.min(0.55,parseFloat(p.noiseGain)*1.7));
+  if(p.noiseCutoff!=null)els.noiseCutoff.value=p.noiseCutoff;
+  if(p.orbitSpeed!=null)setOrbitSpeed(p.orbitSpeed);
+  if(p.orbitVol!=null)setOrbitVol(p.orbitVol);else if(p.noiseGain!=null)setOrbitVol(Math.min(0.55,parseFloat(p.noiseGain)*1.7));
   state.heartbeatBpm=p.heartbeatBpm||60;els.heartbeatBpm.value=state.heartbeatBpm;
-  state.hplusGain=p.hplusGain||0.08;els.hplusGain.value=state.hplusGain;
+  state.heartbeatGain=p.heartbeatGain??state.heartbeatGain;els.heartbeatGain.value=state.heartbeatGain;
+  state.hplusGain=p.hplusGain??0.015;els.hplusGain.value=state.hplusGain;
   setVisMode(p.visual);updateLabels();syncBadges();updateAudioParams(false);
   if(state.playing&&!state.paused)startHeartbeat();
   renderBasicPresets();
@@ -1288,10 +1343,10 @@ function setOrbitSpeed(v){
   els.noiseOrbitSpd.value=v;els.noiseOrbitSpdAdv.value=v;
   if(audio){
     const now=audio.ctx.currentTime;
-    // All 3 ocean LFOs scale with orbit speed; slightly different ratios = organic drift
-    audio.waveAM.frequency.setValueAtTime(Number(v)*0.035,now);
-    audio.wavePan.frequency.setValueAtTime(Number(v)*0.172,now);
-    audio.filterSweep.frequency.setValueAtTime(Number(v)*0.028,now);
+    audio.waveAM.frequency.setValueAtTime(Number(v)*0.026,now);
+    audio.wavePan.frequency.setValueAtTime(Number(v)*0.054,now);
+    audio.filterSweep.frequency.setValueAtTime(Number(v)*0.045,now);
+    if(audio.filterSweepR)audio.filterSweepR.frequency.setValueAtTime(Number(v)*0.039,now);
   }
   updateLabels();syncBadges();
 }
@@ -1301,7 +1356,7 @@ function setOrbitVol(v){
   if(audio){
     const now=audio.ctx.currentTime;
     audio.noiseGainNode.gain.setValueAtTime(state.orbitVol,now);
-    audio.waveAMDepth.gain.setValueAtTime(state.orbitVol*0.22,now);
+    audio.waveAMDepth.gain.setValueAtTime(state.orbitVol*0.14,now);
   }
   updateLabels();
 }
@@ -1330,7 +1385,7 @@ function easeInOutCubic(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
    RESET FUNCTIONS
 ══════════════════════════════════════════════ */
 function resetBasic(){els.basicDuration.value=DEFAULTS.basicDuration;els.basicIntensity.value=DEFAULTS.basicIntensity;els.basicVisToggle.value=DEFAULTS.basicVisToggle;state.visualToggle=DEFAULTS.basicVisToggle;state.visualIntensity=DEFAULTS.basicIntensity;updateLabels();syncBadges();log('Basic reset.');}
-function resetIntermediate(){els.transitionSecs.value=DEFAULTS.transitionSecs;els.masterVol.value=DEFAULTS.masterVol;els.animSpeed.value=DEFAULTS.animSpeed;els.intDuration.value=DEFAULTS.intDuration;state.intDefaultMinutes=DEFAULTS.intDuration;setOrbitSpeed(DEFAULTS.noiseOrbitSpeed);updateLabels();updateAudioParams(false);log('Intermediate reset.');}
+function resetIntermediate(){els.transitionSecs.value=DEFAULTS.transitionSecs;els.masterVol.value=DEFAULTS.masterVol;els.animSpeed.value=DEFAULTS.animSpeed;els.intDuration.value=DEFAULTS.intDuration;state.intDefaultMinutes=DEFAULTS.intDuration;setOrbitSpeed(DEFAULTS.noiseOrbitSpeed);setOrbitVol(DEFAULTS.orbitVol);updateLabels();updateAudioParams(false);log('Intermediate reset.');}
 function resetAdvanced(){els.baseFreq.value=DEFAULTS.baseFreq;els.beatFreq.value=DEFAULTS.beatFreq;els.toneGain.value=DEFAULTS.toneGain;els.noiseGain.value=DEFAULTS.noiseGain;els.noiseCutoff.value=DEFAULTS.noiseCutoff;els.cueGain.value=DEFAULTS.cueGain;updateLabels();updateAudioParams(false);log('Audio engine reset.');}
 function resetMonroe(){state.heartbeatBpm=DEFAULTS.heartbeatBpm;els.heartbeatBpm.value=DEFAULTS.heartbeatBpm;state.heartbeatGain=DEFAULTS.heartbeatGain;els.heartbeatGain.value=DEFAULTS.heartbeatGain;state.hplusGain=DEFAULTS.hplusGain;els.hplusGain.value=DEFAULTS.hplusGain;setOrbitSpeed(DEFAULTS.noiseOrbitSpeed);setOrbitVol(DEFAULTS.orbitVol);if(audio){audio.hpMaster.gain.setValueAtTime(state.hplusGain,audio.ctx.currentTime);audio.hpMix.gain.setValueAtTime(state.hplusGain*0.4,audio.ctx.currentTime);}updateLabels();syncBadges();if(state.playing&&!state.paused)startHeartbeat();log('Monroe params reset.');}
 
@@ -1419,6 +1474,15 @@ function renderQueue(){
   state.queue.forEach((item,i)=>{const isNow=state.playing&&i===state.queueIndex;const div=document.createElement('div');div.className='queue-item'+(isNow?' now':'');div.innerHTML=`<div class="qi-row"><div><span class="qi-name">${item.name}</span>${isNow?'<span class="qi-now">▶ NOW</span>':''}<div class="qi-dur">${item.durationMinutes} min</div></div><div class="qi-acts"><button class="secondary" data-action="up" data-id="${item.id}">↑</button><button class="secondary" data-action="down" data-id="${item.id}">↓</button><button class="danger-btn" data-action="remove" data-id="${item.id}">✕</button></div></div>`;els.queueList.appendChild(div);});
 }
 function addToQueue(name,mins){state.queue.push({id:Date.now()+Math.random(),name,durationMinutes:mins});persistQueue();renderQueue();log(`Queued: ${name} × ${mins} min`);}
+function applySequenceMode(mode){
+  state.seqMode=mode;
+  if(mode==='manual'){updateLabels();return;}
+  const baseDur=Number(els.intDuration.value)||20;
+  const names=mode==='full'?['Focus 10','Focus 12','Focus 15','Focus 21','Return']:['Gateway Threshold','Focus 10','Focus 12','Return'];
+  const weights=mode==='full'?[1,1,1,1,0.5]:[0.75,1,1,0.5];
+  state.queue=names.map((name,i)=>({id:Date.now()+i+Math.random(),name,durationMinutes:Math.max(5,Math.round(baseDur*weights[i]))}));
+  state.queueIndex=0;persistQueue();renderQueue();updateLabels();log(`Sequence loaded: ${labelSeq(mode)}`);
+}
 function moveQueue(id,dir){const idx=state.queue.findIndex(x=>String(x.id)===String(id));if(idx<0)return;const sw=dir==='up'?idx-1:idx+1;if(sw<0||sw>=state.queue.length)return;[state.queue[idx],state.queue[sw]]=[state.queue[sw],state.queue[idx]];persistQueue();renderQueue();}
 function removeQueue(id){state.queue=state.queue.filter(x=>String(x.id)!==String(id));if(state.queueIndex>=state.queue.length)state.queueIndex=Math.max(0,state.queue.length-1);persistQueue();renderQueue();}
 function renderJournal(){if(!state.journal.length){els.journalList.innerHTML='<div class="j-entry"><div class="tiny">No entries yet.</div></div>';return;}els.journalList.innerHTML=state.journal.map(j=>`<div class="j-entry"><div class="j-ts">${j.ts}</div><div class="j-text">${j.text}</div></div>`).join('');}
@@ -1544,7 +1608,7 @@ function savePresetJson(){const payload={name:els.presetName.value||'My State Va
 function loadPresetFile(file){const reader=new FileReader();reader.onload=()=>{try{const pl=JSON.parse(reader.result);if(pl.preset&&presets[pl.preset])state.currentPreset=pl.preset;const s=pl.settings||{};if(s.carrier!=null)els.baseFreq.value=s.carrier;if(s.beat!=null)els.beatFreq.value=s.beat;if(s.toneGain!=null)els.toneGain.value=s.toneGain;if(s.noiseGain!=null)els.noiseGain.value=s.noiseGain;if(s.noiseCutoff!=null)els.noiseCutoff.value=s.noiseCutoff;if(s.cueGain!=null)els.cueGain.value=s.cueGain;if(s.masterVolume!=null)els.masterVol.value=Math.round(s.masterVolume*100);if(s.panSpeed!=null){state.panSpeed=s.panSpeed;els.animSpeed.value=s.panSpeed;}if(s.visualMode)setVisMode(s.visualMode);if(s.visualIntensity!=null){state.visualIntensity=Number(s.visualIntensity);els.visIntensity.value=s.visualIntensity;}if(pl.visualToggle){state.visualToggle=pl.visualToggle;els.basicVisToggle.value=pl.visualToggle;}if(pl.transitionSeconds!=null)els.transitionSecs.value=pl.transitionSeconds;if(pl.sessionMinutes!=null)els.basicDuration.value=pl.sessionMinutes;if(pl.noiseOrbitSpeed!=null)setOrbitSpeed(pl.noiseOrbitSpeed);if(pl.heartbeatBpm!=null){state.heartbeatBpm=pl.heartbeatBpm;els.heartbeatBpm.value=pl.heartbeatBpm;}if(pl.heartbeatGain!=null){state.heartbeatGain=pl.heartbeatGain;els.heartbeatGain.value=pl.heartbeatGain;}if(pl.hplusGain!=null){state.hplusGain=pl.hplusGain;els.hplusGain.value=pl.hplusGain;}updateLabels();syncBadges();renderBasicPresets();updateAudioParams(false);log('Preset JSON loaded.');}catch{alert('Invalid preset file.');}};reader.readAsText(file);}
 async function exportWav(){const btn=$('exportWavBtn');btn.textContent='Rendering…';btn.disabled=true;try{const durS=Number(els.exportDuration.value),sr=44100;const off=new OfflineAudioContext(2,durS*sr,sr);const s=currentSettings();const lo=off.createOscillator(),ro=off.createOscillator();lo.type='sine';ro.type='sine';lo.frequency.value=s.carrier;ro.frequency.value=s.carrier+s.beat;const merger=off.createChannelMerger(2),lg=off.createGain(),rg=off.createGain();lg.gain.value=0.4;rg.gain.value=0.4;lo.connect(lg);ro.connect(rg);lg.connect(merger,0,0);rg.connect(merger,0,1);const nb=createPinkNoiseBuffer(off,Math.min(4,durS));const ns=off.createBufferSource();ns.buffer=nb;ns.loop=true;const nf=off.createBiquadFilter();nf.type='lowpass';nf.frequency.value=s.noiseCutoff;const ng2=off.createGain();ng2.gain.value=s.noiseGain;const np=off.createStereoPanner();for(let st=0;st<durS;st+=0.5)np.pan.setValueAtTime(Math.sin(st*Math.PI*2*state.noiseOrbitSpeed*0.115),st);ns.connect(nf);nf.connect(np);np.connect(ng2);const master=off.createGain();master.gain.value=s.masterVolume;merger.connect(master);ng2.connect(master);master.connect(off.destination);const hbI=60/state.heartbeatBpm;for(let st=0;st<durS;st+=hbI){const pk=(when,freq,dur,gain)=>{const o=off.createOscillator(),e=off.createGain();o.type='sine';o.frequency.setValueAtTime(freq,when);o.frequency.exponentialRampToValueAtTime(freq*0.22,when+dur);e.gain.setValueAtTime(0.0001,when);e.gain.linearRampToValueAtTime(Math.max(0.001,gain),when+0.004);e.gain.exponentialRampToValueAtTime(0.0001,when+dur);o.connect(e);e.connect(master);o.start(when);o.stop(Math.min(durS,when+dur+0.06));};if(st<durS)pk(st,65,0.15,state.heartbeatGain);if(st+0.29<durS)pk(st+0.29,52,0.12,state.heartbeatGain*0.64);}lo.start(0);ro.start(0);ns.start(0);const rendered=await off.startRendering();const wav=audioBufferToWav(rendered);const blob=new Blob([wav],{type:'audio/wav'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='uss_export.wav';a.click();URL.revokeObjectURL(url);log(`WAV export complete (${durS}s).`);}catch(e){log(`WAV export failed: ${e.message}`);}btn.textContent='Export WAV';btn.disabled=false;}
 function audioBufferToWav(buffer){const ch=buffer.numberOfChannels,sr=buffer.sampleRate,bd=16,samples=buffer.length,ba=ch*bd/8,br=sr*ba,ds=samples*ba;const buf=new ArrayBuffer(44+ds),view=new DataView(buf);let o=0;const ws=s=>{for(let i=0;i<s.length;i++)view.setUint8(o++,s.charCodeAt(i));};const wu32=v=>{view.setUint32(o,v,true);o+=4;};const wu16=v=>{view.setUint16(o,v,true);o+=2;};ws('RIFF');wu32(36+ds);ws('WAVE');ws('fmt ');wu32(16);wu16(1);wu16(ch);wu32(sr);wu32(br);wu16(ba);wu16(bd);ws('data');wu32(ds);const cd=[];for(let c=0;c<ch;c++)cd.push(buffer.getChannelData(c));for(let i=0;i<samples;i++)for(let c=0;c<ch;c++){const sv=Math.max(-1,Math.min(1,cd[c][i]));view.setInt16(o,sv<0?sv*0x8000:sv*0x7FFF,true);o+=2;}return buf;}
-async function copySummary(){const txt=`USS v5.5\nPreset: ${state.currentPreset}\nFocus: ${presets[state.currentPreset]?.focus||'—'}\nPhase: ${phases[state.currentPhase].name}\nCarrier: ${els.baseFreq.value} Hz\nBeat: ${parseFloat(els.beatFreq.value).toFixed(1)} Hz\nHeartbeat: ${state.heartbeatBpm} BPM\nH+: ${state.hplusGain.toFixed(3)}\nOrbit: ${orbitLabel(state.noiseOrbitSpeed)}\nVisual: ${labelMode(state.visualMode)}\nDuration: ${currentSessionMinutes()} min`;try{await navigator.clipboard.writeText(txt);log('Summary copied.');}catch{log('Clipboard copy failed.');}}
+async function copySummary(){const txt=`USS v5.6\nPreset: ${state.currentPreset}\nFocus: ${presets[state.currentPreset]?.focus||'—'}\nPhase: ${phases[state.currentPhase].name}\nCarrier: ${els.baseFreq.value} Hz\nBeat: ${parseFloat(els.beatFreq.value).toFixed(1)} Hz\nHeartbeat: ${state.heartbeatBpm} BPM\nH+: ${state.hplusGain.toFixed(3)}\nOrbit: ${orbitLabel(state.noiseOrbitSpeed)}\nVisual: ${labelMode(state.visualMode)}\nDuration: ${currentSessionMinutes()} min`;try{await navigator.clipboard.writeText(txt);log('Summary copied.');}catch{log('Clipboard copy failed.');}}
 
 /* ══════════════════════════════════════════════
    EVENT HANDLERS
@@ -1588,7 +1652,7 @@ $('copySpotifyBtn').addEventListener('click',async()=>{try{await navigator.clipb
 els.basicDuration.addEventListener('input',()=>{updateLabels();state.sessionMinutes=Number(els.basicDuration.value);});
 els.basicIntensity.addEventListener('input',()=>{state.visualIntensity=Number(els.basicIntensity.value);els.visIntensity.value=state.visualIntensity;updateLabels();});
 els.basicVisToggle.addEventListener('change',()=>{state.visualToggle=els.basicVisToggle.value;updateLabels();syncBadges();});
-els.seqMode.addEventListener('change',updateLabels);
+els.seqMode.addEventListener('change',()=>applySequenceMode(els.seqMode.value));
 els.transitionSecs.addEventListener('input',updateLabels);
 els.masterVol.addEventListener('input',()=>{updateLabels();updateAudioParams(false);});
 els.noiseOrbitSpd.addEventListener('input',e=>setOrbitSpeed(e.target.value));
@@ -1601,10 +1665,11 @@ els.intVisMode.addEventListener('change',()=>{setVisMode(els.intVisMode.value);u
 els.visMode.addEventListener('change',()=>{setVisMode(els.visMode.value);updateLabels();syncBadges();});
 els.visIntensity.addEventListener('input',()=>{state.visualIntensity=Number(els.visIntensity.value);els.basicIntensity.value=state.visualIntensity;updateLabels();});
 els.heartbeatBpm.addEventListener('input',()=>{state.heartbeatBpm=Number(els.heartbeatBpm.value);updateLabels();if(state.playing&&!state.paused)startHeartbeat();});
-els.heartbeatGain.addEventListener('input',()=>{state.heartbeatGain=Number(els.heartbeatGain.value);updateLabels();});
+els.heartbeatGain.addEventListener('input',()=>{state.heartbeatGain=Number(els.heartbeatGain.value);if(audio&&audio.hbGainNode)audio.hbGainNode.gain.setValueAtTime(state.heartbeatGain,audio.ctx.currentTime);updateLabels();syncBadges();});
 els.hplusGain.addEventListener('input',()=>{state.hplusGain=Number(els.hplusGain.value);if(audio){audio.hpMaster.gain.setValueAtTime(state.hplusGain,audio.ctx.currentTime);audio.hpMix.gain.setValueAtTime(state.hplusGain*0.4,audio.ctx.currentTime);}updateLabels();syncBadges();});
 els.exportDuration.addEventListener('change',updateLabels);
-['baseFreq','beatFreq','toneGain','noiseGain','noiseCutoff','cueGain'].forEach(id=>{$(id).addEventListener('input',()=>{updateLabels();updateAudioParams(false);});});
+['baseFreq','beatFreq','toneGain','noiseCutoff','cueGain'].forEach(id=>{$(id).addEventListener('input',()=>{updateLabels();updateAudioParams(false);});});
+els.noiseGain.addEventListener('input',()=>{setOrbitVol(Math.min(0.55,Number(els.noiseGain.value)*1.8));updateAudioParams(false);});
 window.addEventListener('resize',resizeCanvases);
 if(typeof ResizeObserver!=='undefined'){new ResizeObserver(()=>{if(state.mode==='advanced')resizeCanvases();}).observe(els.visualCanvas);}
 document.addEventListener('keydown',e=>{
@@ -1628,7 +1693,7 @@ function init(){
   applyPreset(state.currentPreset);
   syncBadges();updateTimeDisplays();updateCycleUI();
   requestAnimationFrame(animateLoop);
-  log('USS v5.5 ready. Flutter orbit · pan-primary 8.3s sweep · subtle AM · soft lowpass.');
+  log('USS v5.6 ready. Stereo spectral ocean · buried tones · audio-graph heartbeat · screen-off bridge.');
 }
 init();
 </script>
