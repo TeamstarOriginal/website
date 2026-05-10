@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGNAL V8 — UAP/UFO Government Release Tracker · Journalist Evidence Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04080C;--bg2:#080F16;--bg3:#0C1820;--card:#0A1520;
+  --border:rgba(21,163,211,0.13);--borderA:rgba(21,163,211,0.45);
+  --accent:#15A3D3;--accent2:#0C3447;--glow:rgba(21,163,211,0.18);
+  --text:#D8EDF5;--dim:#6A8E9F;--muted:#3A5A70;
+  --ok:#22C55E;--warn:#F59E0B;--danger:#EF4444;
+  --t1:#22C55E;--t2:#15A3D3;--t3:#8B5CF6;--sci:#F59E0B;--tech:#EC4899;
+  --osint:#F97316;--uap:#A855F7;--case:#06B6D4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(21,163,211,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(21,163,211,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:-40%;right:-20%;width:700px;height:700px;background:radial-gradient(circle,rgba(21,163,211,0.05) 0%,transparent 65%);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:20px 18px 60px}
+
+/* ETHICS MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:9000;backdrop-filter:blur(5px)}
+.modal{background:var(--bg2);border:1px solid var(--osint);border-radius:14px;padding:28px 32px;max-width:520px;width:90%;box-shadow:0 0 80px rgba(249,115,22,0.2)}
+.modal-icon{font-size:36px;text-align:center;margin-bottom:14px}
+.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:0.14em;color:var(--osint);text-align:center;margin-bottom:12px;text-transform:uppercase}
+.modal-body{font-size:11px;color:var(--dim);line-height:1.7;margin-bottom:18px;text-align:center}
+.modal-checks{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
+.modal-checks label{display:flex;align-items:flex-start;gap:10px;font-size:11px;color:var(--text);line-height:1.55;cursor:pointer}
+.modal-checks input[type="checkbox"]{margin-top:2px;accent-color:var(--osint);flex-shrink:0;width:14px;height:14px}
+
+/* HEADER */
+.hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 24px rgba(21,163,211,0.3)}
+.brand-name{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:0.14em;background:linear-gradient(90deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.brand-sub{font-size:10px;color:var(--dim);letter-spacing:0.14em;margin-top:-2px;display:block}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mode-toggle{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:4px;gap:4px}
+.mbtn{padding:7px 14px;border:none;border-radius:7px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.07em;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--dim)}
+.mbtn.on{background:rgba(21,163,211,0.08);border:1px solid rgba(21,163,211,0.5);color:var(--accent);box-shadow:none}
+.mbtn.on-osint{background:var(--osint);color:#fff;box-shadow:0 0 18px rgba(249,115,22,0.3)}
+.mbtn.on-case{background:var(--case);color:#fff;box-shadow:0 0 18px rgba(6,182,212,0.3)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg3);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;transition:all 0.16s;letter-spacing:0.05em;white-space:nowrap}
+.btn:hover{border-color:var(--accent);background:var(--glow);color:var(--accent)}
+.btn-a{background:rgba(21,163,211,0.08);border-color:rgba(21,163,211,0.5);color:var(--accent)}
+.btn-a:hover{background:rgba(21,163,211,0.14);border-color:var(--accent);box-shadow:none;color:var(--accent)}
+.btn-d{border-color:rgba(239,68,68,0.25);color:var(--danger)}
+.btn-d:hover{background:rgba(239,68,68,0.1);border-color:var(--danger)}
+.btn-o{background:var(--osint);border-color:var(--osint);color:#fff}
+.btn-o:hover{background:#fb923c;color:#fff}
+.btn-case{background:var(--case);border-color:var(--case);color:#fff}
+.btn-case:hover{background:#22d3ee;color:#fff}
+
+/* STATUS */
+.statusbar{display:flex;align-items:center;gap:16px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.sstat{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.sval{color:var(--accent);font-weight:600}
+.sval-o{color:var(--osint);font-weight:600}
+.sval-c{color:var(--case);font-weight:600}
+.sbr{margin-left:auto;font-size:13px;color:var(--text)}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.ctitle{font-family:'Syne',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.11em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px}
+.ctitle-o{color:var(--osint)}
+.ctitle-c{color:var(--case)}
+.ctitle-uap{color:var(--uap)}
+.cbadge{font-size:9px;padding:2px 7px;background:var(--glow);border:1px solid var(--borderA);border-radius:4px;color:var(--accent);letter-spacing:0.06em}
+.panel{display:none}
+.panel.on{display:block}
+
+/* KEYWORDS */
+.krow{display:flex;gap:8px;margin-bottom:10px}
+.kin{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+.kin:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+.kin::placeholder{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;min-height:32px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 8px 5px 11px;background:linear-gradient(135deg,rgba(21,163,211,0.13),rgba(12,52,71,0.35));border:1px solid rgba(21,163,211,0.28);border-radius:20px;font-size:11px;color:var(--accent);animation:chipin .18s ease}
+@keyframes chipin{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.xbtn{display:flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:rgba(239,68,68,.18);border:none;color:var(--danger);cursor:pointer;font-size:9px;transition:background 0.14s;line-height:1}
+.xbtn:hover{background:rgba(239,68,68,.45)}
+
+/* EXPBOX */
+.expbox{background:rgba(21,163,211,0.04);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;font-size:11px;color:var(--dim);line-height:1.65;margin-bottom:12px}
+.expbox strong{color:var(--accent);display:block;margin-bottom:3px;font-size:11px}
+.expbox-o{border-left-color:var(--osint);background:rgba(249,115,22,0.04)}
+.expbox-o strong{color:var(--osint)}
+.expbox-c{border-left-color:var(--case);background:rgba(6,182,212,0.04)}
+.expbox-c strong{color:var(--case)}
+
+/* SOURCE TIERS */
+.tier-label{font-size:9px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin:10px 0 6px;display:flex;align-items:center;gap:8px}
+.tier-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:6px}
+.si{display:flex;align-items:center;gap:8px;padding:7px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.14s;user-select:none}
+.si:hover{border-color:var(--borderA)}
+.si.sel{border-color:var(--accent);background:rgba(21,163,211,0.07)}
+.si.sel-uap{border-color:var(--uap);background:rgba(168,85,247,0.07)}
+.scheck{width:13px;height:13px;border:1px solid var(--muted);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.14s}
+.si.sel .scheck{background:var(--accent);border-color:var(--accent)}
+.si.sel-uap .scheck{background:var(--uap);border-color:var(--uap)}
+.stk{display:none;color:#fff;font-size:9px}
+.si.sel .stk,.si.sel-uap .stk{display:block}
+.sname{font-size:10px;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb{font-size:8px;padding:1px 5px;border-radius:3px;font-weight:600;letter-spacing:.05em;flex-shrink:0}
+.t1b{background:rgba(34,197,94,.12);color:var(--t1);border:1px solid rgba(34,197,94,.25)}
+.t2b{background:rgba(21,163,211,.12);color:var(--t2);border:1px solid rgba(21,163,211,.25)}
+.t3b{background:rgba(139,92,246,.12);color:var(--t3);border:1px solid rgba(139,92,246,.25)}
+.scb{background:rgba(245,158,11,.12);color:var(--sci);border:1px solid rgba(245,158,11,.25)}
+.tcb{background:rgba(236,72,153,.12);color:var(--tech);border:1px solid rgba(236,72,153,.25)}
+.uapb{background:rgba(168,85,247,.12);color:var(--uap);border:1px solid rgba(168,85,247,.25)}
+.govb{background:rgba(6,182,212,.12);color:var(--case);border:1px solid rgba(6,182,212,.25)}
+
+/* TIME FILTER */
+.tfilter{display:flex;gap:6px;flex-wrap:wrap}
+.tbtn{padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);cursor:pointer;transition:all 0.14s}
+.tbtn.on{background:rgba(21,163,211,.13);border-color:var(--accent);color:var(--accent)}
+
+/* DORK GRID */
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:9px}
+.dop{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px;transition:all 0.15s}
+.dop.on{border-color:rgba(21,163,211,.4);background:rgba(21,163,211,.035)}
+.dop-hdr{display:flex;align-items:flex-start;gap:9px;margin-bottom:6px}
+.dtog{width:17px;height:17px;border:1px solid var(--muted);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;transition:all 0.14s}
+.dop.on .dtog{background:var(--accent);border-color:var(--accent)}
+.dtick{display:none;color:#fff;font-size:9px}
+.dop.on .dtick{display:block}
+.dlabel{font-size:12px;font-weight:600;color:var(--accent)}
+.ddesc{font-size:10px;color:#9ab6c9;line-height:1.5;margin-bottom:6px}
+.dex{font-size:10px;color:#8eaec3;background:var(--bg2);padding:3px 7px;border-radius:4px;margin-bottom:6px;font-style:italic}
+.din,.dsel{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:6px 9px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;outline:none;transition:border-color 0.18s}
+.din:focus,.dsel:focus{border-color:var(--accent)}
+.din:disabled,.dsel:disabled{opacity:.35;cursor:not-allowed}
+.din::placeholder{color:#86a7bd}
+
+/* UAP/OSINT PANEL */
+.uap-target-bar{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.tcat{padding:7px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:10px;color:var(--dim);cursor:pointer;transition:all 0.16s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.tcat:hover{border-color:rgba(249,115,22,0.4);color:var(--osint)}
+.tcat.on{background:rgba(249,115,22,0.1);border-color:var(--osint);color:var(--osint);font-weight:600}
+.mbtn.on-osint{background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.5);color:var(--osint);box-shadow:none}
+.tcat-icon{font-size:14px}
+.osint-filter-bar{display:flex;gap:6px;flex-wrap:wrap}
+.fbtn{padding:5px 11px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:9px;color:var(--dim);cursor:pointer;transition:all 0.14s;letter-spacing:.06em}
+.fbtn.on{background:rgba(249,115,22,0.1);border-color:var(--osint);color:var(--osint)}
+
+/* TOOL CARDS */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+.tool-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:13px 14px;transition:all 0.16s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.tool-card::before{content:'';position:absolute;top:0;left:0;width:3px;bottom:0;background:var(--border)}
+.tool-card.gov::before{background:var(--case)}
+.tool-card.free::before{background:var(--ok)}
+.tool-card.registered::before{background:var(--warn)}
+.tool-card.dork::before{background:var(--accent)}
+.tool-card.local::before{background:var(--t3)}
+.tool-card:hover{border-color:rgba(249,115,22,0.35);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.tool-name{font-size:12px;font-weight:600;color:var(--text);flex:1}
+.tool-badges{display:flex;gap:4px;flex-wrap:wrap}
+.badge{font-size:9px;padding:2px 6px;border-radius:3px;font-weight:600;letter-spacing:.06em;white-space:nowrap}
+.badge-gov{background:rgba(6,182,212,.15);color:var(--case);border:1px solid rgba(6,182,212,.3)}
+.badge-free{background:rgba(34,197,94,.12);color:var(--ok);border:1px solid rgba(34,197,94,.25)}
+.badge-reg{background:rgba(245,158,11,.12);color:var(--warn);border:1px solid rgba(245,158,11,.25)}
+.badge-local{background:rgba(139,92,246,.12);color:var(--t3);border:1px solid rgba(139,92,246,.25)}
+.badge-dork{background:rgba(21,163,211,.12);color:var(--accent);border:1px solid rgba(21,163,211,.25)}
+.badge-auto{background:rgba(34,197,94,.18);color:var(--ok);border:1px solid rgba(34,197,94,.4);font-size:8px}
+.tool-desc{font-size:10px;color:var(--dim);line-height:1.55;flex:1}
+.tool-domain{font-size:9px;color:var(--muted);margin-top:-4px}
+.tool-url-preview{font-size:9px;color:var(--muted);word-break:break-all;padding:4px 8px;background:var(--bg2);border-radius:4px;display:none}
+.tool-card:hover .tool-url-preview{display:block}
+.tool-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.tbtn-launch{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.14s;border:1px solid rgba(249,115,22,0.3);background:rgba(249,115,22,0.06);color:var(--osint)}
+.tbtn-launch:hover{background:rgba(249,115,22,0.15);border-color:var(--osint)}
+.tbtn-dork{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.14s;border:1px solid rgba(21,163,211,0.3);background:rgba(21,163,211,0.06);color:var(--accent)}
+.tbtn-copy{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.14s;border:1px solid var(--border);background:var(--bg2);color:var(--dim)}
+.tbtn-copy:hover{border-color:var(--dim);color:var(--text)}
+
+/* OSINT SUMMARY */
+.osint-summary{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.osum{flex:1;min-width:130px;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px}
+.osum-n{font-size:18px;font-weight:700;color:var(--osint)}
+.osum-l{font-size:9px;color:var(--muted);letter-spacing:.1em;margin-top:1px}
+
+/* ASSEMBLED QUERY */
+.qpanel{background:var(--bg);border:1px solid rgba(21,163,211,.35);border-radius:12px;padding:14px;position:relative;overflow:hidden}
+.qpanel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),rgba(21,163,211,0))}
+.qlabel{font-size:9px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-bottom:7px}
+.qtext{font-size:12px;color:var(--text);word-break:break-all;line-height:1.65;min-height:40px;padding:9px 11px;background:var(--bg2);border-radius:6px;border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;white-space:pre-wrap}
+.qempty{color:var(--muted);font-style:italic}
+.engines{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.engbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;transition:all 0.14s;border:1px solid var(--border);background:var(--bg2);color:var(--dim)}
+.engbtn:hover{border-color:var(--accent);color:var(--accent)}
+.search-launch-card{margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg)}
+.search-launch-card .engines{gap:10px;margin-top:12px}
+.search-launch-card .engbtn{padding:10px 16px;font-size:14px;gap:8px;border-radius:10px}
+.eng-logo{width:20px;height:20px;border-radius:4px;object-fit:contain;background:#fff}
+
+/* CASE MODE */
+.case-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}
+.case-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;margin-bottom:10px}
+.case-input:focus{border-color:var(--case);box-shadow:0 0 0 3px rgba(6,182,212,0.15)}
+.case-input::placeholder{color:var(--muted)}
+.case-select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;outline:none;cursor:pointer;margin-bottom:10px}
+.case-select:focus{border-color:var(--case)}
+.case-textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;outline:none;resize:vertical;min-height:75px;margin-bottom:10px;line-height:1.65;transition:border-color 0.2s}
+.case-textarea:focus{border-color:var(--case);box-shadow:0 0 0 3px rgba(6,182,212,0.12)}
+.case-textarea::placeholder{color:var(--muted)}
+.ev-stats{display:flex;gap:16px;margin-bottom:14px}
+.ev-stat{text-align:center;flex:1;padding:10px 8px;background:var(--bg);border:1px solid var(--border);border-radius:8px}
+.ev-stat-val{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--case)}
+.ev-stat-val.red{color:var(--danger)}
+.ev-stat-lbl{font-size:9px;color:var(--muted);letter-spacing:.08em;margin-top:2px}
+.ev-rule{font-size:10px;color:var(--dim);line-height:1.6;padding:10px 12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:6px}
+.ev-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ev-form-full{grid-column:1/-1}
+.conf-row{display:flex;align-items:center;gap:10px}
+.conf-slider{flex:1;accent-color:var(--case);cursor:pointer}
+.conf-val{min-width:35px;text-align:center;font-size:13px;font-weight:700;color:var(--case)}
+.contra-label{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--dim);cursor:pointer;white-space:nowrap;margin-top:6px}
+.contra-label input{accent-color:var(--danger);width:14px;height:14px}
+.ev-board{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.ev-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;transition:border-color 0.15s}
+.ev-card::before{content:'';position:absolute;top:0;left:0;width:3px;bottom:0;background:var(--ok)}
+.ev-card.contradiction{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.03)}
+.ev-card.contradiction::before{background:var(--danger)}
+.ev-card-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.ev-card-title{font-size:12px;font-weight:600;color:var(--text);flex:1}
+.ev-card-badges{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap}
+.conf-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px}
+.conf-h{background:rgba(34,197,94,.15);color:var(--ok);border:1px solid rgba(34,197,94,.3)}
+.conf-m{background:rgba(245,158,11,.15);color:var(--warn);border:1px solid rgba(245,158,11,.3)}
+.conf-l{background:rgba(239,68,68,.12);color:var(--danger);border:1px solid rgba(239,68,68,.25)}
+.contra-badge{font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(239,68,68,.15);color:var(--danger);border:1px solid rgba(239,68,68,.3);font-weight:700}
+.ev-card-url{font-size:9px;color:var(--muted);word-break:break-all;margin-bottom:6px}
+.ev-card-url a{color:var(--accent);text-decoration:none}
+.ev-card-url a:hover{text-decoration:underline}
+.ev-card-quote{font-size:10px;color:var(--dim);line-height:1.6;padding:8px 10px;background:var(--bg2);border-radius:6px;border-left:2px solid var(--border);font-style:italic;margin-bottom:8px}
+.ev-card-meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ev-card-type{font-size:9px;color:var(--muted)}
+.ev-card-date{font-size:9px;color:var(--muted)}
+.ev-rm{display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--danger);cursor:pointer;font-size:10px;transition:background 0.14s;flex-shrink:0}
+.ev-rm:hover{background:rgba(239,68,68,.35)}
+.crow{display:flex;gap:8px;margin-top:8px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--accent);border-radius:8px;padding:9px 16px;font-size:11px;color:var(--accent);z-index:9999;animation:tin .25s ease,tout .25s ease 2.2s forwards;box-shadow:0 4px 24px rgba(21,163,211,.25);pointer-events:none}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tout{from{opacity:1}to{opacity:0}}
+.step-chip{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:30px;padding:3px 14px 2px;border-radius:999px;border:1px solid rgba(239,68,68,0.65);background:rgba(239,68,68,0.20);color:var(--danger);font-family:'Syne',sans-serif;font-size:15px;line-height:1;letter-spacing:.07em;font-weight:700;font-variant-numeric:lining-nums tabular-nums;text-rendering:geometricPrecision;position:relative;top:-1px;margin-right:10px;vertical-align:middle}
+.finish-chip{border-color:rgba(34,197,94,0.65);background:rgba(34,197,94,0.20);color:var(--ok)}
+.step-help{position:relative;display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;border:1px solid rgba(21,163,211,0.45);color:var(--accent);font-size:10px;cursor:help;vertical-align:middle}
+.step-tip{display:none;position:absolute;left:20px;top:-4px;min-width:240px;max-width:320px;background:var(--bg2);border:1px solid var(--accent);border-radius:8px;padding:8px 10px;color:var(--text);font-size:10px;line-height:1.45;z-index:9999;letter-spacing:normal;text-transform:none;font-family:'IBM Plex Mono',monospace}
+.step-help:hover .step-tip{display:block}
+.finish-launch{font-family:'Syne',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.11em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px}
+#impInput,#caseImpInput{display:none}
+@media(max-width:960px){.case-grid{grid-template-columns:1fr}}
+@media(max-width:760px){.dgrid,.tool-grid{grid-template-columns:1fr}.sgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.hdr{flex-direction:column;align-items:flex-start}.ev-form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ETHICS MODAL -->
+<div class="modal-overlay" id="ethicsModal" style="display:none" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-icon">🛡</div>
+    <div class="modal-title">Required Checkpoint</div>
+    <div class="modal-body">SIGNAL is built for public-interest journalism, verification, fraud/corruption research, aviation/security reporting, archival research and consent-based investigation. It is not for stalking, harassment, doxxing, credential hunting, private-account access or bypassing access controls.</div>
+    <div class="modal-checks">
+      <label><input type="checkbox" id="ec1"> I am using this for public-interest, security, verification, archival or consent-based research.</label>
+      <label><input type="checkbox" id="ec2"> I will not use this to harass, stalk, dox, impersonate, retrieve credentials or access private accounts.</label>
+      <label><input type="checkbox" id="ec3"> I will preserve source URLs, dates, contradictions and uncertainty rather than laundering speculation into claims.</label>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-o" id="ethicsConfirmBtn" type="button" onclick="confirmEthics()" style="flex:1;justify-content:center">ACCEPT &amp; OPEN SIGNAL</button>
+      <button class="btn" type="button" onclick="copyEthicsText()" style="flex:1;justify-content:center">COPY ETHICS TEXT</button>
+    </div>
+    <div style="text-align:center;font-size:9px;color:var(--muted);margin-top:10px">One-time checkpoint, stored locally</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="brand">
+    <div class="brand-icon">📡</div>
+    <div>
+      <div class="brand-name">SIGNAL</div>
+      <span class="brand-sub">V8 · UAP/UFO GOVERNMENT RELEASE TRACKER · JOURNALIST INTEL GATHERING</span>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="mode-toggle">
+      <button class="mbtn on"  id="mBtn0" onclick="setMode('corroborate')">⚖ QUERY</button>
+      <button class="mbtn"     id="mBtn1" onclick="setMode('dork')">🔍 DORK</button>
+      <button class="mbtn"     id="mBtn2" onclick="setMode('osint')">🛸 UAP/OSINT</button>
+    </div>
+    <button class="btn" onclick="exportSettings()">⬆ EXPORT SETTINGS</button>
+    <label  class="btn" for="impInput" style="cursor:pointer">⬇ IMPORT</label>
+    <input type="file" id="impInput" accept=".txt,.json" onchange="importSettings(event)">
+    <button class="btn btn-d" onclick="if(confirm('Reset all settings?')){localStorage.clear();location.reload()}">RESET</button>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <div class="sdot"></div>
+  <span style="letter-spacing:.1em;color:var(--dim)">SIGNAL ACTIVE</span>
+  <div class="sstat">KEYWORDS: <span class="sval" id="sKw">0</span></div>
+  <div class="sstat">SOURCES: <span class="sval" id="sSrc">0</span></div>
+  <div class="sstat" id="ssUap" style="display:none"><span style="color:var(--osint)">UAP TOOLS:</span> <span class="sval-o" id="sUapTools">0</span></div>
+  <div class="sstat sbr" id="sTime">Ready</div>
+  <div style="font-size:11px;color:var(--muted)">MODE: <span class="sval" id="sMod">CORROBORATE</span></div>
+</div>
+
+<!-- KEYWORDS -->
+<div class="card" id="kwCard">
+  <div class="card-hdr">
+    <div class="ctitle"><span class="step-chip">STEP 1</span><span class="step-help">?<span class="step-tip">Add your core investigation terms first. Use names, programs, places, dates, or identifiers.</span></span> 🔑 KEYWORDS / INVESTIGATION TERMS</div>
+    <button class="btn btn-d" onclick="clearKeywords()">CLEAR TERMS</button>
+  </div>
+  <div class="krow">
+    <input class="kin" id="kwIn" type="text" placeholder="Example: AARO OR UAP annual report OR Project Blue Book OR Roswell OR sensor data" onkeydown="kwKey(event)">
+    <button class="btn btn-a" onclick="addKw()">+ ADD</button>
+  </div>
+  <div class="chips" id="chipsEl"><span style="font-size:11px;color:var(--muted);align-self:center">No keywords yet</span></div>
+</div>
+
+<!-- ═══════════ CORROBORATE PANEL ═══════════ -->
+<div class="panel on" id="panelC">
+  <div class="expbox">
+    <strong>⚖ CORROBORATION MODE</strong>
+    Restricts results to verified, reputable sources using Google's site: operator. Multiple independent sources agreeing = higher confidence vs disinformation.
+  </div>
+  <div class="card">
+    <div class="card-hdr">
+      <div class="ctitle"><span class="step-chip">STEP 2</span><span class="step-help">?<span class="step-tip">Choose trusted source domains to constrain results. Use SELECT UAP GOV for official-first sourcing.</span></span> 📰 TRUSTED SOURCE REGISTRY</div>
+      <div style="display:flex;gap:7px">
+        <button class="btn" onclick="selUapGov()">SELECT UAP GOV</button>
+        <button class="btn" onclick="selAll()">SELECT ALL</button>
+        <button class="btn" onclick="deselAll()">DESELECT ALL</button>
+      </div>
+    </div>
+    <div class="tier-label"><span class="tb t1b">T1</span> WIRE SERVICES &amp; BROADCASTERS</div>
+    <div class="sgrid" id="sg1"></div>
+    <div class="tier-label"><span class="tb t2b">T2</span> MAJOR GLOBAL PUBLICATIONS</div>
+    <div class="sgrid" id="sg2"></div>
+    <div class="tier-label"><span class="tb t3b">GOV</span> GOVERNMENT &amp; INSTITUTIONAL</div>
+    <div class="sgrid" id="sg3"></div>
+    <div class="tier-label"><span class="tb scb">SCI</span> PEER-REVIEWED &amp; ACADEMIC</div>
+    <div class="sgrid" id="sg4"></div>
+    <div class="tier-label"><span class="tb tcb">TECH</span> TECH / CYBER / OSINT MEDIA</div>
+    <div class="sgrid" id="sg6"></div>
+    <div class="tier-label"><span class="tb uapb">UAP</span> UAP/UFO GOVERNMENT SOURCES</div>
+    <div class="sgrid" id="sg5"></div>
+    <div class="tier-label">CUSTOM DOMAINS</div>
+    <div class="crow">
+      <input class="kin" id="csIn" type="text" placeholder="e.g. example.com (no https://)">
+      <button class="btn btn-a" onclick="addCustomSrc()">+ ADD</button>
+    </div>
+    <div class="chips" id="csChips" style="margin-top:8px"><span style="font-size:11px;color:var(--muted)">No custom sources</span></div>
+  </div>
+  <div class="card" style="margin-top:0">
+    <div class="card-hdr"><div class="ctitle"><span class="step-chip">STEP 3</span><span class="step-help">?<span class="step-tip">Set the reporting timeframe (24H, week, month, year, or all time) to match your investigation window.</span></span> 🕐 RECENCY FILTER</div></div>
+    <div class="tfilter">
+      <button class="tbtn" data-tbs="" onclick="setTime(this,'')">ALL TIME</button>
+      <button class="tbtn" data-tbs="qdr:d" onclick="setTime(this,'qdr:d')">24H</button>
+      <button class="tbtn on" data-tbs="qdr:w" onclick="setTime(this,'qdr:w')">WEEK</button>
+      <button class="tbtn" data-tbs="qdr:m" onclick="setTime(this,'qdr:m')">MONTH</button>
+      <button class="tbtn" data-tbs="qdr:y" onclick="setTime(this,'qdr:y')">YEAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ DORK PANEL ═══════════ -->
+<div class="panel" id="panelD">
+  <div class="expbox">
+    <strong>🔍 GOOGLE DORKING MODE</strong>
+    Advanced search operators to surface specific information the general index hides. Enable operators, fill values, launch with precision.
+  </div>
+  <div class="card">
+    <div class="card-hdr">
+      <div class="ctitle"><span class="step-chip">STEP 2</span><span class="step-help">?<span class="step-tip">Enable only the operators you need (site, intitle, inurl, filetype, date filters). Too many operators can over-constrain results.</span></span> ⚡ OPERATOR BUILDER</div>
+      <button class="btn" onclick="resetDorks()">↺ RESET ALL</button>
+    </div>
+    <div class="dgrid" id="dgrid"></div>
+  </div>
+</div>
+
+<!-- ═══════════ UAP/OSINT PANEL ═══════════ -->
+<div class="panel" id="panelO">
+  <div class="expbox expbox-o">
+    <strong>🛸 UAP / UFO GOVERNMENT RELEASE MODE</strong>
+    Dedicated launcher for official government UAP/UFO sources and adjacent OSINT research. Auto-inject tools accept a search term; static official release hubs open directly. Use "Copy Visible URLs" for a journalist runlist instead of spraying tabs everywhere like a browser-abusing goblin.
+  </div>
+  <div class="card">
+    <div class="card-hdr">
+      <div class="ctitle ctitle-o"><span class="step-chip" id="osintStepCat">STEP 2</span><span class="step-help">?<span class="step-tip">Choose the OSINT target category first. This controls which tool cards appear for the investigation workflow.</span></span> 🎯 TARGET CATEGORY</div>
+      <span style="font-size:10px;color:var(--muted)">Choose the investigation type</span>
+    </div>
+    <div class="uap-target-bar" id="uapTargetBar"></div>
+  </div>
+  <div class="card">
+    <div class="card-hdr">
+      <div class="ctitle ctitle-o"><span class="step-chip" id="osintStepTerm">STEP 3</span><span class="step-help">?<span class="step-tip">Enter one focused search term (name, program, file number, location). This is injected into AUTO tools and dork cards.</span></span> 🔎 OSINT SEARCH TERM</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input class="kin" id="osintTerm" type="text" placeholder="AARO, Roswell, Project Blue Book, Tic Tac, AATIP, specific witness, agency, file number..." oninput="renderUapTools()" style="flex:1;border-color:rgba(249,115,22,0.3)">
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div class="osint-filter-bar">
+        <button class="fbtn on" id="fb_all"  onclick="setUapFilter('all')">ALL</button>
+        <button class="fbtn"    id="fb_gov"  onclick="setUapFilter('gov')">GOV</button>
+        <button class="fbtn"    id="fb_free" onclick="setUapFilter('free')">FREE</button>
+        <button class="fbtn"    id="fb_auto" onclick="setUapFilter('auto')">AUTO-INJECT</button>
+        <button class="fbtn"    id="fb_dork" onclick="setUapFilter('dork')">DORKS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOL LAUNCHER HEADER -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <div class="ctitle ctitle-o" style="margin:0">🔧 TOOL / SOURCE LAUNCHER</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" onclick="copyAllUapUrls()">COPY VISIBLE URLS</button>
+      <button class="btn" id="openVisibleBatchBtn" onclick="launchAllUap()">OPEN VISIBLE BATCH</button>
+    </div>
+  </div>
+
+  <div class="osint-summary">
+    <div class="osum"><div class="osum-n" id="osTotal">0</div><div class="osum-l">TOTAL TOOLS</div></div>
+    <div class="osum"><div class="osum-n" id="osGov"  style="color:var(--case)">0</div><div class="osum-l">GOV SOURCES</div></div>
+    <div class="osum"><div class="osum-n" id="osAuto" style="color:var(--accent)">0</div><div class="osum-l">AUTO-INJECT</div></div>
+    <div class="osum"><div class="osum-n" id="osFree" style="color:var(--ok)">0</div><div class="osum-l">FREE ACCESS</div></div>
+  </div>
+
+  <div class="tool-grid" id="toolGrid"></div>
+  <div id="noTools" style="display:none;padding:20px;text-align:center;color:var(--muted);font-size:11px">No tools match current filter.</div>
+
+  <!-- UAP ASSEMBLED QUERY -->
+  <div class="card" style="margin-top:14px">
+    <div class="card-hdr">
+      <div class="ctitle ctitle-o">⚡ ASSEMBLED QUERY</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="copyUapQ()">📋 COPY</button>
+      </div>
+    </div>
+    <div class="qpanel">
+      <div class="qlabel">// GENERATED SEARCH STRING</div>
+      <div class="qtext" id="uapQOut"><span class="qempty">Select GOV filter and add keywords to build a corroboration query across all UAP government sources…</span></div>
+    </div>
+    <div class="search-launch-card">
+      <div class="finish-launch"><span class="step-chip finish-chip">FINISH</span><span class="step-help">?<span class="step-tip">Run the assembled query in one or more search engines, then compare results and capture evidence.</span></span> START SEARCHING (Choose your search engine below)</div>
+      <div class="engines">
+        <button class="engbtn" onclick="launchUapQ('google')"><img class="eng-logo" src="https://www.google.com/favicon.ico" alt="Google logo"> Google</button>
+        <button class="engbtn" onclick="launchUapQ('bing')"><img class="eng-logo" src="https://www.bing.com/sa/simg/favicon-trans-bg-blue-mg.ico" alt="Bing logo"> Bing</button>
+        <button class="engbtn" onclick="launchUapQ('ddg')"><img class="eng-logo" src="https://duckduckgo.com/favicon.ico" alt="DuckDuckGo logo"> DuckDuckGo</button>
+        <button class="engbtn" onclick="launchUapQ('brave')"><img class="eng-logo" src="https://brave.com/static-assets/images/brave-favicon.png" alt="Brave logo"> Brave</button>
+        <button class="engbtn" onclick="launchUapQ('startpage')"><img class="eng-logo" src="https://www.startpage.com/sp/cdn/favicons/favicon.ico" alt="Startpage logo"> Startpage</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CASE TAB/PANEL REMOVED IN V6a -->
+
+<!-- CORROB/DORK ASSEMBLED QUERY -->
+<div class="card" id="qCard">
+  <div class="card-hdr">
+    <div class="ctitle">⚡ ASSEMBLED QUERY</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" onclick="copyQ()">📋 COPY</button>
+    </div>
+  </div>
+  <div class="qpanel">
+    <div class="qlabel">// GENERATED SEARCH STRING</div>
+    <div class="qtext" id="qOut"><span class="qempty">Add keywords and configure options above…</span></div>
+  </div>
+  <div class="search-launch-card">
+      <div class="finish-launch"><span class="step-chip finish-chip">FINISH</span><span class="step-help">?<span class="step-tip">Run the assembled query in one or more search engines, then compare results and capture evidence.</span></span> START SEARCHING (Choose your search engine below)</div>
+    <div class="engines">
+      <button class="engbtn" onclick="launch('google')"><img class="eng-logo" src="https://www.google.com/favicon.ico" alt="Google logo"> Google</button>
+      <button class="engbtn" onclick="launch('bing')"><img class="eng-logo" src="https://www.bing.com/sa/simg/favicon-trans-bg-blue-mg.ico" alt="Bing logo"> Bing</button>
+      <button class="engbtn" onclick="launch('ddg')"><img class="eng-logo" src="https://duckduckgo.com/favicon.ico" alt="DuckDuckGo logo"> DuckDuckGo</button>
+      <button class="engbtn" onclick="launch('brave')"><img class="eng-logo" src="https://brave.com/static-assets/images/brave-favicon.png" alt="Brave logo"> Brave</button>
+      <button class="engbtn" onclick="launch('startpage')"><img class="eng-logo" src="https://www.startpage.com/sp/cdn/favicons/favicon.ico" alt="Startpage logo"> Startpage</button>
+    </div>
+  </div>
+</div>
+</div><!-- /wrap -->
+
+<script>
+'use strict';
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+const S={kws:[],mode:'corroborate',selSrc:[],custSrc:[],tbs:'qdr:w',dops:{},uapCat:'uap_releases',uapFilter:'all'};
+let pendingMode=null;
+let ethicsAckFallback=false;
+let CASE_DATA={title:'',type:'UAP/UFO government release',hypothesis:'',notes:'',evidence:[],created:null,updated:null};
+
+// ═══════════════════════════════════════════════
+// SECURITY UTILS
+// ═══════════════════════════════════════════════
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+function safeOpen(url){try{const u=new URL(url);if(u.protocol!=='https:'&&u.protocol!=='http:')return;const w=window.open(url,'_blank','noopener,noreferrer');if(w)w.opener=null}catch{}}
+function isValidDomain(s){return/^(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/i.test(s)&&!/<|>|'|"|`|\s/i.test(s)}
+
+// ═══════════════════════════════════════════════
+// SOURCE DATA
+// ═══════════════════════════════════════════════
+const SRCS={
+  t1:[{id:'reuters',n:'Reuters',d:'reuters.com'},{id:'apnews',n:'AP News',d:'apnews.com'},{id:'bbc',n:'BBC News',d:'bbc.com'},{id:'abc_au',n:'ABC Australia',d:'abc.net.au'},{id:'sbs',n:'SBS News',d:'sbs.com.au'},{id:'afp',n:'AFP',d:'afp.com'}],
+  t2:[{id:'guardian',n:'The Guardian',d:'theguardian.com'},{id:'nyt',n:'New York Times',d:'nytimes.com'},{id:'wapo',n:'Washington Post',d:'washingtonpost.com'},{id:'ft',n:'Financial Times',d:'ft.com'},{id:'economist',n:'The Economist',d:'economist.com'},{id:'smh',n:'Sydney Morning Herald',d:'smh.com.au'},{id:'afr',n:'AFR',d:'afr.com'},{id:'alj',n:'Al Jazeera',d:'aljazeera.com'},{id:'dw',n:'Deutsche Welle',d:'dw.com'}],
+  t3:[{id:'govau',n:'Australian Gov',d:'gov.au'},{id:'govus',n:'US Government',d:'*.gov'},{id:'un',n:'United Nations',d:'un.org'},{id:'nato',n:'NATO',d:'nato.int'},{id:'imf',n:'IMF',d:'imf.org'}],
+  sci:[{id:'nature',n:'Nature',d:'nature.com'},{id:'science',n:'Science Magazine',d:'science.org'},{id:'pubmed',n:'NIH/PubMed',d:'pubmed.ncbi.nlm.nih.gov'},{id:'arxiv',n:'arXiv',d:'arxiv.org'},{id:'nasa',n:'NASA',d:'nasa.gov'},{id:'ieee',n:'IEEE Spectrum',d:'spectrum.ieee.org'}],
+  tech:[{id:'ars',n:'Ars Technica',d:'arstechnica.com'},{id:'wired',n:'Wired',d:'wired.com'},{id:'register',n:'The Register',d:'theregister.com'},{id:'zdnet',n:'ZDNET',d:'zdnet.com'},{id:'bleeping',n:'BleepingComputer',d:'bleepingcomputer.com'}],
+  uap:[
+    {id:'aaro_home',n:'AARO Home',d:'aaro.mil'},
+    {id:'aaro_records',n:'AARO UAP Records',d:'aaro.mil/UAP-Records'},
+    {id:'aaro_imagery',n:'AARO Official UAP Imagery',d:'aaro.mil/UAP-Cases/Official-UAP-Imagery'},
+    {id:'aaro_cases',n:'AARO Case Resolution Reports',d:'aaro.mil/UAP-Cases/UAP-Case-Resolution-Reports'},
+    {id:'aaro_trends',n:'AARO UAP Reporting Trends',d:'aaro.mil/UAP-Cases/UAP-Reporting-Trends'},
+    {id:'aaro_press',n:'AARO Congressional / Press Products',d:'aaro.mil/Congressional-Press-Products'},
+    {id:'aaro_efoia',n:'AARO EFOIA Reading Room',d:'aaro.mil/EFOIA-Reading-Room'},
+    {id:'war_ufo',n:'War.gov / PURSUE UAP Files',d:'war.gov/UFO'},
+    {id:'nara_uap',n:'NARA UFO/UAP Topic Hub',d:'archives.gov/research/topics/uaps'},
+    {id:'nara_rg615',n:'NARA RG 615 UAP Collection',d:'archives.gov/research/topics/uaps/rg-615'},
+    {id:'nara_rglist',n:'NARA UAP Record Groups',d:'archives.gov/research/topics/uaps/rg-collections'},
+    {id:'nara_finding',n:'NARA RG 615 Finding Aid',d:'archives.gov/findingaid/stat/discovery/615'},
+    {id:'fbi_ufo',n:'FBI Vault UFO',d:'vault.fbi.gov/UFO'},
+    {id:'fbi_search_ufo',n:'FBI Vault Search UFO',d:'vault.fbi.gov/search'},
+    {id:'cia_ufo',n:'CIA UFOs Fact or Fiction',d:'cia.gov/readingroom/collection/ufos-fact-or-fiction'},
+    {id:'cia_special',n:'CIA UFO Special Collection',d:'cia.gov/readingroom/keyword/ufo-special-collection'},
+    {id:'cia_reading',n:'CIA Reading Room',d:'cia.gov/readingroom'},
+    {id:'nsa_ufo',n:'NSA UFO FOIA',d:'nsa.gov/Helpful-Links/NSA-FOIA/Frequently-Requested-Information/Unidentified-Flying-Objects-UFOs'},
+    {id:'nsa_para',n:'NSA UFO / Paranormal Info',d:'nsa.gov/Helpful-Links/NSA-FOIA/Frequently-Requested-Information/UFO-and-Other-Paranormal-Information'},
+    {id:'odni_uap',n:'ODNI UAP Reports',d:'dni.gov'},
+    {id:'nasa_uap',n:'NASA UAP',d:'science.nasa.gov/uap'},
+    {id:'nasa_faq',n:'NASA UAP FAQs',d:'science.nasa.gov/uap/faqs'},
+    {id:'nnsa_uap',n:'DOE/NNSA UAP UFO Resources',d:'energy.gov/nnsa/uapufo-resources-and-documents'},
+    {id:'af_bluebook',n:'USAF Project Blue Book',d:'af.mil/About-Us/Fact-Sheets/Display/Article/104590/unidentified-flying-objects-and-air-force-project-blue-book'},
+    {id:'afosi_bluebook',n:'AFOSI Project Blue Book',d:'osi.af.mil/News/Features/Display/Article/2302429/project-blue-book-part-1-ufo-reports'},
+    {id:'house_oversight',n:'House Oversight UAP Hearings',d:'oversight.house.gov'},
+    {id:'senate_armed',n:'Senate Armed Services',d:'armed-services.senate.gov'},
+    {id:'congress_uap',n:'Congress.gov UAP Legislation',d:'congress.gov'},
+    {id:'blackvault',n:'The Black Vault',d:'theblackvault.com'},
+    {id:'foia_gov',n:'FOIA.gov',d:'foia.gov'},
+  ]
+};
+const ALL_SRCS=[...SRCS.t1,...SRCS.t2,...SRCS.t3,...SRCS.sci,...SRCS.tech,...SRCS.uap];
+
+// ═══════════════════════════════════════════════
+// DORK DEFINITIONS (deprecated operators removed)
+// ═══════════════════════════════════════════════
+const DORKS=[
+  {id:'site',lbl:'site:',desc:'Restrict to a specific domain.',ex:'site:aaro.mil',ph:'e.g. aaro.mil',type:'text'},
+  {id:'intitle',lbl:'intitle:',desc:'Word(s) must appear in page title.',ex:'intitle:"UAP 2024"',ph:'e.g. UAP annual report',type:'text'},
+  {id:'allintitle',lbl:'allintitle:',desc:'ALL words must appear in page title.',ex:'allintitle: AARO UAP disclosure',ph:'e.g. AARO disclosure report',type:'text'},
+  {id:'inurl',lbl:'inurl:',desc:'Word(s) must appear in the URL.',ex:'inurl:uap',ph:'e.g. uap',type:'text'},
+  {id:'intext',lbl:'intext:',desc:'Term must appear in body text.',ex:'intext:"non-human intelligence"',ph:'e.g. non-human intelligence',type:'text'},
+  {id:'filetype',lbl:'filetype:',desc:'Restrict to a specific file format.',ex:'filetype:pdf',ph:'',type:'sel',opts:['pdf','doc','docx','xls','xlsx','ppt','pptx','csv','txt','xml','json']},
+  {id:'exact',lbl:'"exact phrase"',desc:'Forces exact string matching.',ex:'"crash retrieval program"',ph:'e.g. non-human intelligence',type:'text'},
+  {id:'exclude',lbl:'-exclude',desc:'Removes results containing these terms.',ex:'-wikipedia -reddit',ph:'e.g. wikipedia reddit',type:'text'},
+  {id:'after',lbl:'after:',desc:'Only results after this date.',ex:'after:2023-07-01',ph:'',type:'date'},
+  {id:'before',lbl:'before:',desc:'Only results before this date.',ex:'before:2025-01-01',ph:'',type:'date'},
+  {id:'around',lbl:'AROUND(n)',desc:'Both terms within n words of each other. Format: word1 n word2 — e.g. "AARO 5 Grusch"',ex:'AARO AROUND(5) Grusch',ph:'e.g. AARO 5 Grusch',type:'text'},
+  {id:'numrange',lbl:'numrange x..y',desc:'Pages containing numbers in range.',ex:'2020..2025',ph:'e.g. 2020..2025',type:'text'},
+  {id:'or',lbl:'OR / |',desc:'Either term must match.',ex:'Grusch OR Graves OR Fravor',ph:'e.g. Grusch OR Graves',type:'text'},
+  {id:'wildcard',lbl:'* wildcard',desc:'Asterisk is a one-word placeholder.',ex:'"AARO * program" OR "* retrieval"',ph:'e.g. "* retrieval program"',type:'text'},
+];
+
+// ═══════════════════════════════════════════════
+// UAP OSINT CATEGORIES & TOOLS
+// corrPath = path used in site: operator for assembled query
+// ═══════════════════════════════════════════════
+const UAP_CATS=[
+  {id:'uap_releases',  icon:'🛸', label:'UAP Gov Releases'},
+  {id:'agency_acronyms',icon:'🏛', label:'Agency Acronyms'},
+  {id:'archives_foia', icon:'📦', label:'Archives / FOIA'},
+  {id:'hearings_congress',icon:'🎤',label:'Hearings / Congress'},
+  {id:'aviation_space',icon:'✈',  label:'Aviation / Space'},
+  {id:'person_witness',icon:'👤', label:'Person / Witness'},
+  {id:'image_video',   icon:'🎬', label:'Image / Video'},
+  {id:'domain_dns',    icon:'🌐', label:'Domain / DNS'},
+];
+
+const UAP_TOOLS={
+  uap_releases:[
+    {name:'AARO Home',type:'gov',autoInject:false,url:'https://www.aaro.mil/',corrPath:'aaro.mil',domain:'aaro.mil',desc:'Primary official AARO portal. Start here for current UAP cases, records, reporting trends and press products.'},
+    {name:'AARO UAP Records',type:'gov',autoInject:false,url:'https://www.aaro.mil/UAP-Records/',corrPath:'aaro.mil/UAP-Records',domain:'aaro.mil',desc:'Official AARO UAP records and information papers.'},
+    {name:'AARO Official Imagery',type:'gov',autoInject:false,url:'https://www.aaro.mil/UAP-Cases/Official-UAP-Imagery/',corrPath:'aaro.mil/UAP-Cases/Official-UAP-Imagery',domain:'aaro.mil',desc:'Official imagery and related case material released by AARO. Primary source for government-released UAP footage.'},
+    {name:'AARO Case Resolution Reports',type:'gov',autoInject:false,url:'https://www.aaro.mil/UAP-Cases/UAP-Case-Resolution-Reports/',corrPath:'aaro.mil/UAP-Cases/UAP-Case-Resolution-Reports',domain:'aaro.mil',desc:'Resolved case reports. Useful for comparing public claims against official AARO analysis and attribution.'},
+    {name:'AARO Reporting Trends',type:'gov',autoInject:false,url:'https://www.aaro.mil/UAP-Cases/UAP-Reporting-Trends/',corrPath:'aaro.mil/UAP-Cases/UAP-Reporting-Trends',domain:'aaro.mil',desc:'Trend data and reported UAP pattern summaries from AARO.'},
+    {name:'AARO Congressional / Press Products',type:'gov',autoInject:false,url:'https://www.aaro.mil/Congressional-Press-Products/',corrPath:'aaro.mil/Congressional-Press-Products',domain:'aaro.mil',desc:'Briefings, press releases, transcripts and congressional products from AARO.'},
+    {name:'AARO EFOIA Reading Room',type:'gov',autoInject:false,url:'https://www.aaro.mil/EFOIA-Reading-Room/',corrPath:'aaro.mil/EFOIA-Reading-Room',domain:'aaro.mil',desc:'FOIA responses and reading room documents. Released records as they are declassified.'},
+    {name:'AARO Historical Record Report Vol.1',type:'gov',autoInject:false,url:'https://www.aaro.mil/Portals/136/PDFs/AARO_Historical_Record_Report_Vol1_2024.pdf',corrPath:'aaro.mil/Portals',domain:'aaro.mil',desc:'Official 2024 historical assessment of alleged UAP programs. Covers AAWSAP, AATIP, alleged crash retrieval programs. Primary source.'},
+    {name:'War.gov / DoD UAP Files',type:'gov',autoInject:false,url:'https://www.defense.gov/Spotlights/UAP/',corrPath:'war.gov/UFO',domain:'defense.gov',desc:'Pentagon rolling UAP/UFO release hub. Interagency collection from White House, ODNI, DOE, AARO, NASA, FBI and IC components.'},
+    {name:'DoD UAP News — Auto-Search',type:'gov',autoInject:true,url:'https://www.defense.gov/News/News-Stories/?query={TERM}',corrPath:'defense.gov',domain:'defense.gov',desc:'DoD official news stories. Auto-injects search term into DoD news search.'},
+    {name:'NARA UAP Topic Hub',type:'gov',autoInject:false,url:'https://www.archives.gov/research/topics/uaps',corrPath:'archives.gov/research/topics/uaps',domain:'archives.gov',desc:'National Archives UFO/UAP records hub.'},
+    {name:'NARA Record Group 615',type:'gov',autoInject:false,url:'https://www.archives.gov/research/topics/uaps/rg-615',corrPath:'archives.gov/research/topics/uaps/rg-615',domain:'archives.gov',desc:'UAP Records Collection RG 615.'},
+    {name:'NARA RG 615 Finding Aid',type:'gov',autoInject:false,url:'https://www.archives.gov/findingaid/stat/discovery/615',corrPath:'archives.gov/findingaid/stat/discovery/615',domain:'archives.gov',desc:'Browse RG 615 descriptions and textual records.'},
+    {name:'NARA UAP FAQs',type:'gov',autoInject:false,url:'https://www.archives.gov/research/topics/uaps/faqs',corrPath:'archives.gov/research/topics/uaps',domain:'archives.gov',desc:'NARA guidance and collection FAQs.'},
+    {name:'FBI Vault UFO',type:'gov',autoInject:false,url:'https://vault.fbi.gov/UFO',corrPath:'vault.fbi.gov/UFO',domain:'vault.fbi.gov',desc:'FBI UFO Vault records.'},
+    {name:'FBI Vault Search UFO',type:'gov',autoInject:true,url:'https://vault.fbi.gov/search?SearchableText={TERM}',corrPath:'vault.fbi.gov/search',domain:'vault.fbi.gov',desc:'Search FBI Vault records for UFO/UAP terms, names or places.'},
+    {name:'CIA UFO Collection',type:'gov',autoInject:false,url:'https://www.cia.gov/readingroom/collection/ufos-fact-or-fiction',corrPath:'cia.gov/readingroom/collection/ufos-fact-or-fiction',domain:'cia.gov',desc:'CIA Reading Room UFO collection.'},
+    {name:'CIA UFO Keyword Search',type:'gov',autoInject:true,url:'https://www.cia.gov/readingroom/search/site/{TERM}',corrPath:'cia.gov/readingroom',domain:'cia.gov',desc:'Search CIA Reading Room for target term.'},
+    {name:'NSA UFO FOIA',type:'gov',autoInject:false,url:'https://www.nsa.gov/Helpful-Links/NSA-FOIA/Frequently-Requested-Information/Unidentified-Flying-Objects-UFOs/',corrPath:'nsa.gov/Helpful-Links/NSA-FOIA/Frequently-Requested-Information',domain:'nsa.gov',desc:'NSA UFO frequently requested information.'},
+    {name:'NASA UAP Hub',type:'gov',autoInject:false,url:'https://science.nasa.gov/uap/',corrPath:'science.nasa.gov/uap',domain:'nasa.gov',desc:'NASA UAP independent study hub.'},
+    {name:'NASA UAP Final Report PDF',type:'gov',autoInject:false,url:'https://science.nasa.gov/wp-content/uploads/2023/09/uap-independent-study-team-final-report.pdf',corrPath:'science.nasa.gov/uap',domain:'nasa.gov',desc:'NASA independent study final report PDF (2023).'},
+    {name:'ODNI 2024 UAP Report',type:'gov',autoInject:false,url:'https://www.dni.gov/index.php/newsroom/reports-publications/reports-publications-2024/4620-uap-2024',corrPath:'dni.gov',domain:'dni.gov',desc:'ODNI/DoD FY2024 consolidated UAP annual report to Congress.'},
+    {name:'ODNI Site Search',type:'gov',autoInject:true,url:'https://www.dni.gov/index.php/search?searchword={TERM}&searchphrase=all',corrPath:'dni.gov',domain:'dni.gov',desc:'Search ODNI for UAP reports, releases and PDFs.'},
+    {name:'DOE/NNSA UAP Resources',type:'gov',autoInject:false,url:'https://www.energy.gov/nnsa/uapufo-resources-and-documents',corrPath:'energy.gov/nnsa/uapufo-resources-and-documents',domain:'energy.gov',desc:'DOE/NNSA UAP/UFO resources under NNSA jurisdiction.'},
+    {name:'USAF Project Blue Book',type:'gov',autoInject:false,url:'https://www.af.mil/About-Us/Fact-Sheets/Display/Article/104590/unidentified-flying-objects-and-air-force-project-blue-book/',corrPath:'af.mil/About-Us/Fact-Sheets/Display/Article/104590/unidentified-flying-objects-and-air-force-project-blue-book',domain:'af.mil',desc:'US Air Force Project Blue Book fact sheet.'},
+    {name:'AFOSI Blue Book Feature',type:'gov',autoInject:false,url:'https://www.osi.af.mil/News/Features/Display/Article/2302429/project-blue-book-part-1-ufo-reports/',corrPath:'osi.af.mil/News/Features/Display/Article/2302429/project-blue-book-part-1-ufo-reports',domain:'osi.af.mil',desc:'AFOSI feature on Project Blue Book investigative files.'},
+    {name:'House Oversight UAP',type:'gov',autoInject:false,url:'https://oversight.house.gov/hearing/unidentified-anomalous-phenomena-exposing-the-truth/',corrPath:'oversight.house.gov',domain:'oversight.house.gov',desc:'House Oversight UAP hearing page.'},
+    {name:'The Black Vault',type:'free',autoInject:false,url:'https://www.theblackvault.com/',corrPath:'theblackvault.com',domain:'theblackvault.com',desc:'Long-running FOIA document repository focused on UAP/UFO and government records. Useful for historical files, archives, and cross-referencing released documents.'},
+    {name:'FOIA.gov Agency Search',type:'gov',autoInject:false,url:'https://www.foia.gov/',corrPath:'foia.gov',domain:'foia.gov',desc:'FOIA starting point for agency requests.'},
+  ],
+  agency_acronyms:[
+    {name:'CIA UFO Collection',type:'gov',autoInject:false,url:'https://www.cia.gov/readingroom/collection/ufos-fact-or-fiction',corrPath:'cia.gov/readingroom/collection/ufos-fact-or-fiction',domain:'cia.gov',desc:'CIA Reading Room UFO collection. Declassified documents, assessments, and historical files from CIA archives.'},
+    {name:'CIA UFO Keyword Search',type:'gov',autoInject:true,url:'https://www.cia.gov/readingroom/search/site/{TERM}',corrPath:'cia.gov/readingroom',domain:'cia.gov',desc:'Search CIA Reading Room for target term. Try: AQUARIUS, GRUDGE, SIGN, Robertson Panel, UAP, non-human.'},
+    {name:'NSA UFO FOIA',type:'gov',autoInject:false,url:'https://www.nsa.gov/Helpful-Links/NSA-FOIA/Frequently-Requested-Information/Unidentified-Flying-Objects-UFOs/',corrPath:'nsa.gov/Helpful-Links/NSA-FOIA/Frequently-Requested-Information',domain:'nsa.gov',desc:'NSA UFO frequently requested information. Declassified SIGINT-adjacent materials.'},
+    {name:'FBI Vault UFO',type:'gov',autoInject:false,url:'https://vault.fbi.gov/UFO',corrPath:'vault.fbi.gov/UFO',domain:'vault.fbi.gov',desc:'FBI UFO Vault records. Declassified field office memoranda, investigation records including the 1950 Guy Hottel memo.'},
+    {name:'FBI Vault Search UFO',type:'gov',autoInject:true,url:'https://vault.fbi.gov/search?SearchableText={TERM}',corrPath:'vault.fbi.gov/search',domain:'vault.fbi.gov',desc:'Search FBI Vault records for UFO/UAP terms, names or places. Auto-injects search term into FBI document search.'},
+    {name:'NASA UAP Hub',type:'gov',autoInject:false,url:'https://science.nasa.gov/uap/',corrPath:'science.nasa.gov/uap',domain:'nasa.gov',desc:'NASA UAP independent study hub. Scientific framework, data collection methodology, ongoing research programs.'},
+    {name:'NASA UAP Final Report PDF',type:'gov',autoInject:false,url:'https://science.nasa.gov/wp-content/uploads/2023/09/uap-independent-study-team-final-report.pdf',corrPath:'science.nasa.gov/uap',domain:'nasa.gov',desc:'NASA independent study final report PDF (2023). Direct download of the primary source document.'},
+    {name:'ODNI 2024 UAP Report',type:'gov',autoInject:false,url:'https://www.dni.gov/index.php/newsroom/reports-publications/reports-publications-2024/4620-uap-2024',corrPath:'dni.gov',domain:'dni.gov',desc:'ODNI/DoD FY2024 consolidated UAP annual report to Congress. Latest unclassified IC assessment.'},
+    {name:'ODNI Site Search',type:'gov',autoInject:true,url:'https://www.dni.gov/index.php/search?searchword={TERM}&searchphrase=all',corrPath:'dni.gov',domain:'dni.gov',desc:'Search ODNI for UAP reports, releases and PDFs. Auto-injects search term.'},
+    {name:'DOE/NNSA UAP Resources',type:'gov',autoInject:false,url:'https://www.energy.gov/nnsa/uapufo-resources-and-documents',corrPath:'energy.gov/nnsa/uapufo-resources-and-documents',domain:'energy.gov',desc:'DOE/NNSA UAP/UFO resources under nuclear jurisdiction. Relevant for Kirtland AFB, Hanford, nuclear facility incident records.'},
+    {name:'DIA FOIA Library',type:'gov',autoInject:false,url:'https://www.dia.mil/FOIA/FOIA-Electronic-Reading-Room/',corrPath:'dia.mil',domain:'dia.mil',desc:'Defense Intelligence Agency FOIA library. AAWSAP, AATIP assessments and 38 DIRD technical reports on exotic propulsion and materials.'},
+  ],
+  archives_foia:[
+    {name:'NARA UAP Topic Hub',type:'gov',autoInject:false,url:'https://www.archives.gov/research/topics/uaps',corrPath:'archives.gov/research/topics/uaps',domain:'archives.gov',desc:'National Archives UFO/UAP records hub. Gateway to all NARA UAP holdings and collection finding aids.'},
+    {name:'NARA Record Group 615',type:'gov',autoInject:false,url:'https://www.archives.gov/research/topics/uaps/rg-615',corrPath:'archives.gov/research/topics/uaps/rg-615',domain:'archives.gov',desc:'UAP Records Collection RG 615. Established by UAP Disclosure Act 2023. Primary archival repository for all IC UAP records.'},
+    {name:'NARA RG 615 Finding Aid',type:'gov',autoInject:false,url:'https://www.archives.gov/findingaid/stat/discovery/615',corrPath:'archives.gov/findingaid/stat/discovery/615',domain:'archives.gov',desc:'Browse RG 615 descriptions and textual records. Detailed finding aid for the UAP Record Group.'},
+    {name:'NARA UAP FAQs',type:'gov',autoInject:false,url:'https://www.archives.gov/research/topics/uaps/faqs',corrPath:'archives.gov/research/topics/uaps',domain:'archives.gov',desc:'NARA guidance and collection FAQs. Understanding what records are available and how to request them.'},
+    {name:'NARA Catalog — Auto-Search',type:'gov',autoInject:true,url:'https://catalog.archives.gov/search?q={TERM}&f.oldScope=descriptions',corrPath:'catalog.archives.gov',domain:'archives.gov',desc:'Search NARA catalog. Use: AARO, UAP, UFO, AATIP, AAWSAP, Majestic, Project Blue Book, Roswell, Grudge, Sign.'},
+    {name:'USAF Project Blue Book Fact Sheet',type:'gov',autoInject:false,url:'https://www.af.mil/About-Us/Fact-Sheets/Display/Article/104590/unidentified-flying-objects-and-air-force-project-blue-book/',corrPath:'af.mil/About-Us/Fact-Sheets/Display/Article/104590/unidentified-flying-objects-and-air-force-project-blue-book',domain:'af.mil',desc:'US Air Force Project Blue Book fact sheet. Official Air Force summary of the 1947-1969 investigation program.'},
+    {name:'AFOSI Blue Book Feature',type:'gov',autoInject:false,url:'https://www.osi.af.mil/News/Features/Display/Article/2302429/project-blue-book-part-1-ufo-reports/',corrPath:'osi.af.mil/News/Features/Display/Article/2302429/project-blue-book-part-1-ufo-reports',domain:'osi.af.mil',desc:'AFOSI feature on Project Blue Book investigative files. Air Force Office of Special Investigations perspective.'},
+    {name:'FOIA.gov — Agency Portal',type:'gov',autoInject:false,url:'https://www.foia.gov/',corrPath:'foia.gov',domain:'foia.gov',desc:'Centralised FOIA starting point. File requests to any federal agency. Find existing UAP-related request statuses.'},
+    {name:'FOIA.gov Multi-Agency Search',type:'gov',autoInject:true,url:'https://search.foia.gov/search?query={TERM}+UAP+UFO',corrPath:'search.foia.gov',domain:'foia.gov',desc:'Search across all federal agency FOIA reading rooms simultaneously. Surfaces UAP/UFO releases from any agency.'},
+    {name:'MuckRock — UAP FOIA Tracker',type:'free',autoInject:true,url:'https://www.muckrock.com/search/?q={TERM}+UAP',domain:'muckrock.com',desc:'Public FOIA request tracking. See all filed and completed UAP/UFO FOIA requests. Shows what other journalists have obtained — and what\'s been refused.'},
+    {name:'Fold3 — Military Records',type:'registered',autoInject:true,url:'https://www.fold3.com/search?terms={TERM}+blue+book+UFO',domain:'fold3.com',desc:'Digitised military records including Project Blue Book case files. Subscription for full access to document scans.'},
+  ],
+  hearings_congress:[
+    {name:'House Oversight UAP Hearing (Jul 2023)',type:'gov',autoInject:false,url:'https://oversight.house.gov/hearing/unidentified-anomalous-phenomena-implications-on-national-security-public-safety-and-government-transparency/',corrPath:'oversight.house.gov',domain:'oversight.house.gov',desc:'House Oversight Committee July 2023 UAP hearing. Full testimony from Grusch, Graves, Fravor. Video, transcript, and submitted written statements.'},
+    {name:'House Oversight — Exposing the Truth',type:'gov',autoInject:false,url:'https://oversight.house.gov/hearing/unidentified-anomalous-phenomena-exposing-the-truth/',corrPath:'oversight.house.gov',domain:'oversight.house.gov',desc:'Follow-up House Oversight UAP hearing — Exposing the Truth. Additional testimony and classified briefing referrals.'},
+    {name:'Senate Armed Services — UAP',type:'gov',autoInject:true,url:'https://www.armed-services.senate.gov/search?q={TERM}+UAP',corrPath:'armed-services.senate.gov',domain:'armed-services.senate.gov',desc:'Senate Armed Services Committee UAP legislation, NDAA provisions, and committee products. Key venue for UAP disclosure provisions.'},
+    {name:'Congress.gov — UAP Legislation',type:'gov',autoInject:true,url:'https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22{TERM}+UAP%22%7D',corrPath:'congress.gov',domain:'congress.gov',desc:'Search UAP-related legislation. UAP Disclosure Act, NDAA UAP provisions FY22–FY25, and pending disclosure bills.'},
+    {name:'GovInfo — UAP Records',type:'gov',autoInject:true,url:'https://www.govinfo.gov/app/search/%7B%22query%22%3A%22{TERM}+UAP%22%7D',corrPath:'govinfo.gov',domain:'govinfo.gov',desc:'US Government Publishing Office repository. Congressional Records, GAO reports, NDAA UAP provisions, Federal Register entries.'},
+    {name:'CRS Reports — UAP',type:'gov',autoInject:true,url:'https://crsreports.congress.gov/search/#?q="{TERM}+UAP"',corrPath:'crsreports.congress.gov',domain:'crsreports.congress.gov',desc:'Congressional Research Service non-partisan UAP analysis. Updated as new legislation passes.'},
+    {name:'GAO — UAP / Defence Reports',type:'gov',autoInject:true,url:'https://www.gao.gov/search?search_page_query={TERM}+UAP',corrPath:'gao.gov',domain:'gao.gov',desc:'Government Accountability Office reports on UAP/UFO programs. Independent congressional watchdog analysis.'},
+    {name:'C-SPAN UAP Hearings',type:'free',autoInject:true,url:'https://www.c-span.org/search/?searchtype=All&query={TERM}+UAP+UFO',domain:'c-span.org',desc:'C-SPAN archive of UAP-related congressional hearings. Full unedited video of all testimony sessions since 2022.'},
+    {name:'UAP Congressional Dork',type:'dork',autoInject:true,url:'https://www.google.com/search?q="{TERM}"+UAP+site:congress.gov+OR+site:govinfo.gov+OR+site:oversight.house.gov+OR+site:intelligence.senate.gov',domain:'Google Dork',desc:'(DORK) Searches congressional databases for testimony, legislation, and committee reports mentioning your search term.'},
+    {name:'IC Committee UAP Dork',type:'dork',autoInject:true,url:'https://www.google.com/search?q="{TERM}"+UAP+site:intelligence.senate.gov+OR+site:armed-services.senate.gov+OR+site:oversight.house.gov',domain:'Google Dork',desc:'(DORK) Searches Senate Intelligence, Armed Services, and House Oversight — the three key UAP oversight committees.'},
+  ],
+  aviation_space:[
+    {name:'ADSBExchange — Unfiltered',type:'free',autoInject:true,url:'https://globe.adsbexchange.com/?icao={TERM}',domain:'globe.adsbexchange.com',desc:'Unfiltered ADS-B flight tracking including military and private aircraft excluded by other trackers. Search by ICAO hex code.'},
+    {name:'FAA Aircraft Registry',type:'gov',autoInject:true,url:'https://registry.faa.gov/aircraftinquiry/Search/NNumberInquiry?nNumberTxt={TERM}',corrPath:'registry.faa.gov',domain:'faa.gov',desc:'FAA aircraft registry N-number lookup. Find registration, owner, and aircraft type for any US-registered aircraft.'},
+    {name:'FAA UAS / Drone Resources',type:'gov',autoInject:false,url:'https://www.faa.gov/uas/',corrPath:'faa.gov',domain:'faa.gov',desc:'FAA UAS (drone) resources and airspace data. Relevant for distinguishing UAP from UAS/drone activity.'},
+    {name:'Flightradar24',type:'free',autoInject:true,url:'https://www.flightradar24.com/{TERM}',domain:'flightradar24.com',desc:'Live flight tracking. Enter flight number, registration, or airline to track current and historic flights.'},
+    {name:'FlightAware',type:'free',autoInject:true,url:'https://flightaware.com/live/flight/{TERM}',domain:'flightaware.com',desc:'Flight tracking with historical data. Track private jet registrations (N-numbers) and flight patterns.'},
+    {name:'OpenSky Network',type:'free',autoInject:true,url:'https://opensky-network.org/aircraft-profile?icao24={TERM}',domain:'opensky-network.org',desc:'Open-source ADS-B network with historical data. Verify aircraft activity in a specific time/location window.'},
+    {name:'Space-Track.org',type:'registered',autoInject:false,url:'https://www.space-track.org/',domain:'space-track.org',desc:'US Space Command satellite tracking. Conjunction data, orbital elements. Free for researchers — rule out satellites as UAP explanation.'},
+    {name:'CelesTrak — Satellite Catalog',type:'free',autoInject:true,url:'https://celestrak.org/satcat/search.php?INTDES={TERM}',domain:'celestrak.org',desc:'Satellite catalog and orbital data. Search by international designation to rule out satellite explanations for UAP sightings.'},
+    {name:'NOAA Space Weather Center',type:'free',autoInject:false,url:'https://www.swpc.noaa.gov/',domain:'swpc.noaa.gov',desc:'Space weather alerts and geomagnetic storm data. Explains some electronic sensor interference anomalies coinciding with UAP reports.'},
+    {name:'NASA EOSDIS Worldview',type:'free',autoInject:false,url:'https://worldview.earthdata.nasa.gov/',domain:'worldview.earthdata.nasa.gov',desc:'NASA Earth Observing System satellite imagery browser. Compare scenes at the same location over time.'},
+    {name:'Aviation Dork',type:'dork',autoInject:true,url:'https://www.google.com/search?q="{TERM}"+site:registry.faa.gov+OR+site:flightaware.com+OR+site:adsbexchange.com',domain:'Google Dork',desc:'(DORK) Searches FAA and ADS-B sources for aircraft registration data and sighting correlations.'},
+  ],
+  person_witness:[
+    {name:'CourtListener',type:'free',autoInject:true,url:'https://www.courtlistener.com/?q={TERM}&type=r',domain:'courtlistener.com',desc:'US federal court records. Search whistleblower-related litigation, security clearance cases, and congressional referrals by name.'},
+    {name:'PACER Federal Courts',type:'registered',autoInject:false,url:'https://pacer.gov/',domain:'pacer.gov',desc:'Public Access to Court Electronic Records. Official US federal court filing system. Low per-page fee for full documents.'},
+    {name:'OpenCorporates — Officer Search',type:'free',autoInject:true,url:'https://opencorporates.com/officers?q={TERM}',domain:'opencorporates.com',desc:'Search company officers and directors globally. Map contractor affiliations, consultancy relationships, and defence industry connections.'},
+    {name:'USASpending.gov',type:'gov',autoInject:true,url:'https://www.usaspending.gov/search/?query={TERM}',corrPath:'usaspending.gov',domain:'usaspending.gov',desc:'Federal contract and grant spending data. Search for UAP-adjacent defence contractors, program funding, and AARO-related expenditure.'},
+    {name:'ProPublica Nonprofit Explorer',type:'free',autoInject:true,url:'https://projects.propublica.org/nonprofits/search?q={TERM}',domain:'propublica.org',desc:'Search 990 forms for nonprofit organisations. Reveals funding sources, board members, and financial ties for UAP research orgs.'},
+    {name:'SEC EDGAR — Person Search',type:'free',autoInject:true,url:'https://efts.sec.gov/LATEST/search-index?q="{TERM}"&dateRange=custom&startdt=2020-01-01',domain:'sec.gov',desc:'SEC filings search by name. Find board memberships, stock holdings, and business relationships of UAP-connected individuals.'},
+    {name:'LinkedIn People Search',type:'registered',autoInject:true,url:'https://www.linkedin.com/search/results/people/?keywords={TERM}',domain:'linkedin.com',desc:'Professional profiles, job history, connections, companies. Map career paths and affiliations of witnesses and officials.'},
+    {name:'Twitter/X — UAP Live Search',type:'free',autoInject:true,url:'https://twitter.com/search?q={TERM}+UAP+OR+UFO&f=live',domain:'twitter.com',desc:'X/Twitter live search. Find witness statements, journalist sources, and real-time disclosure commentary.'},
+    {name:'Witness Dork',type:'dork',autoInject:true,url:'https://www.google.com/search?q="{TERM}"+whistleblower+OR+testimony+OR+"security+clearance"+site:congress.gov+OR+site:courtlistener.com',domain:'Google Dork',desc:'(DORK) Searches congressional records and court filings for a witness\'s name combined with whistleblower or testimony terms.'},
+    {name:'Contractor / Programme Dork',type:'dork',autoInject:true,url:'https://www.google.com/search?q="{TERM}"+UAP+OR+UFO+site:usaspending.gov+OR+site:sam.gov+OR+site:fpds.gov',domain:'Google Dork',desc:'(DORK) Searches federal contracting databases for a company or individual name linked to UAP-related programs.'},
+  ],
+  image_video:[
+    {name:'InVID / WeVerify Plugin',type:'free',autoInject:false,url:'https://www.invid-project.eu/tools-and-services/invid-verification-plugin/',domain:'invid-project.eu',desc:'Essential browser plugin for video verification. Keyframe extraction, metadata analysis, reverse image, publication date check. Use on all UAP footage.'},
+    {name:'Google Reverse Image',type:'free',autoInject:false,url:'https://images.google.com/',domain:'images.google.com',desc:'Drag-and-drop reverse image search. First check for recycled, reused, or misattributed UAP images.'},
+    {name:'TinEye Reverse Image',type:'free',autoInject:false,url:'https://tineye.com/',domain:'tineye.com',desc:'Reverse image tracking — finds where an image first appeared online and its complete usage history.'},
+    {name:'Yandex Images',type:'free',autoInject:false,url:'https://yandex.com/images/',domain:'yandex.com',desc:'Russian search engine reverse image. Often finds faces and results Google misses. Run in parallel to Google for UAP footage and witness photos.'},
+    {name:'FotoForensics — ELA Analysis',type:'free',autoInject:false,url:'https://fotoforensics.com/',domain:'fotoforensics.com',desc:'Error Level Analysis detects image manipulation. Reveals edited regions in JPEGs. Apply to every UAP still image received.'},
+    {name:'Metadata2Go — EXIF Extractor',type:'free',autoInject:false,url:'https://www.metadata2go.com/',domain:'metadata2go.com',desc:'Extract EXIF metadata from uploaded images — GPS coordinates, camera model, timestamps, editing software version.'},
+    {name:'Jeffrey\'s Exif Viewer',type:'free',autoInject:false,url:'https://exif.regex.info/exif.cgi',domain:'exif.regex.info',desc:'Detailed EXIF viewer including GPS data, camera settings, embedded thumbnails, and editing software traces.'},
+    {name:'SunCalc — Shadow Analysis',type:'free',autoInject:false,url:'https://www.suncalc.org/',domain:'suncalc.org',desc:'Sun position calculator by date, time, and location. Verify if shadows in UAP photos are consistent with the claimed time and place.'},
+    {name:'Sentinel Hub EO Browser',type:'free',autoInject:false,url:'https://apps.sentinel-hub.com/eo-browser/',domain:'sentinel-hub.com',desc:'Free multispectral satellite imagery. Compare scenes at the same location over time for ground event verification.'},
+    {name:'Fake Image Detector',type:'free',autoInject:false,url:'https://www.fakeimagedetector.com/',domain:'fakeimagedetector.com',desc:'AI-based tool to detect AI-generated or manipulated images. Upload suspicious UAP images for structural analysis.'},
+  ],
+  domain_dns:[
+    {name:'WHOIS Lookup',type:'free',autoInject:true,url:'https://www.whois.com/whois/{TERM}',domain:'whois.com',desc:'Full registrant details, registration/expiry dates, nameservers. First stop for investigating UAP-related websites and organisations.'},
+    {name:'Wayback Machine',type:'free',autoInject:true,url:'https://web.archive.org/web/*/{TERM}',domain:'web.archive.org',desc:'Historical website snapshots. Recover deleted UAP claim pages, press releases, and organisation websites. Essential for volatile content.'},
+    {name:'Archive.ph',type:'free',autoInject:true,url:'https://archive.ph/{TERM}',domain:'archive.ph',desc:'Permanent page snapshots. Archive paywalled or volatile UAP-related content for evidence preservation.'},
+    {name:'ViewDNS.info',type:'free',autoInject:true,url:'https://viewdns.info/whois/?domain={TERM}',domain:'viewdns.info',desc:'Multi-function DNS toolkit: reverse IP, DNS report, WHOIS, IP history. Trace UAP org infrastructure.'},
+    {name:'crt.sh — Certificate Transparency',type:'free',autoInject:true,url:'https://crt.sh/?q={TERM}',domain:'crt.sh',desc:'SSL/TLS certificate transparency logs. Finds all certificates issued — reveals hidden subdomains of UAP-related sites.'},
+    {name:'SecurityTrails',type:'registered',autoInject:true,url:'https://securitytrails.com/domain/{TERM}/dns',domain:'securitytrails.com',desc:'Historical DNS records and IP history. Reveals hosting infrastructure changes over time for UAP researcher or organisation sites.'},
+    {name:'URLScan.io',type:'free',autoInject:true,url:'https://urlscan.io/search/#domain:{TERM}',domain:'urlscan.io',desc:'Full page behaviour scan — outbound links, scripts, IP info, screenshot. Good for vetting unfamiliar UAP source sites.'},
+    {name:'BuiltWith',type:'free',autoInject:true,url:'https://builtwith.com/{TERM}',domain:'builtwith.com',desc:'Reveals all technologies powering a website. Useful for vetting UAP research organisations and media outlets.'},
+    {name:'Domain Dork',type:'dork',autoInject:true,url:'https://www.google.com/search?q=site:{TERM}',domain:'Google Dork',desc:'(DORK) Maps all content indexed by Google for a domain. Find hidden pages and documents on UAP sites.'},
+  ]
+};
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+window.onload=()=>{
+  renderSrcGroup('sg1',SRCS.t1,'t1b','T1');
+  renderSrcGroup('sg2',SRCS.t2,'t2b','T2');
+  renderSrcGroup('sg3',SRCS.t3,'t3b','GOV');
+  renderSrcGroup('sg4',SRCS.sci,'scb','SCI');
+  renderSrcGroup('sg6',SRCS.tech,'tcb','TECH');
+  renderSrcGroupUap('sg5',SRCS.uap);
+  SRCS.t1.forEach(s=>{S.selSrc.push(s.id);document.getElementById('si_'+s.id)?.classList.add('sel')});
+  initDorks();renderUapTargetBar();renderUapTools();updStats();updQ();
+  loadSavedState();loadCaseFromStorage();
+  document.getElementById('kwIn').focus();
+  const ethicsBtn=document.getElementById('ethicsConfirmBtn');
+  if(ethicsBtn)ethicsBtn.addEventListener('click',confirmEthics);
+};
+
+// ═══════════════════════════════════════════════
+// ETHICS GATE
+// ═══════════════════════════════════════════════
+function showEthicsGate(){
+  const modal=document.getElementById('ethicsModal');
+  if(!modal)return;
+  modal.style.display='flex';
+  modal.style.visibility='visible';
+  modal.style.pointerEvents='auto';
+}
+function hideEthicsGate(){
+  const modal=document.getElementById('ethicsModal');
+  if(!modal)return;
+  modal.style.display='none';
+  modal.style.visibility='hidden';
+  modal.style.pointerEvents='none';
+}
+function hasEthicsAck(){
+  if(ethicsAckFallback)return true;
+  try{return localStorage.getItem('signal_ethics_ack')==='1'}catch(e){return false}
+}
+function setEthicsAck(){ethicsAckFallback=true;try{localStorage.setItem('signal_ethics_ack','1')}catch(e){}}
+function copyEthicsText(){
+  const txt='Use only for public-interest, security, verification, archival or consent-based research. Do not harass, stalk, dox, impersonate, retrieve credentials or access private accounts. Preserve source URLs, dates, contradictions and uncertainty.';
+  navigator.clipboard.writeText(txt).then(()=>toast('Ethics text copied ✓')).catch(()=>toast('Unable to copy ethics text'));
+}
+function confirmEthics(){
+  if(!['ec1','ec2','ec3'].every(id=>document.getElementById(id).checked)){toast('Please acknowledge all three points');return}
+  setEthicsAck();
+  hideEthicsGate();
+  const m=pendingMode||'osint';
+  pendingMode=null;
+  setMode(m);
+  toast('Ethics checkpoint accepted ✓');
+}
+
+// ═══════════════════════════════════════════════
+// AUTOSAVE (settings)
+// ═══════════════════════════════════════════════
+function saveState(){
+  try{localStorage.setItem('signal_v5_state',JSON.stringify({kws:S.kws,mode:S.mode,selSrc:S.selSrc,custSrc:S.custSrc,tbs:S.tbs,uapCat:S.uapCat,uapFilter:S.uapFilter}))}catch(e){}
+}
+function loadSavedState(){
+  try{
+    const raw=localStorage.getItem('signal_v5_state');if(!raw)return;
+    const d=JSON.parse(raw);
+    if(Array.isArray(d.kws)&&d.kws.every(k=>typeof k==='string'&&k.length<500)){S.kws=d.kws.slice(0,50);renderChips()}
+    if(Array.isArray(d.selSrc)){
+      S.selSrc=d.selSrc.filter(id=>ALL_SRCS.some(s=>s.id===id));
+      ALL_SRCS.forEach(s=>{
+        const el=document.getElementById('si_'+s.id);
+        if(!el)return;
+        if(S.selSrc.includes(s.id))el.classList.add(SRCS.uap.some(u=>u.id===s.id)?'sel-uap':'sel');
+        else el.classList.remove('sel','sel-uap');
+      });
+    }
+    if(Array.isArray(d.custSrc)){S.custSrc=d.custSrc.filter(v=>typeof v==='string'&&isValidDomain(v)).slice(0,30);renderCustSrc()}
+    if(typeof d.tbs==='string'){S.tbs=d.tbs;document.querySelectorAll('.tbtn').forEach(b=>b.classList.toggle('on',b.dataset.tbs===d.tbs))}
+    if(typeof d.uapCat==='string'&&UAP_CATS.some(c=>c.id===d.uapCat))S.uapCat=d.uapCat;
+    if(typeof d.uapFilter==='string')S.uapFilter=d.uapFilter;
+    if(typeof d.mode==='string'&&['corroborate','dork','osint'].includes(d.mode)&&d.mode!=='osint'){setTimeout(()=>setMode(d.mode),60)}
+    updStats();updQ();
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════════
+// CASE MANAGEMENT
+// ═══════════════════════════════════════════════
+function saveCaseToStorage(){
+  try{
+    CASE_DATA.title=document.getElementById('caseTitle').value;
+    CASE_DATA.type=document.getElementById('caseType').value;
+    CASE_DATA.hypothesis=document.getElementById('caseHypo').value;
+    CASE_DATA.notes=document.getElementById('caseNotes').value;
+    CASE_DATA.updated=new Date().toISOString();
+    localStorage.setItem('signal_v5_case',JSON.stringify(CASE_DATA));
+    calcCaseStats();
+  }catch(e){}
+}
+function loadCaseFromStorage(){
+  try{
+    const raw=localStorage.getItem('signal_v5_case');if(!raw)return;
+    const d=JSON.parse(raw);
+    if(typeof d.title==='string')CASE_DATA.title=d.title;
+    if(typeof d.type==='string')CASE_DATA.type=d.type;
+    if(typeof d.hypothesis==='string')CASE_DATA.hypothesis=d.hypothesis;
+    if(typeof d.notes==='string')CASE_DATA.notes=d.notes;
+    if(Array.isArray(d.evidence))CASE_DATA.evidence=d.evidence;
+    if(d.created)CASE_DATA.created=d.created;
+    document.getElementById('caseTitle').value=CASE_DATA.title||'';
+    const typeEl=document.getElementById('caseType');
+    if(CASE_DATA.type){for(let i=0;i<typeEl.options.length;i++)if(typeEl.options[i].value===CASE_DATA.type){typeEl.selectedIndex=i;break}}
+    document.getElementById('caseHypo').value=CASE_DATA.hypothesis||'';
+    document.getElementById('caseNotes').value=CASE_DATA.notes||'';
+    renderEvidenceBoard();calcCaseStats();
+  }catch(e){}
+}
+function addEvidenceCard(){
+  const title=document.getElementById('evTitle').value.trim();
+  if(!title){toast('Evidence title is required');return}
+  if(!CASE_DATA.created)CASE_DATA.created=new Date().toISOString();
+  const ev={
+    id:Date.now().toString(36),
+    title,
+    sourceType:document.getElementById('evSourceType').value,
+    sourceUrl:document.getElementById('evUrl').value.trim(),
+    archiveUrl:document.getElementById('evArchive').value.trim(),
+    quote:document.getElementById('evQuote').value.trim(),
+    confidence:parseInt(document.getElementById('evConf').value),
+    isContradiction:document.getElementById('evContra').checked,
+    dateAdded:new Date().toISOString()
+  };
+  CASE_DATA.evidence.unshift(ev);
+  renderEvidenceBoard();calcCaseStats();saveCaseToStorage();
+  // Reset form
+  ['evTitle','evUrl','evArchive','evQuote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('evConf').value=70;document.getElementById('evConfVal').textContent='70';
+  document.getElementById('evContra').checked=false;
+  toast('Evidence card added ✓');
+}
+function removeEvidence(id){
+  CASE_DATA.evidence=CASE_DATA.evidence.filter(e=>e.id!==id);
+  renderEvidenceBoard();calcCaseStats();saveCaseToStorage();
+}
+function renderEvidenceBoard(){
+  const board=document.getElementById('evBoard');
+  board.innerHTML='';
+  if(!CASE_DATA.evidence.length){
+    const s=document.createElement('span');s.style.cssText='font-size:11px;color:var(--muted)';s.textContent='No evidence cards yet.';board.appendChild(s);return;
+  }
+  CASE_DATA.evidence.forEach(ev=>{
+    const cc=ev.confidence>=80?'conf-h':ev.confidence>=50?'conf-m':'conf-l';
+    const card=document.createElement('div');
+    card.className='ev-card'+(ev.isContradiction?' contradiction':'');
+    const hdr=document.createElement('div');hdr.className='ev-card-hdr';
+    const title=document.createElement('div');title.className='ev-card-title';title.textContent=ev.title;
+    const badges=document.createElement('div');badges.className='ev-card-badges';
+    const cb=document.createElement('span');cb.className=`conf-badge ${cc}`;cb.textContent=`${ev.confidence}%`;badges.appendChild(cb);
+    if(ev.isContradiction){const xb=document.createElement('span');xb.className='contra-badge';xb.textContent='⚡ CONTRADICTION';badges.appendChild(xb)}
+    const rm=document.createElement('button');rm.className='ev-rm';rm.textContent='✕';rm.setAttribute('aria-label','Remove');
+    rm.addEventListener('click',()=>removeEvidence(ev.id));
+    hdr.appendChild(title);hdr.appendChild(badges);hdr.appendChild(rm);card.appendChild(hdr);
+    if(ev.sourceUrl){
+      const ud=document.createElement('div');ud.className='ev-card-url';
+      const a=document.createElement('a');a.href=ev.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';
+      a.textContent=ev.sourceUrl.length>90?ev.sourceUrl.slice(0,90)+'…':ev.sourceUrl;
+      ud.appendChild(a);card.appendChild(ud);
+    }
+    if(ev.archiveUrl){
+      const ad=document.createElement('div');ad.className='ev-card-url';
+      ad.appendChild(document.createTextNode('📦 '));
+      const aa=document.createElement('a');aa.href=ev.archiveUrl;aa.target='_blank';aa.rel='noopener noreferrer';
+      aa.textContent=ev.archiveUrl.length>80?ev.archiveUrl.slice(0,80)+'…':ev.archiveUrl;ad.appendChild(aa);card.appendChild(ad);
+    }
+    if(ev.quote){const qd=document.createElement('div');qd.className='ev-card-quote';qd.textContent=ev.quote.length>400?ev.quote.slice(0,400)+'…':ev.quote;card.appendChild(qd)}
+    const meta=document.createElement('div');meta.className='ev-card-meta';
+    const ts=document.createElement('span');ts.className='ev-card-type';ts.textContent=ev.sourceType;
+    const ds=document.createElement('span');ds.className='ev-card-date';ds.textContent=new Date(ev.dateAdded).toLocaleDateString('en-AU');
+    meta.appendChild(ts);meta.appendChild(ds);card.appendChild(meta);
+    board.appendChild(card);
+  });
+}
+function calcCaseStats(){
+  const evs=CASE_DATA.evidence;
+  const n=evs.length;
+  const avg=n?Math.round(evs.reduce((a,e)=>a+e.confidence,0)/n):0;
+  const contra=evs.filter(e=>e.isContradiction).length;
+  const avgEl=document.getElementById('avgConf');if(avgEl)avgEl.textContent=n?`${avg}%`:'0%';
+  const evEl=document.getElementById('evCount');if(evEl)evEl.textContent=n;
+  const conEl=document.getElementById('contraCount');if(conEl)conEl.textContent=contra;
+}
+function exportCaseJson(){
+  saveCaseToStorage();
+  const data={_type:'SIGNAL-Case',_version:'5.0',_exported:new Date().toISOString(),...CASE_DATA};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const title=CASE_DATA.title?CASE_DATA.title.replace(/[^a-z0-9]/gi,'-').slice(0,40):'case';
+  const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(blob),download:`SIGNAL_Case_${title}_${new Date().toISOString().slice(0,10)}.json`});
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  toast('Case exported ✓');
+}
+function importCaseJson(evt){
+  const file=evt.target.files[0];if(!file)return;
+  if(file.size>2000000){toast('File too large');evt.target.value='';return}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      if(d._type&&d._type!=='SIGNAL-Case'){toast('Not a SIGNAL Case file');return}
+      if(typeof d.title==='string')CASE_DATA.title=d.title.slice(0,500);
+      if(typeof d.type==='string')CASE_DATA.type=d.type;
+      if(typeof d.hypothesis==='string')CASE_DATA.hypothesis=d.hypothesis.slice(0,5000);
+      if(typeof d.notes==='string')CASE_DATA.notes=d.notes.slice(0,5000);
+      if(Array.isArray(d.evidence))CASE_DATA.evidence=d.evidence.filter(e=>e&&typeof e.title==='string').slice(0,500);
+      if(d.created)CASE_DATA.created=d.created;
+      document.getElementById('caseTitle').value=CASE_DATA.title||'';
+      document.getElementById('caseHypo').value=CASE_DATA.hypothesis||'';
+      document.getElementById('caseNotes').value=CASE_DATA.notes||'';
+      renderEvidenceBoard();calcCaseStats();saveCaseToStorage();
+      toast(`Case loaded — ${CASE_DATA.evidence.length} evidence cards ✓`);
+    }catch{toast('ERROR: Invalid case file')}
+  };
+  reader.readAsText(file);evt.target.value='';
+}
+function addQueryToCase(){
+  const q=S.mode==='osint'?buildUapCorrQ():getQuery();
+  if(!q){toast('No query to add to case');return}
+  if(!CASE_DATA.created)CASE_DATA.created=new Date().toISOString();
+  const ev={
+    id:Date.now().toString(36),
+    title:`Search query — ${new Date().toLocaleDateString('en-AU')} ${new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}`,
+    sourceType:'Research strategy / query',
+    sourceUrl:buildLaunchUrl('google',q),
+    archiveUrl:'',
+    quote:q,
+    confidence:50,
+    isContradiction:false,
+    dateAdded:new Date().toISOString()
+  };
+  CASE_DATA.evidence.unshift(ev);
+  renderEvidenceBoard();calcCaseStats();saveCaseToStorage();
+  toast('Query saved to local case data ✓');
+}
+function buildLaunchUrl(eng,q){
+  const enc=encodeURIComponent(q||getQuery());
+  const tbs=S.tbs?`&tbs=${S.tbs}`:'';
+  return{google:`https://www.google.com/search?q=${enc}${tbs}`,bing:`https://www.bing.com/search?q=${enc}`,ddg:`https://duckduckgo.com/?q=${enc}`,brave:`https://search.brave.com/search?q=${enc}`,startpage:`https://www.startpage.com/search?q=${enc}`}[eng]||'';
+}
+
+// ═══════════════════════════════════════════════
+// UAP OSINT FUNCTIONS
+// ═══════════════════════════════════════════════
+function renderUapTargetBar(){
+  const bar=document.getElementById('uapTargetBar');
+  bar.innerHTML='';
+  UAP_CATS.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='tcat'+(c.id===S.uapCat?' on':'');
+    btn.id='tc_'+c.id;
+    btn.innerHTML=`<span class="tcat-icon">${c.icon}</span>${esc(c.label)}`;
+    btn.addEventListener('click',()=>{S.uapCat=c.id;document.querySelectorAll('.tcat').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderUapTools();saveState()});
+    bar.appendChild(btn);
+  });
+}
+function setUapFilter(f){
+  S.uapFilter=f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('fb_'+f)?.classList.add('on');
+  renderUapTools();saveState();
+}
+function getScopedUapTools(){
+  const tools=(UAP_TOOLS[S.uapCat]||[]);
+  const f=S.uapFilter;
+  return tools.filter(t=>{
+    if(f==='gov')return t.type==='gov';
+    if(f==='free')return t.type==='free';
+    if(f==='auto')return t.autoInject;
+    if(f==='dork')return t.type==='dork';
+    return true;
+  });
+}
+function getTerm(){return document.getElementById('osintTerm').value.trim()||(S.kws.length?S.kws[0]:'')}
+function useFirstKw(){if(S.kws.length){document.getElementById('osintTerm').value=S.kws[0];renderUapTools()}else toast('Add a keyword first')}
+function buildUapToolUrl(tool){const t=getTerm();if(tool.autoInject&&t)return tool.url.replace(/\{TERM\}/g,encodeURIComponent(t));return tool.url}
+function renderUapTools(){
+  const tools=(UAP_TOOLS[S.uapCat]||[]);
+  const filtered=getScopedUapTools();
+  const grid=document.getElementById('toolGrid');const none=document.getElementById('noTools');
+  grid.innerHTML='';
+  if(!filtered.length){
+    none.style.display='block';
+    if(f==='dork')none.textContent='No dork tools in this category. Switch target category (for example Agency Acronyms or Hearings / Congress) to see dork cards.';
+    else if(f==='free')none.textContent='No free-access tools in this category.';
+    else if(f==='gov')none.textContent='No government tools in this category.';
+    else if(f==='auto')none.textContent='No auto-inject tools in this category.';
+    else none.textContent='No tools match current filter.';
+    return;
+  }
+  none.style.display='none';
+  const allT=tools;
+  document.getElementById('osTotal').textContent=allT.length;
+  document.getElementById('osGov').textContent=allT.filter(t=>t.type==='gov').length;
+  document.getElementById('osAuto').textContent=allT.filter(t=>t.autoInject).length;
+  document.getElementById('osFree').textContent=allT.filter(t=>t.type==='free').length;
+  const typeBadgeMap={gov:'badge-gov',free:'badge-free',registered:'badge-reg',dork:'badge-dork',local:'badge-local'};
+  const typeLabelMap={gov:'GOV',free:'FREE',registered:'REG',dork:'DORK',local:'LOCAL'};
+  filtered.forEach(tool=>{
+    const term=getTerm();
+    const card=document.createElement('div');card.className=`tool-card ${tool.type}`;
+    const urlPreview=document.createElement('div');urlPreview.className='tool-url-preview';urlPreview.textContent=buildUapToolUrl(tool);
+    const actions=document.createElement('div');actions.className='tool-actions';
+    card.innerHTML=`
+      <div class="tool-header">
+        <span class="tool-name">${esc(tool.name)}</span>
+        <div class="tool-badges">
+          <span class="badge ${typeBadgeMap[tool.type]||'badge-free'}">${typeLabelMap[tool.type]||tool.type.toUpperCase()}</span>
+          ${tool.autoInject?'<span class="badge badge-auto">⚡AUTO</span>':''}
+        </div>
+      </div>
+      <div class="tool-domain">${esc(tool.domain)}</div>
+      <div class="tool-desc">${esc(tool.desc)}</div>`;
+    card.appendChild(urlPreview);
+    if(tool.type!=='local'){
+      const ob=document.createElement('button');ob.className='tbtn-launch';ob.textContent=`OPEN${tool.autoInject&&term?' (AUTO)':''}`;
+      ob.addEventListener('click',()=>{if(tool.autoInject){const t=getTerm();if(!t){toast('Enter a search term first');return}safeOpen(tool.url.replace(/\{TERM\}/g,encodeURIComponent(t)))}else safeOpen(tool.url)});
+      actions.appendChild(ob);
+    }
+    if(tool.type==='dork'){
+      const db=document.createElement('button');db.className='tbtn-dork';db.textContent='→ DORK MODE';
+      db.addEventListener('click',()=>{setMode('dork');toast('Switched to Dork mode')});
+      actions.appendChild(db);
+    }
+    const cb=document.createElement('button');cb.className='tbtn-copy';cb.textContent='COPY URL';
+    cb.addEventListener('click',()=>navigator.clipboard.writeText(buildUapToolUrl(tool)).then(()=>toast('URL copied ✓')));
+    actions.appendChild(cb);
+    if(tool.type==='local'){const ib=document.createElement('button');ib.className='tbtn-launch';ib.textContent='📦 INSTALL';ib.addEventListener('click',()=>safeOpen(tool.url));actions.appendChild(ib)}
+    card.appendChild(actions);grid.appendChild(card);
+  });
+  updateUapQ();
+  document.getElementById('ssUap').style.display='';
+  document.getElementById('sUapTools').textContent=allT.length;
+}
+function buildUapCorrQ(){
+  const govTools=getScopedUapTools().filter(t=>t.type==='gov'&&t.corrPath);
+  const seen=new Set();const siteParts=[];
+  govTools.forEach(t=>{if(!seen.has(t.corrPath)){seen.add(t.corrPath);siteParts.push(`site:${t.corrPath}`)}});
+  const term=document.getElementById('osintTerm').value.trim();
+  const kwPart=term?(term.includes(' ')?`"${term}"`:term):'';
+  const sitePart=siteParts.length?`(${siteParts.join(' OR ')})`:''
+  return[kwPart,sitePart].filter(Boolean).join(' ').trim();
+}
+function updateUapQ(){
+  const q=buildUapCorrQ();const el=document.getElementById('uapQOut');
+  if(q){el.textContent=q;el.style.color='var(--text)'}
+  else el.innerHTML='<span class="qempty">Select GOV filter and add keywords to build a corroboration query across all UAP government sources…</span>';
+}
+function copyUapQ(){const term=document.getElementById('osintTerm').value.trim();if(!term){toast('Enter OSINT SEARCH TERM first');return}const q=buildUapCorrQ();if(!q){toast('No query built');return}navigator.clipboard.writeText(q).then(()=>toast('UAP query copied ✓'))}
+function launchUapQ(eng){const term=document.getElementById('osintTerm').value.trim();if(!term){toast('Enter OSINT SEARCH TERM first');return}const q=buildUapCorrQ();if(!q){toast('Build a query first');return}safeOpen(buildLaunchUrl(eng,q))}
+function copyAllUapUrls(){
+  const tools=(UAP_TOOLS[S.uapCat]||[]).filter(t=>t.type!=='local');
+  if(!tools.length){toast('No tool URLs to copy');return}
+  const urls=tools.map(t=>buildUapToolUrl(t)).join('\n');
+  navigator.clipboard.writeText(urls).then(()=>toast(`${tools.length} URLs copied ✓`));
+}
+function launchAllUap(){
+  const tools=(UAP_TOOLS[S.uapCat]||[]).filter(t=>t.type!=='local');
+  if(!tools.length){toast('No tools visible');return}
+  if(tools.length>5&&!confirm(`This will open ${tools.length} tabs. Use "COPY VISIBLE URLS" instead to review first. Proceed?`))return;
+  tools.forEach(t=>safeOpen(buildUapToolUrl(t)));
+  toast(`Launched ${tools.length} tools ✓`);
+}
+
+// ═══════════════════════════════════════════════
+// SOURCES
+// ═══════════════════════════════════════════════
+function renderSrcGroup(cid,arr,bc,lbl){
+  const el=document.getElementById(cid);el.innerHTML='';
+  arr.forEach(s=>{
+    const div=document.createElement('div');div.className='si';div.id='si_'+s.id;div.setAttribute('tabindex','0');
+    div.innerHTML=`<div class="scheck"><span class="stk">✓</span></div><span class="sname" title="${esc(s.d)}">${esc(s.n)}</span><span class="tb ${bc}">${lbl}</span>`;
+    div.addEventListener('click',()=>togSrc(s.id,div,false));
+    div.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();togSrc(s.id,div,false)}});
+    el.appendChild(div);
+  });
+}
+function renderSrcGroupUap(cid,arr){
+  const el=document.getElementById(cid);el.innerHTML='';
+  arr.forEach(s=>{
+    const div=document.createElement('div');div.className='si';div.id='si_'+s.id;div.setAttribute('tabindex','0');
+    div.innerHTML=`<div class="scheck"><span class="stk">✓</span></div><span class="sname" title="${esc(s.d)}">${esc(s.n)}</span><span class="tb uapb">UAP</span>`;
+    div.addEventListener('click',()=>togSrc(s.id,div,true));
+    div.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();togSrc(s.id,div,true)}});
+    el.appendChild(div);
+  });
+}
+function togSrc(id,el,isUap){
+  const i=S.selSrc.indexOf(id);
+  if(i>=0){S.selSrc.splice(i,1);el.classList.remove('sel','sel-uap')}
+  else{S.selSrc.push(id);el.classList.add(isUap?'sel-uap':'sel')}
+  updStats();updQ();saveState();
+}
+function selAll(){ALL_SRCS.forEach(s=>{if(!S.selSrc.includes(s.id))S.selSrc.push(s.id);const el=document.getElementById('si_'+s.id);if(el)el.classList.add(SRCS.uap.some(u=>u.id===s.id)?'sel-uap':'sel')});updStats();updQ();saveState()}
+function selUapGov(){SRCS.uap.forEach(s=>{if(!S.selSrc.includes(s.id))S.selSrc.push(s.id);const el=document.getElementById('si_'+s.id);if(el)el.classList.add('sel-uap')});updStats();updQ();saveState()}
+function deselAll(){S.selSrc=[];ALL_SRCS.forEach(s=>{const el=document.getElementById('si_'+s.id);if(el)el.classList.remove('sel','sel-uap')});updStats();updQ();saveState()}
+function addCustomSrc(){
+  const el=document.getElementById('csIn');let v=el.value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/$/,'');
+  if(!v||!isValidDomain(v)){toast('Invalid domain format — use example.com');return}
+  if(S.custSrc.includes(v)){toast('Already added');return}
+  if(S.custSrc.length>=30){toast('Max 30 custom sources');return}
+  S.custSrc.push(v);el.value='';renderCustSrc();updQ();saveState();
+}
+function rmCustSrc(idx){S.custSrc.splice(idx,1);renderCustSrc();updQ();saveState()}
+function renderCustSrc(){
+  const el=document.getElementById('csChips');el.innerHTML='';
+  if(!S.custSrc.length){const s=document.createElement('span');s.style.cssText='font-size:11px;color:var(--muted)';s.textContent='No custom sources';el.appendChild(s);return}
+  S.custSrc.forEach((d,i)=>{
+    const chip=document.createElement('div');chip.className='chip';
+    const txt=document.createElement('span');txt.textContent=d;
+    const x=document.createElement('button');x.className='xbtn';x.textContent='✕';x.addEventListener('click',()=>rmCustSrc(i));
+    chip.appendChild(txt);chip.appendChild(x);el.appendChild(chip);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// DORKS
+// ═══════════════════════════════════════════════
+function initDorks(){
+  const g=document.getElementById('dgrid');
+  DORKS.forEach(op=>{
+    S.dops[op.id]={on:false,val:''};
+    let inp='';
+    if(op.type==='sel')inp=`<select class="dsel" id="dv_${op.id}" disabled onchange="dChange('${op.id}',this.value)"><option value="">— select —</option>${op.opts.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join('')}</select>`;
+    else if(op.type==='date')inp=`<input class="din" type="date" id="dv_${op.id}" disabled oninput="dChange('${op.id}',this.value)">`;
+    else inp=`<input class="din" type="text" id="dv_${op.id}" placeholder="${esc(op.ph)}" disabled oninput="dChange('${op.id}',this.value)">`;
+    const div=document.createElement('div');div.className='dop';div.id='dc_'+op.id;
+    div.innerHTML=`<div class="dop-hdr"><div class="dtog" onclick="togDork('${op.id}')" tabindex="0"><span class="dtick" id="dt_${op.id}">✓</span></div><div><div class="dlabel">${esc(op.lbl)}</div></div></div><div class="ddesc">${esc(op.desc)}</div><div class="dex">e.g. ${esc(op.ex)}</div>${inp}`;
+    g.appendChild(div);
+  });
+}
+function togDork(id){
+  const op=S.dops[id];op.on=!op.on;
+  const card=document.getElementById('dc_'+id);const tick=document.getElementById('dt_'+id);const inp=document.getElementById('dv_'+id);const tog=card.querySelector('.dtog');
+  if(op.on){card.classList.add('on');tog.style.cssText='background:var(--accent);border-color:var(--accent)';tick.style.display='block';inp.disabled=false;inp.focus()}
+  else{card.classList.remove('on');tog.style.cssText='';tick.style.display='none';inp.disabled=true}
+  updStats();updQ();
+}
+function dChange(id,v){S.dops[id].val=v;updQ()}
+function resetDorks(){
+  DORKS.forEach(op=>{if(S.dops[op.id].on){S.dops[op.id]={on:false,val:''};const card=document.getElementById('dc_'+op.id);const tick=document.getElementById('dt_'+op.id);const inp=document.getElementById('dv_'+op.id);const tog=card?.querySelector('.dtog');card?.classList.remove('on');if(tog)tog.style.cssText='';if(tick)tick.style.display='none';if(inp){inp.disabled=true;inp.value=''}}});
+  updStats();updQ();
+}
+
+// ═══════════════════════════════════════════════
+// KEYWORDS
+// ═══════════════════════════════════════════════
+function kwKey(e){if(e.key==='Enter')addKw()}
+function addKw(){
+  const el=document.getElementById('kwIn');const v=el.value.trim();
+  if(!v||v.length>500)return;
+  if(S.kws.includes(v)){toast('Already tracking');return}
+  if(S.kws.length>=50){toast('Max 50 keywords');return}
+  S.kws.push(v);el.value='';renderChips();updStats();updQ();saveState();
+  if(S.mode==='osint')renderUapTools();
+}
+function rmKw(idx){S.kws.splice(idx,1);renderChips();updStats();updQ();saveState()}
+function clearKeywords(){S.kws=[];renderChips();updStats();updQ();saveState()}
+function renderChips(){
+  const el=document.getElementById('chipsEl');el.innerHTML='';
+  if(!S.kws.length){const s=document.createElement('span');s.style.cssText='font-size:11px;color:var(--muted);align-self:center';s.textContent='No keywords yet';el.appendChild(s);return}
+  S.kws.forEach((k,i)=>{
+    const chip=document.createElement('div');chip.className='chip';
+    const txt=document.createElement('span');txt.textContent=k;
+    const x=document.createElement('button');x.className='xbtn';x.textContent='✕';x.addEventListener('click',()=>rmKw(i));
+    chip.appendChild(txt);chip.appendChild(x);el.appendChild(chip);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// MODE
+// ═══════════════════════════════════════════════
+function setMode(m){
+  if(m==='osint'&&!hasEthicsAck()){pendingMode=m;showEthicsGate();return}
+  if(m==='case')m='corroborate';
+  S.mode=m;
+  document.getElementById('mBtn0').className='mbtn'+(m==='corroborate'?' on':'');
+  document.getElementById('mBtn1').className='mbtn'+(m==='dork'?' on':'');
+  document.getElementById('mBtn2').className='mbtn'+(m==='osint'?' on-osint':'');
+  ['C','D'].forEach(p=>document.getElementById('panel'+p).classList.toggle('on',m===({C:'corroborate',D:'dork'}[p])));
+  document.getElementById('panelO').classList.toggle('on',m==='osint');
+  document.getElementById('qCard').style.display=(m==='osint')?'none':'block';
+  const kwCard=document.getElementById('kwCard');
+  const osintStepCat=document.getElementById('osintStepCat');
+  const osintStepTerm=document.getElementById('osintStepTerm');
+  if(m==='osint'){
+    if(kwCard)kwCard.style.display='none';
+    if(osintStepCat)osintStepCat.textContent='STEP 1';
+    if(osintStepTerm)osintStepTerm.textContent='STEP 2';
+    document.getElementById('osintTerm')?.focus();
+  }else{
+    if(kwCard)kwCard.style.display='';
+    if(osintStepCat)osintStepCat.textContent='STEP 2';
+    if(osintStepTerm)osintStepTerm.textContent='STEP 3';
+  }
+  document.getElementById('sMod').textContent=m.toUpperCase();
+  document.getElementById('ssUap').style.display=m==='osint'?'':'none';
+  if(m==='osint')renderUapTools();else updQ();
+  saveState();
+}
+
+// ═══════════════════════════════════════════════
+// TIME / QUERY
+// ═══════════════════════════════════════════════
+function setTime(btn,v){S.tbs=v;document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');updQ();saveState()}
+function buildCorrQ(){
+  const domains=[...ALL_SRCS.filter(s=>S.selSrc.includes(s.id)).map(s=>`site:${s.d}`),...S.custSrc.map(d=>`site:${d}`)];
+  const kwPart=S.kws.map(k=>k.includes(' ')?`"${k}"`:k).join(' ');
+  const sitePart=domains.length?`(${domains.join(' OR ')})`:''
+  return[kwPart,sitePart].filter(Boolean).join(' ').trim();
+}
+function buildDorkQ(){
+  const parts=S.kws.length?[S.kws.map(k=>k.includes(' ')?`"${k}"`:k).join(' ')]:[];
+  DORKS.forEach(od=>{
+    const op=S.dops[od.id];if(!op.on||!op.val.trim())return;
+    const v=op.val.trim();
+    switch(od.id){
+      case 'site':parts.push(`site:${v}`);break;
+      case 'intitle':parts.push(`intitle:${v.includes(' ')?`"${v}"`:v}`);break;
+      case 'allintitle':parts.push(`allintitle:${v}`);break;
+      case 'inurl':parts.push(`inurl:${v}`);break;
+      case 'intext':parts.push(`intext:${v.includes(' ')?`"${v}"`:v}`);break;
+      case 'filetype':parts.push(`filetype:${v}`);break;
+      case 'exact':parts.push(`"${v}"`);break;
+      case 'exclude':v.split(/\s+/).forEach(t=>{if(t)parts.push(`-${t}`)});break;
+      case 'after':parts.push(`after:${v}`);break;
+      case 'before':parts.push(`before:${v}`);break;
+      case 'around':{const p=v.split(/\s+/);if(p.length>=3&&!isNaN(p[1]))parts.push(`${p[0]} AROUND(${p[1]}) ${p.slice(2).join(' ')}`);else toast('AROUND format: word1 n word2 — e.g. AARO 5 Grusch');break}
+      case 'numrange':parts.push(v);break;
+      case 'or':parts.push(`(${v})`);break;
+      case 'wildcard':parts.push(v);break;
+      default:parts.push(`${od.lbl}${v}`);
+    }
+  });
+  return parts.join(' ').trim();
+}
+function getQuery(){return S.mode==='corroborate'?buildCorrQ():buildDorkQ()}
+function updQ(){
+  if(S.mode==='osint')return;
+  const q=getQuery();const el=document.getElementById('qOut');
+  if(q){el.textContent=q;el.style.color='var(--text)'}else el.innerHTML='<span class="qempty">Add keywords and configure options above…</span>';
+  document.getElementById('sTime').textContent='Updated '+new Date().toLocaleTimeString('en-AU');
+}
+function updStats(){
+  document.getElementById('sKw').textContent=S.kws.length;
+  document.getElementById('sSrc').textContent=S.selSrc.length+S.custSrc.length;
+}
+
+// ═══════════════════════════════════════════════
+// LAUNCH
+// ═══════════════════════════════════════════════
+function copyQ(){const q=getQuery();if(!q){toast('No query');return}navigator.clipboard.writeText(q).then(()=>toast('Copied ✓'))}
+function launch(eng){const q=getQuery();if(!q){toast('Build a query first');return}safeOpen(buildLaunchUrl(eng,q))}
+
+// ═══════════════════════════════════════════════
+// EXPORT / IMPORT SETTINGS
+// ═══════════════════════════════════════════════
+function exportSettings(){
+  const data={_app:'SIGNAL v5.0',_exported:new Date().toISOString(),keywords:S.kws,mode:S.mode,selectedSources:S.selSrc,customSources:S.custSrc,timeFilter:S.tbs,dorkOperators:S.dops,uapCat:S.uapCat,uapFilter:S.uapFilter};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'text/plain'});
+  const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(blob),download:`SIGNAL_Settings_${new Date().toISOString().slice(0,10)}.json`});
+  document.body.appendChild(a);a.click();document.body.removeChild(a);toast('Settings exported ✓');
+}
+function importSettings(evt){
+  const file=evt.target.files[0];if(!file||file.size>500000){toast('ERROR: File invalid or too large');evt.target.value='';return}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      if(d._app&&!String(d._app).startsWith('SIGNAL')){toast('Not a SIGNAL settings file');return}
+      if(Array.isArray(d.keywords))S.kws=d.keywords.filter(k=>typeof k==='string'&&k.length<500).slice(0,50);
+      if(Array.isArray(d.selectedSources))S.selSrc=d.selectedSources.filter(id=>ALL_SRCS.some(s=>s.id===id));
+      if(Array.isArray(d.customSources))S.custSrc=d.customSources.filter(v=>typeof v==='string'&&isValidDomain(v)).slice(0,30);
+      if(typeof d.timeFilter==='string')S.tbs=d.timeFilter;
+      if(typeof d.uapCat==='string'&&UAP_CATS.some(c=>c.id===d.uapCat))S.uapCat=d.uapCat;
+      if(typeof d.uapFilter==='string')S.uapFilter=d.uapFilter;
+      if(d.dorkOperators&&typeof d.dorkOperators==='object'){
+        Object.keys(d.dorkOperators).forEach(id=>{
+          if(!S.dops[id])return;const op=d.dorkOperators[id];
+          if(typeof op!=='object'||typeof op.on!=='boolean')return;
+          const val=typeof op.val==='string'?op.val.slice(0,500):'';
+          S.dops[id]={on:op.on,val};
+          if(op.on){const card=document.getElementById('dc_'+id);const tick=document.getElementById('dt_'+id);const inp=document.getElementById('dv_'+id);const tog=card?.querySelector('.dtog');card?.classList.add('on');if(tog)tog.style.cssText='background:var(--accent);border-color:var(--accent)';if(tick)tick.style.display='block';if(inp){inp.disabled=false;inp.value=val}}
+        });
+      }
+      renderChips();renderCustSrc();renderUapTargetBar();updStats();updQ();renderUapTools();saveState();
+      toast('Settings loaded ✓');
+    }catch{toast('ERROR: Invalid file')}
+  };
+  reader.readAsText(file);evt.target.value='';
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function toast(msg){document.querySelector('.toast')?.remove();const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2800)}
+</script>
+</body>
+</html>
