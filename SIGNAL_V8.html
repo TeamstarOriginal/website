@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
 <title>SIGNAL V8 — UAP/UFO Government Release Tracker · Journalist Evidence Builder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -510,6 +511,12 @@ let CASE_DATA={title:'',type:'UAP/UFO government release',hypothesis:'',notes:''
 // ═══════════════════════════════════════════════
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 function safeOpen(url){try{const u=new URL(url);if(u.protocol!=='https:'&&u.protocol!=='http:')return;const w=window.open(url,'_blank','noopener,noreferrer');if(w)w.opener=null}catch{}}
+function safeHttpUrl(value){
+  try{
+    const u=new URL(String(value).trim());
+    return (u.protocol==='https:'||u.protocol==='http:')?u.href:'';
+  }catch{return ''}
+}
 function isValidDomain(s){return/^(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/i.test(s)&&!/<|>|'|"|`|\s/i.test(s)}
 
 // ═══════════════════════════════════════════════
@@ -816,7 +823,18 @@ function loadCaseFromStorage(){
     if(typeof d.type==='string')CASE_DATA.type=d.type;
     if(typeof d.hypothesis==='string')CASE_DATA.hypothesis=d.hypothesis;
     if(typeof d.notes==='string')CASE_DATA.notes=d.notes;
-    if(Array.isArray(d.evidence))CASE_DATA.evidence=d.evidence;
+    if(Array.isArray(d.evidence)){
+      CASE_DATA.evidence=d.evidence
+        .filter(e=>e&&typeof e.title==='string')
+        .slice(0,500)
+        .map(e=>({
+          ...e,
+          title:String(e.title).slice(0,300),
+          sourceUrl:safeHttpUrl(e.sourceUrl||''),
+          archiveUrl:safeHttpUrl(e.archiveUrl||''),
+          quote:String(e.quote||'').slice(0,5000)
+        }));
+    }
     if(d.created)CASE_DATA.created=d.created;
     document.getElementById('caseTitle').value=CASE_DATA.title||'';
     const typeEl=document.getElementById('caseType');
@@ -834,8 +852,8 @@ function addEvidenceCard(){
     id:Date.now().toString(36),
     title,
     sourceType:document.getElementById('evSourceType').value,
-    sourceUrl:document.getElementById('evUrl').value.trim(),
-    archiveUrl:document.getElementById('evArchive').value.trim(),
+    sourceUrl:safeHttpUrl(document.getElementById('evUrl').value),
+    archiveUrl:safeHttpUrl(document.getElementById('evArchive').value),
     quote:document.getElementById('evQuote').value.trim(),
     confidence:parseInt(document.getElementById('evConf').value),
     isContradiction:document.getElementById('evContra').checked,
@@ -921,7 +939,18 @@ function importCaseJson(evt){
       if(typeof d.type==='string')CASE_DATA.type=d.type;
       if(typeof d.hypothesis==='string')CASE_DATA.hypothesis=d.hypothesis.slice(0,5000);
       if(typeof d.notes==='string')CASE_DATA.notes=d.notes.slice(0,5000);
-      if(Array.isArray(d.evidence))CASE_DATA.evidence=d.evidence.filter(e=>e&&typeof e.title==='string').slice(0,500);
+      if(Array.isArray(d.evidence)) {
+        CASE_DATA.evidence=d.evidence
+          .filter(e=>e&&typeof e.title==='string')
+          .slice(0,500)
+          .map(e=>({
+            ...e,
+            title:String(e.title).slice(0,300),
+            sourceUrl:safeHttpUrl(e.sourceUrl||''),
+            archiveUrl:safeHttpUrl(e.archiveUrl||''),
+            quote:String(e.quote||'').slice(0,5000)
+          }));
+      }
       if(d.created)CASE_DATA.created=d.created;
       document.getElementById('caseTitle').value=CASE_DATA.title||'';
       document.getElementById('caseHypo').value=CASE_DATA.hypothesis||'';
